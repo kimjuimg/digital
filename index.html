@@ -1,0 +1,1504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>디지털 감식반 | 딥페이크 &amp; 개인정보 보호</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+:root{
+  --bg:#12161A;
+  --panel:#1B2126;
+  --panel-alt:#212930;
+  --line:#2E373E;
+  --text:#ECEEEF;
+  --muted:#8A96A1;
+  --amber:#F2B705;
+  --teal:#3FC7B0;
+  --red:#E2574C;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'Pretendard', -apple-system, sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+.disp{font-family:'Space Grotesk', 'Pretendard', sans-serif;}
+.mono{font-family:'JetBrains Mono', monospace;}
+::selection{background:var(--amber); color:#12161A;}
+
+/* progress bar */
+.progress-rail{
+  position:sticky; top:0; z-index:50;
+  background:rgba(18,22,26,0.92);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+  padding:10px 20px;
+  display:flex; align-items:center; gap:14px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px;
+  letter-spacing:0.04em;
+  overflow-x:auto;
+}
+.progress-rail .tag{color:var(--muted); flex-shrink:0;}
+.stepdots{display:flex; gap:8px; flex-shrink:0;}
+.stepdot{
+  width:8px; height:8px; border-radius:50%;
+  background:var(--line);
+  transition:background .3s, box-shadow .3s;
+}
+.stepdot.active{background:var(--amber); box-shadow:0 0 8px rgba(242,183,5,0.6);}
+.stepdot.done{background:var(--teal);}
+
+section{
+  max-width:920px;
+  margin:0 auto;
+  padding:90px 24px;
+}
+@media(max-width:640px){ section{padding:56px 18px;} }
+
+/* HERO */
+.hero{
+  padding-top:70px;
+  text-align:center;
+  position:relative;
+}
+.case-eyebrow{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px; letter-spacing:0.12em;
+  color:var(--amber); text-transform:uppercase;
+  border:1px solid rgba(242,183,5,0.35);
+  padding:6px 14px; border-radius:999px;
+  margin-bottom:28px;
+}
+.case-eyebrow::before{content:"●"; font-size:8px; animation:pulse 1.6s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+.hero h1{
+  font-size:clamp(34px, 6vw, 62px);
+  font-weight:700;
+  margin:0 0 18px;
+  letter-spacing:-0.01em;
+  line-height:1.15;
+}
+.hero h1 .accent{color:var(--amber);}
+.hero p.lead{
+  color:var(--muted);
+  font-size:17px;
+  max-width:520px;
+  margin:0 auto 44px;
+}
+.scanwrap{
+  position:relative;
+  width:220px; height:220px;
+  margin:0 auto 14px;
+  cursor:pointer;
+  transition:transform .2s;
+}
+.scanwrap:hover{transform:scale(1.03);}
+.scanwrap svg{width:100%; height:100%;}
+.scan-hint{
+  text-align:center; font-size:11.5px; color:var(--muted);
+  margin-bottom:32px; letter-spacing:0.03em;
+}
+.scanline{
+  position:absolute; left:8%; right:8%;
+  height:2px;
+  background:linear-gradient(90deg, transparent, var(--amber), transparent);
+  animation:scan 2.8s ease-in-out infinite;
+  box-shadow:0 0 12px rgba(242,183,5,0.7);
+}
+@keyframes scan{
+  0%{top:12%;} 50%{top:88%;} 100%{top:12%;}
+}
+.btn{
+  font-family:'Pretendard', sans-serif;
+  font-weight:600; font-size:15px;
+  background:var(--amber); color:#181205;
+  border:none; padding:14px 30px; border-radius:8px;
+  cursor:pointer;
+  transition:transform .15s, box-shadow .15s;
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(242,183,5,0.25);}
+.btn:active{transform:translateY(0);}
+.btn.ghost{
+  background:transparent; color:var(--text);
+  border:1px solid var(--line);
+}
+.btn.ghost:hover{border-color:var(--teal); box-shadow:none; color:var(--teal);}
+.btn:disabled{opacity:0.4; cursor:not-allowed; transform:none; box-shadow:none;}
+.btn.small{padding:9px 18px; font-size:13px;}
+
+/* section header */
+.sec-head{margin-bottom:40px;}
+.sec-num{
+  font-family:'JetBrains Mono', monospace;
+  color:var(--muted); font-size:13px; letter-spacing:0.1em;
+  display:block; margin-bottom:10px;
+}
+.sec-head h2{font-size:clamp(24px,4vw,32px); margin:0 0 12px; font-weight:700;}
+.sec-head p{color:var(--muted); font-size:15.5px; margin:0; max-width:600px;}
+
+/* CASE 01 cards */
+.card-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr));
+  gap:16px; margin-top:32px;
+}
+.evi-card{
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:20px;
+  cursor:pointer;
+  transition:border-color .2s, transform .2s;
+  min-height:260px;
+  display:flex; flex-direction:column;
+}
+.evi-card:hover{border-color:rgba(242,183,5,0.4); transform:translateY(-3px);}
+.evi-card.flipped{border-color:var(--teal);}
+.evi-card .svgbox{
+  height:120px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:14px;
+}
+.evi-card .label{
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; color:var(--muted); letter-spacing:0.06em;
+  text-transform:uppercase; margin-bottom:6px;
+}
+.evi-card h3{font-size:16px; margin:0 0 8px; font-weight:600;}
+.evi-card p{font-size:13.5px; color:var(--muted); margin:0; display:none;}
+.evi-card.flipped p{display:block;}
+.evi-card .hint{font-size:12px; color:var(--amber); margin-top:auto; padding-top:8px;}
+.evi-card.flipped .hint{display:none;}
+.evi-card .badge-ok{
+  display:none;
+  font-family:'JetBrains Mono', monospace;
+  font-size:11px; color:var(--teal); margin-top:auto; padding-top:8px;
+}
+.evi-card.flipped .badge-ok{display:block;}
+
+.counter-pill{
+  display:inline-flex; align-items:center; gap:8px;
+  font-family:'JetBrains Mono', monospace; font-size:12.5px;
+  color:var(--teal); background:rgba(63,199,176,0.08);
+  border:1px solid rgba(63,199,176,0.3);
+  padding:7px 14px; border-radius:999px; margin-top:28px;
+}
+
+/* CASE 01-B upload */
+.upload-block{
+  margin-top:56px; padding-top:40px; border-top:1px solid var(--line);
+}
+.upload-block h3{font-size:19px; margin:0 0 8px; font-weight:700;}
+.upload-desc{color:var(--muted); font-size:14px; margin:0 0 22px;}
+.upload-row{display:flex; gap:18px; flex-wrap:wrap; align-items:stretch; margin-bottom:16px;}
+.upload-drop{
+  flex:1; min-width:200px; min-height:140px;
+  border:1.5px dashed var(--line); border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; text-align:center; padding:20px;
+  transition:border-color .2s, background .2s;
+  color:var(--muted); font-size:13px;
+}
+.upload-drop:hover{border-color:var(--amber); color:var(--amber); background:rgba(242,183,5,0.04);}
+.upload-drop input{display:none;}
+.preview-box{
+  display:none; flex:1; min-width:160px; max-width:220px;
+  border-radius:12px; overflow:hidden; border:1px solid var(--line);
+  align-items:center; justify-content:center; background:var(--panel);
+}
+.preview-box.show{display:flex;}
+.preview-box img{width:100%; height:100%; object-fit:cover; max-height:220px;}
+.ai-result{display:none; margin-top:20px;}
+.ai-result.show{display:block;}
+.ai-result .verdict-row{
+  display:flex; align-items:center; gap:10px; margin-bottom:14px;
+}
+.ai-result .verdict-badge{
+  font-family:'JetBrains Mono', monospace; font-size:12.5px; font-weight:600;
+  padding:6px 14px; border-radius:999px; border:1px solid;
+}
+.ai-result .conf{font-size:12px; color:var(--muted); font-family:'JetBrains Mono', monospace;}
+.ai-result ul{margin:0; padding-left:18px; font-size:14px; color:var(--text); line-height:1.8;}
+.ai-result .caveat{
+  margin-top:14px; font-size:13px; color:var(--muted);
+  background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+}
+.disclaimer-box{
+  margin-top:18px; font-size:12.5px; color:var(--muted);
+  background:rgba(226,87,76,0.06); border:1px solid rgba(226,87,76,0.25);
+  border-radius:10px; padding:12px 14px;
+}
+.loading-dots{font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--amber);}
+.loading-dots::after{content:'⋯'; animation:pulse 1s infinite;}
+
+/* forensic report */
+.report-grid{
+  display:grid; grid-template-columns:repeat(auto-fit, minmax(210px,1fr));
+  gap:10px; margin-top:18px;
+}
+.report-item{
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:10px; padding:12px 14px;
+}
+.report-item .rk{
+  font-family:'JetBrains Mono', monospace; font-size:10.5px;
+  color:var(--muted); letter-spacing:0.06em; text-transform:uppercase;
+}
+.report-item .rv{font-size:14.5px; font-weight:600; margin-top:5px;}
+.report-item .rd{font-size:12px; color:var(--muted); margin-top:5px; line-height:1.55;}
+.report-item.flag{border-color:rgba(242,183,5,0.45);}
+.report-item.flag .rv{color:var(--amber);}
+.report-item.strong{border-color:rgba(226,87,76,0.5);}
+.report-item.strong .rv{color:var(--red);}
+.report-item.good{border-color:rgba(63,199,176,0.35);}
+.report-item.good .rv{color:var(--teal);}
+.ela-row{display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start; margin-top:20px;}
+.ela-row figure{margin:0; width:220px; max-width:100%;}
+.ela-row img{width:100%; border-radius:10px; border:1px solid var(--line); display:block; background:#000;}
+.ela-row figcaption{
+  font-size:11.5px; color:var(--muted); margin-top:7px;
+  font-family:'JetBrains Mono', monospace; line-height:1.5;
+}
+
+/* CASE 02 analyzer */
+.analyzer{
+  display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-top:30px;
+}
+@media(max-width:760px){ .analyzer{grid-template-columns:1fr;} }
+.analyzer textarea{
+  width:100%; min-height:220px;
+  background:var(--panel); color:var(--text);
+  border:1px solid var(--line); border-radius:12px;
+  padding:16px; font-family:'Pretendard', sans-serif; font-size:14.5px;
+  resize:vertical; line-height:1.7;
+}
+.analyzer textarea:focus{outline:none; border-color:var(--amber);}
+.result-panel{
+  background:var(--panel); border:1px solid var(--line); border-radius:12px;
+  padding:18px; min-height:220px;
+}
+.render-out{
+  font-size:14.5px; line-height:1.9; white-space:pre-wrap; word-break:break-word;
+  min-height:80px;
+}
+.render-out mark{
+  border-radius:4px; padding:1px 3px; font-weight:600;
+}
+.meter-row{display:flex; align-items:center; gap:10px; margin-bottom:14px;}
+.meter-track{
+  flex:1; height:8px; border-radius:999px; background:var(--line); overflow:hidden;
+}
+.meter-fill{
+  height:100%; width:0%; border-radius:999px;
+  background:linear-gradient(90deg, var(--teal), var(--amber), var(--red));
+  transition:width .4s ease;
+}
+.meter-label{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted); min-width:70px; text-align:right;}
+.legend{display:flex; flex-wrap:wrap; gap:8px; margin-top:14px;}
+.legend .chip{
+  font-family:'JetBrains Mono', monospace; font-size:11px;
+  padding:4px 10px; border-radius:6px; opacity:0.5; transition:opacity .2s;
+}
+.legend .chip.on{opacity:1;}
+.actions-row{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
+
+/* CASE 02-B: 고쳐 쓰기 미션 */
+.mission-block{margin-top:48px; padding-top:36px; border-top:1px solid var(--line);}
+.mission-block h3{font-size:19px; margin:0 0 8px; font-weight:700;}
+.mission-desc{color:var(--muted); font-size:14px; margin:0 0 18px;}
+.mission-origin{
+  background:rgba(226,87,76,0.07); border:1px solid rgba(226,87,76,0.28);
+  border-radius:12px; padding:16px 18px; font-size:14.5px; line-height:1.9; margin-bottom:16px;
+}
+.mission-origin .mo-label{
+  font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--red);
+  letter-spacing:0.06em; display:block; margin-bottom:8px;
+}
+.mission-origin mark{border-radius:4px; padding:1px 3px; font-weight:600;}
+.mission-block textarea{
+  width:100%; min-height:110px;
+  background:var(--panel); color:var(--text);
+  border:1px solid var(--line); border-radius:12px; padding:15px;
+  font-family:'Pretendard', sans-serif; font-size:14.5px; line-height:1.7; resize:vertical;
+}
+.mission-block textarea:focus{outline:none; border-color:var(--amber);}
+.mission-feedback{
+  display:none; margin-top:16px; border-radius:12px;
+  padding:16px 18px; font-size:14px; border:1px solid;
+}
+.mission-feedback.show{display:block;}
+.mission-feedback .mf-title{
+  font-family:'JetBrains Mono', monospace; font-size:12px;
+  letter-spacing:0.05em; font-weight:700; margin-bottom:8px;
+}
+.mission-feedback ul{margin:8px 0 0; padding-left:18px; line-height:1.8;}
+.mission-feedback .model-answer{
+  margin-top:12px; font-size:13px; color:var(--muted);
+  border-top:1px dashed var(--line); padding-top:10px;
+}
+.left-chips{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+.left-chips span{font-family:'JetBrains Mono', monospace; font-size:11px; padding:4px 9px; border-radius:6px;}
+
+/* CASE 03 scenarios */
+.scenario-card{
+  background:var(--panel); border:1px solid var(--line); border-radius:14px;
+  padding:26px; margin-top:20px;
+}
+.scenario-card .sit{font-size:15.5px; margin-bottom:20px; color:var(--text);}
+.choice-list{display:flex; flex-direction:column; gap:10px;}
+.choice-btn{
+  text-align:left;
+  background:var(--panel-alt); border:1px solid var(--line); color:var(--text);
+  padding:13px 16px; border-radius:10px; font-size:14.5px; cursor:pointer;
+  font-family:'Pretendard', sans-serif;
+  transition:border-color .15s, background .15s;
+}
+.choice-btn:hover{border-color:var(--amber);}
+.choice-btn:disabled{cursor:default;}
+.choice-btn.correct{border-color:var(--teal); background:rgba(63,199,176,0.08);}
+.choice-btn.wrong{border-color:var(--red); background:rgba(226,87,76,0.08);}
+.feedback-box{
+  margin-top:16px; padding:16px; border-radius:10px;
+  background:rgba(242,183,5,0.06); border:1px solid rgba(242,183,5,0.25);
+  font-size:14px; display:none;
+}
+.feedback-box.show{display:block;}
+.feedback-box .fb-title{font-weight:700; margin-bottom:6px; font-family:'JetBrains Mono', monospace; font-size:12px; letter-spacing:0.05em;}
+
+/* FINAL badge */
+.finale{text-align:center;}
+.id-card{
+  max-width:420px; margin:36px auto 0;
+  background:linear-gradient(155deg, #1D242B, #171B1F);
+  border:1px solid var(--line); border-radius:18px;
+  padding:28px; position:relative; overflow:hidden;
+  text-align:left;
+}
+.id-card::before{
+  content:""; position:absolute; top:-40px; right:-40px;
+  width:160px; height:160px; border-radius:50%;
+  background:radial-gradient(circle, rgba(242,183,5,0.14), transparent 70%);
+}
+.id-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px;}
+.id-top .org{font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--muted); letter-spacing:0.08em;}
+.id-top .idnum{font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--amber);}
+.id-name-input{
+  width:100%; background:transparent; border:none; border-bottom:1px solid var(--line);
+  color:var(--text); font-size:22px; font-weight:700; padding:6px 0 10px;
+  font-family:'Pretendard', sans-serif;
+}
+.id-name-input:focus{outline:none; border-color:var(--amber);}
+.id-name-input::placeholder{color:#555f68;}
+.id-grade{
+  margin-top:16px; font-family:'JetBrains Mono', monospace;
+  font-size:13px; color:var(--teal);
+}
+.id-stats{display:flex; gap:22px; margin-top:18px;}
+.id-stats div{font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--muted);}
+.id-stats b{display:block; color:var(--text); font-size:20px; font-family:'Space Grotesk',sans-serif;}
+.pledge{
+  margin-top:34px; font-size:13.5px; color:var(--muted);
+  border-top:1px solid var(--line); padding-top:18px;
+}
+.id-actions{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:22px;}
+.grade-note{
+  font-family:'JetBrains Mono', monospace; font-size:11.5px;
+  color:var(--muted); margin-top:16px; text-align:center; line-height:1.7;
+}
+.id-stats div.muted-stat b{color:var(--muted);}
+.save-msg{font-size:12.5px; color:var(--amber); margin-top:10px; min-height:18px;}
+footer{
+  text-align:center; padding:40px 20px 60px; color:#555f68;
+  font-size:12px; font-family:'JetBrains Mono', monospace;
+}
+
+/* 인쇄: 요원증만 밝은 색으로 출력 */
+@media print{
+  .progress-rail, footer, .id-actions, .save-msg, .grade-note,
+  #sec-hero, #sec-1, #sec-2, #sec-3, #sec-4 .sec-head{display:none !important;}
+  body{background:#fff !important; color:#111 !important;}
+  section{padding:0 !important;}
+  .id-card{
+    background:#fff !important; border:2px solid #333 !important;
+    color:#111 !important; max-width:100%; margin:0;
+  }
+  .id-card::before{display:none !important;}
+  .id-top .org{color:#555 !important;}
+  .id-top .idnum{color:#8a6b00 !important;}
+  .id-name-input{color:#111 !important; border-bottom:1px solid #999 !important;}
+  .id-grade{color:#0a6b5c !important;}
+  .id-stats div{color:#555 !important;}
+  .id-stats b{color:#111 !important;}
+  .pledge{color:#333 !important; border-top:1px solid #bbb !important;}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-rail">
+  <span class="tag">CASE FILE //</span>
+  <div class="stepdots">
+    <div class="stepdot active" id="dot-0"></div>
+    <div class="stepdot" id="dot-1"></div>
+    <div class="stepdot" id="dot-2"></div>
+    <div class="stepdot" id="dot-3"></div>
+    <div class="stepdot" id="dot-4"></div>
+  </div>
+  <span class="tag" id="rail-status">감식 대기 중</span>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="sec-hero">
+  <div class="case-eyebrow">DIGITAL FORENSICS UNIT</div>
+  <h1>진짜와 가짜를<br><span class="accent">구별하는 눈</span>을 길러라</h1>
+  <p class="lead">인공지능이 만든 가짜 얼굴, 무심코 새어나간 내 정보. 감식반 요원이 되어 세 가지 사건을 직접 조사해보자.</p>
+  <div class="scanwrap" id="heroScan" title="클릭해서 사진 넣어보기">
+    <input type="file" id="heroPhotoInput" accept="image/*" style="display:none;">
+    <svg viewBox="0 0 220 220">
+      <defs>
+        <clipPath id="faceclip"><circle cx="110" cy="100" r="70"/></clipPath>
+      </defs>
+      <circle cx="110" cy="100" r="72" fill="none" stroke="#2E373E" stroke-width="1.5" stroke-dasharray="4 5"/>
+      <circle cx="110" cy="100" r="70" fill="#1B2126"/>
+      <g id="heroFaceAbstract" clip-path="url(#faceclip)">
+        <ellipse cx="110" cy="112" rx="46" ry="58" fill="#232B31"/>
+        <circle cx="92" cy="98" r="6" fill="#3FC7B0" opacity="0.8"/>
+        <circle cx="128" cy="98" r="6" fill="#3FC7B0" opacity="0.8"/>
+        <path d="M92 130 Q110 142 128 130" stroke="#8A96A1" stroke-width="3" fill="none" stroke-linecap="round"/>
+      </g>
+      <image id="heroPhotoImg" x="40" y="30" width="140" height="140" preserveAspectRatio="xMidYMid slice" clip-path="url(#faceclip)" style="display:none;"></image>
+      <circle cx="110" cy="100" r="70" fill="none" stroke="#F2B705" stroke-width="1" opacity="0.3"/>
+    </svg>
+    <div class="scanline"></div>
+  </div>
+  <div class="scan-hint mono" id="scanHint">📷 클릭해서 사진 넣어보기</div>
+  <button class="btn" onclick="goTo(1)">감식 시작하기 →</button>
+</section>
+
+<!-- CASE 01 -->
+<section id="sec-1">
+  <div class="sec-head">
+    <span class="sec-num mono">CASE 01 / 03</span>
+    <h2>딥페이크 단서 찾기</h2>
+    <p>AI가 만든 합성 얼굴에는 아직 완벽하게 지우지 못하는 흔적이 남아있다. 카드를 클릭해 다섯 가지 단서를 감식해보자.</p>
+  </div>
+  <div class="card-grid" id="evi-grid"></div>
+  <div class="counter-pill mono" id="case1-counter">단서 학습: 0 / 5 · 등급 미반영</div>
+
+  <div class="upload-block">
+    <span class="sec-num mono" style="display:block; margin-bottom:8px;">CASE 01-B</span>
+    <h3>실전 감식: 사진으로 직접 확인하기</h3>
+    <p class="upload-desc">사진을 넣으면 내장 감식 엔진이 <b>파일 속 숨은 기록(메타데이터)</b>과 <b>픽셀</b>을 직접 분석해 소견을 제시합니다. 사진은 이 기기 밖으로 전송되지 않고, 인터넷이 끊겨 있어도 동작합니다.</p>
+
+    <div class="upload-row">
+      <label class="upload-drop" id="dropLabel">
+        <input type="file" id="photoInput" accept="image/*">
+        <span id="dropText" class="mono">+ 클릭해서 사진 선택</span>
+      </label>
+      <div class="preview-box" id="previewBox">
+        <img id="previewImg" alt="업로드한 사진 미리보기">
+      </div>
+    </div>
+
+    <button class="btn small" id="analyzeBtn" disabled>감식 요청하기</button>
+
+    <div class="ai-result" id="aiResult"></div>
+
+    <div class="disclaimer-box">
+      ⚠️ 이 기능은 <b>교육용 참고 도구</b>입니다. 여기서 계산하는 것은 "합성 여부"가 아니라 <b>의심해볼 만한 단서</b>일 뿐이며, 진짜 사진이 단서 발견으로, 잘 만든 가짜가 특이사항 없음으로 나올 수 있습니다. 친구·타인의 사진은 본인 동의 없이 올리지 마세요.
+    </div>
+  </div>
+</section>
+
+<!-- CASE 02 -->
+<section id="sec-2">
+  <div class="sec-head">
+    <span class="sec-num mono">CASE 02 / 03</span>
+    <h2>디지털 발자국 분석기</h2>
+    <p>SNS에 올릴 법한 글을 직접 입력해보자. 그 안에 숨어있는 개인정보를 실시간으로 찾아 위험도를 계산한다.</p>
+  </div>
+  <div class="analyzer">
+    <div>
+      <textarea id="postInput" placeholder="예) 오늘도 학원 끝나고 8시에 집 앞 편의점에서 친구 기다리는 중ㅋㅋ 우리 학교 2학년 3반 다 모여라"></textarea>
+      <div class="actions-row">
+        <button class="btn small ghost" onclick="loadSample()">예시 글 불러오기</button>
+        <button class="btn small ghost" onclick="clearPost()">지우기</button>
+      </div>
+    </div>
+    <div class="result-panel">
+      <div class="meter-row">
+        <span class="meter-label mono">위험도</span>
+        <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+        <span class="meter-label mono" id="meterPct">0%</span>
+      </div>
+      <div class="render-out" id="renderOut" style="color:#555f68;">← 왼쪽에 글을 입력하면 여기에 분석 결과가 표시됩니다.</div>
+      <div class="legend" id="legend"></div>
+    </div>
+  </div>
+
+  <div class="mission-block">
+    <span class="sec-num mono" style="display:block; margin-bottom:8px;">MISSION · 요원증 등급 반영</span>
+    <h3>안전하게 고쳐 쓰기</h3>
+    <p class="mission-desc">아래 글에는 위험한 정보가 다섯 종류나 들어 있습니다. <b>하고 싶은 말은 살리면서</b> 위험한 부분만 걷어내 다시 써보세요. 지우기만 하는 건 답이 아닙니다.</p>
+    <div class="mission-origin">
+      <span class="mo-label">원문 · 위험 요소 5종 검출</span>
+      <div id="missionOrigin"></div>
+    </div>
+    <textarea id="missionInput" placeholder="여기에 안전하게 고쳐 쓴 글을 입력하세요 (20자 이상)"></textarea>
+    <div class="actions-row">
+      <button class="btn small" id="missionSubmit">제출하기</button>
+      <button class="btn small ghost" id="missionReset">다시 쓰기</button>
+    </div>
+    <div class="mission-feedback" id="missionFeedback"></div>
+  </div>
+</section>
+
+<!-- CASE 03 -->
+<section id="sec-3">
+  <div class="sec-head">
+    <span class="sec-num mono">CASE 03 / 03</span>
+    <h2>현장 판결</h2>
+    <p>실제로 벌어질 수 있는 여덟 가지 상황. 요원으로서 가장 올바른 대응을 선택해보자. 이 판결이 요원증 등급의 핵심 기준이 된다.</p>
+  </div>
+  <div id="scenario-wrap"></div>
+</section>
+
+<!-- FINAL -->
+<section class="finale" id="sec-4">
+  <div class="sec-head" style="text-align:center;">
+    <span class="sec-num mono">FINAL REPORT</span>
+    <h2>요원증 발급</h2>
+    <p style="margin:0 auto;">지금까지의 감식 결과를 바탕으로 디지털 시민 요원증이 발급됩니다.</p>
+  </div>
+  <div class="id-card">
+    <div class="id-top">
+      <span class="org mono">DIGITAL FORENSICS UNIT</span>
+      <span class="idnum mono" id="idnum">ID · ------</span>
+    </div>
+    <input type="text" class="id-name-input" id="agentName" placeholder="이름을 입력하세요" oninput="renderID()">
+    <div class="id-grade mono" id="idGrade">등급 판정 대기 중</div>
+    <div class="id-stats">
+      <div>현장 판결<b id="statCase3">0/8</b></div>
+      <div>고쳐 쓰기<b id="statMission">0/2</b></div>
+      <div class="muted-stat">단서 학습<b id="statCase1">0/5</b></div>
+    </div>
+    <div class="pledge">
+      "나는 인공지능이 만든 정보를 그대로 믿지 않고, 나와 다른 사람의 개인정보를 함부로 다루지 않겠습니다." — 디지털 시민 서약
+    </div>
+  </div>
+  <div class="grade-note">
+    등급 산정 = 현장 판결(8점) + 고쳐 쓰기(2점) = 10점 만점<br>
+    단서 학습은 참고 항목이며 등급에 반영되지 않습니다
+  </div>
+  <div class="id-actions">
+    <button class="btn small" id="saveIdBtn">요원증 이미지로 저장</button>
+    <button class="btn small ghost" id="printIdBtn">인쇄하기</button>
+  </div>
+  <div class="save-msg" id="saveMsg"></div>
+</section>
+
+<footer>DIGITAL FORENSICS UNIT · EDUCATIONAL SIMULATION · 실존 인물과 무관한 교육용 콘텐츠입니다</footer>
+
+<script>
+/* ---------- progress dots ---------- */
+const sections = ['sec-hero','sec-1','sec-2','sec-3','sec-4'];
+const railLabels = ['감식 대기 중','CASE 01 진행 중','CASE 02 진행 중','CASE 03 진행 중','최종 보고서'];
+function goTo(i){ document.getElementById(sections[i]).scrollIntoView({behavior:'smooth'}); }
+const obs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const idx = sections.indexOf(e.target.id);
+      document.querySelectorAll('.stepdot').forEach((d,i)=>{
+        d.classList.toggle('active', i===idx);
+        d.classList.toggle('done', i<idx);
+      });
+      document.getElementById('rail-status').textContent = railLabels[idx];
+    }
+  });
+},{threshold:0.4});
+sections.forEach(id=>obs.observe(document.getElementById(id)));
+
+/* ---------- HERO: put a real photo inside the circle ---------- */
+const heroScan = document.getElementById('heroScan');
+const heroPhotoInput = document.getElementById('heroPhotoInput');
+const heroFaceAbstract = document.getElementById('heroFaceAbstract');
+const heroPhotoImg = document.getElementById('heroPhotoImg');
+const scanHint = document.getElementById('scanHint');
+
+heroScan.addEventListener('click', ()=> heroPhotoInput.click());
+heroPhotoInput.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    heroPhotoImg.setAttribute('href', ev.target.result);
+    heroPhotoImg.style.display = 'block';
+    heroFaceAbstract.style.display = 'none';
+    scanHint.textContent = '📷 클릭하면 다른 사진으로 바꿀 수 있어요';
+  };
+  reader.readAsDataURL(file);
+});
+
+/* ---------- CASE 01: evidence cards ---------- */
+const svgIcon = (type)=>{
+  const base = `viewBox="0 0 120 100"`;
+  if(type==='ear') return `<svg ${base}><ellipse cx="60" cy="55" rx="34" ry="40" fill="#232B31"/><circle cx="30" cy="52" r="6" fill="#232B31" stroke="#F2B705" stroke-width="2"/><circle cx="30" cy="60" r="3" fill="#F2B705"/><circle cx="90" cy="52" r="6" fill="#232B31" stroke="#3FC7B0" stroke-width="1"/></svg>`;
+  if(type==='seam') return `<svg ${base}><ellipse cx="60" cy="50" rx="34" ry="40" fill="#232B31"/><rect x="26" y="72" width="68" height="8" fill="#1B2126"/><line x1="26" y1="76" x2="94" y2="76" stroke="#F2B705" stroke-width="2" stroke-dasharray="3 3"/></svg>`;
+  if(type==='teeth') return `<svg ${base}><ellipse cx="60" cy="50" rx="34" ry="40" fill="#232B31"/><rect x="40" y="70" width="40" height="12" rx="2" fill="#1B2126"/><line x1="46" y1="70" x2="43" y2="82" stroke="#F2B705" stroke-width="1.5"/><line x1="54" y1="70" x2="58" y2="82" stroke="#F2B705" stroke-width="1.5"/><line x1="66" y1="70" x2="61" y2="82" stroke="#F2B705" stroke-width="1.5"/><line x1="74" y1="70" x2="76" y2="82" stroke="#F2B705" stroke-width="1.5"/><circle cx="60" cy="76" r="18" fill="none" stroke="#F2B705" stroke-width="1" opacity="0.4"/></svg>`;
+  if(type==='shadow') return `<svg ${base}><ellipse cx="55" cy="50" rx="30" ry="36" fill="#232B31"/><path d="M20 90 L100 90" stroke="#1B2126" stroke-width="4"/><ellipse cx="42" cy="90" rx="22" ry="5" fill="#12161A"/><line x1="14" y1="18" x2="30" y2="34" stroke="#3FC7B0" stroke-width="2"/><line x1="95" y1="20" x2="80" y2="35" stroke="#F2B705" stroke-width="2"/><circle cx="8" cy="12" r="3" fill="#3FC7B0"/><circle cx="100" cy="14" r="3" fill="#F2B705"/></svg>`;
+  if(type==='bg') return `<svg ${base}><path d="M0 20 Q30 40 20 60 Q10 80 0 100" stroke="#3FC7B0" stroke-width="2" fill="none" opacity="0.5"/><path d="M120 15 Q95 35 100 60 Q105 85 120 95" stroke="#3FC7B0" stroke-width="2" fill="none" opacity="0.5"/><ellipse cx="60" cy="52" rx="30" ry="38" fill="#232B31"/><path d="M28 52 Q20 52 15 45" stroke="#F2B705" stroke-width="2" fill="none"/><path d="M92 52 Q102 40 96 30" stroke="#F2B705" stroke-width="2" fill="none"/></svg>`;
+};
+const evidence = [
+  {id:'ear', label:'CLUE 01', title:'액세서리 비대칭', hint:'클릭해서 감식하기', body:'딥페이크는 좌우 액세서리를 따로 학습하지 않아 귀걸이·안경 다리처럼 짝을 이루는 요소의 모양·개수가 미묘하게 달라지는 경우가 많습니다.'},
+  {id:'seam', label:'CLUE 02', title:'피부 경계선 이음매', hint:'클릭해서 감식하기', body:'얼굴을 다른 영상에 합성할 때 턱선·목 주변에 색감이나 선명도가 미세하게 달라지는 "이음매"가 남는 경우가 있습니다.'},
+  {id:'teeth', label:'CLUE 03', title:'치아·입 모양 왜곡', hint:'클릭해서 감식하기', body:'입을 벌리고 말하는 장면은 생성 난이도가 높아, 치아 개수가 이상하거나 모양이 뭉개져 보이는 경우가 자주 발생합니다.'},
+  {id:'shadow', label:'CLUE 04', title:'조명·그림자 불일치', hint:'클릭해서 감식하기', body:'얼굴에 비치는 빛의 방향과 배경의 그림자 방향이 서로 다르다면, 얼굴과 배경이 원래 다른 장면에서 왔을 가능성이 큽니다.'},
+  {id:'bg', label:'CLUE 05', title:'배경 왜곡·흔들림', hint:'클릭해서 감식하기', body:'얼굴 경계 주변으로 배경의 직선이 휘어지거나 물결치듯 흔들리는 것은 합성 과정에서 생기는 대표적인 왜곡 신호입니다.'},
+];
+let case1Done = 0;
+const grid = document.getElementById('evi-grid');
+evidence.forEach(ev=>{
+  const card = document.createElement('div');
+  card.className='evi-card';
+  card.innerHTML = `
+    <div class="svgbox">${svgIcon(ev.id)}</div>
+    <div class="label mono">${ev.label}</div>
+    <h3>${ev.title}</h3>
+    <p>${ev.body}</p>
+    <div class="hint mono">${ev.hint}</div>
+    <div class="badge-ok mono">✓ 감식 완료</div>
+  `;
+  card.addEventListener('click', ()=>{
+    if(!card.classList.contains('flipped')){
+      card.classList.add('flipped');
+      case1Done++;
+      document.getElementById('case1-counter').textContent = `단서 학습: ${case1Done} / 5 · 등급 미반영`;
+      updateStats();
+    }
+  });
+  grid.appendChild(card);
+});
+
+/* ---------- CASE 01-B: 브라우저 내장 감식 엔진 (서버·API 키 불필요) ----------
+   원본 파일의 바이트(메타데이터)와 픽셀을 모두 이 페이지 안에서 직접 분석한다.
+   사진은 어디로도 전송되지 않는다. */
+
+const photoInput = document.getElementById('photoInput');
+const dropText = document.getElementById('dropText');
+const previewBox = document.getElementById('previewBox');
+const previewImg = document.getElementById('previewImg');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const aiResult = document.getElementById('aiResult');
+
+let originalFile = null;    // 사용자가 고른 원본 파일
+let originalBytes = null;   // 원본 바이트 (메타데이터 감식용 — 절대 재압축하지 않는다)
+let workImage = null;       // 디코딩된 이미지 (픽셀 감식용)
+
+photoInput.addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  originalFile = file;
+  originalBytes = null; workImage = null;
+  analyzeBtn.disabled = true;
+  aiResult.classList.remove('show');
+  aiResult.innerHTML = '';
+
+  function ready(){
+    if(originalBytes && workImage) analyzeBtn.disabled = false;
+  }
+
+  const bufReader = new FileReader();
+  bufReader.onload = (ev)=>{ originalBytes = ev.target.result; ready(); };
+  bufReader.readAsArrayBuffer(file);
+
+  const urlReader = new FileReader();
+  urlReader.onload = (ev)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      workImage = img;
+      previewImg.src = ev.target.result;
+      previewBox.classList.add('show');
+      dropText.textContent = '다른 사진으로 바꾸기';
+      ready();
+    };
+    img.onerror = ()=>{
+      aiResult.classList.add('show');
+      aiResult.innerHTML = `<div class="disclaimer-box" style="margin-top:0;">
+        이 브라우저가 열 수 없는 형식입니다. (HEIC 등)<br>
+        <span style="display:block; margin-top:6px;">JPG 또는 PNG로 저장한 뒤 다시 올려주세요.</span></div>`;
+    };
+    img.src = ev.target.result;
+  };
+  urlReader.readAsDataURL(file);
+});
+
+analyzeBtn.addEventListener('click', analyzePhoto);
+
+/* ===== 감식 1. 파일 메타데이터 ===== */
+const AI_SIGNATURE = /(stable[\s-]?diffusion|midjourney|nijijourney|dall[\s.·-]?e|openai|gpt-image|comfyui|automatic1111|invokeai|novelai|firefly|imagen|nano[\s-]?banana|gemini|flux|leonardo|playground\s?ai|krea|runway|sora|kling|veo|pika|ideogram|recraft|seedream|dreamstudio|ai[\s-]?generated|generated[\s-]?by[\s-]?ai|trainedalgorithmicmedia|c2pa)/i;
+const CAMERA_HINT = /(apple|iphone|samsung|galaxy|canon|nikon|sony|fujifilm|olympus|panasonic|leica|pixel|xiaomi|oppo|vivo|motorola|gopro|dji)/i;
+
+function ascii(bytes, off, len){
+  let s = '';
+  const end = Math.min(off + len, bytes.length);
+  for(let i = off; i < end; i++) s += String.fromCharCode(bytes[i]);
+  return s;
+}
+
+function readIFD(dv, tiffBase, ifdOff, le, out, wanted){
+  if(ifdOff + 2 > dv.byteLength) return;
+  const count = dv.getUint16(ifdOff, le);
+  for(let i = 0; i < count; i++){
+    const ent = ifdOff + 2 + i*12;
+    if(ent + 12 > dv.byteLength) return;
+    const tag  = dv.getUint16(ent, le);
+    const type = dv.getUint16(ent + 2, le);
+    const num  = dv.getUint32(ent + 4, le);
+    const name = wanted[tag];
+    if(!name) continue;
+    if(type === 2){ // ASCII
+      const len = Math.min(num, 200);
+      let vOff = ent + 8;
+      if(num > 4) vOff = tiffBase + dv.getUint32(ent + 8, le);
+      if(vOff + len > dv.byteLength) continue;
+      let s = '';
+      for(let k = 0; k < len; k++){
+        const c = dv.getUint8(vOff + k);
+        if(c === 0) break;
+        s += String.fromCharCode(c);
+      }
+      s = s.trim();
+      if(s) out[name] = s;
+    } else if(type === 4 || type === 3){ // LONG / SHORT (주로 포인터)
+      out[name] = (type === 4) ? dv.getUint32(ent + 8, le) : dv.getUint16(ent + 8, le);
+    }
+  }
+}
+
+function parseMetadata(buffer){
+  const bytes = new Uint8Array(buffer);
+  const dv = new DataView(buffer);
+  const meta = { format:'알 수 없음', hasExif:false, tags:{}, textKeys:[], aiHit:'', c2pa:false, gps:false };
+
+  try{
+    if(bytes[0] === 0xFF && bytes[1] === 0xD8){
+      meta.format = 'JPEG';
+      let off = 2;
+      while(off < bytes.length - 3){
+        if(bytes[off] !== 0xFF){ off++; continue; }
+        const marker = bytes[off + 1];
+        if(marker === 0xD8 || marker === 0x01 || (marker >= 0xD0 && marker <= 0xD7)){ off += 2; continue; }
+        if(marker === 0xDA || marker === 0xD9) break;          // 이미지 데이터 시작
+        const len = dv.getUint16(off + 2);
+        if(len < 2) break;
+        if(marker === 0xE1){
+          const sig = ascii(bytes, off + 4, 6);
+          if(sig === 'Exif\0\0'){
+            const base = off + 10;
+            const le = dv.getUint16(base) === 0x4949;
+            if(dv.getUint16(base + 2, le) === 42){
+              meta.hasExif = true;
+              const IFD0 = {0x010F:'Make',0x0110:'Model',0x0131:'Software',0x0132:'DateTime',0x013B:'Artist',0x8298:'Copyright',0x8769:'_exif',0x8825:'_gps'};
+              readIFD(dv, base, base + dv.getUint32(base + 4, le), le, meta.tags, IFD0);
+              if(meta.tags._gps){ meta.gps = true; delete meta.tags._gps; }
+              if(meta.tags._exif){
+                const EXIF = {0x9003:'DateTimeOriginal',0x829A:'ExposureTime',0x829D:'FNumber',0x8827:'ISO',0xA434:'LensModel',0x927C:'MakerNote'};
+                readIFD(dv, base, base + meta.tags._exif, le, meta.tags, EXIF);
+                delete meta.tags._exif;
+              }
+            }
+          } else {
+            const xmp = ascii(bytes, off + 4, Math.min(len, 3000));
+            if(AI_SIGNATURE.test(xmp)) meta.aiHit = (xmp.match(AI_SIGNATURE) || [''])[0];
+            if(/c2pa|contentcredentials/i.test(xmp)) meta.c2pa = true;
+          }
+        } else if(marker === 0xE2 || marker === 0xEB || marker === 0xED){
+          const seg = ascii(bytes, off + 4, Math.min(len, 400));
+          if(/c2pa|jumb/i.test(seg)) meta.c2pa = true;
+        } else if(marker === 0xFE){
+          const cm = ascii(bytes, off + 4, Math.min(len, 300)).trim();
+          if(cm){ meta.tags.Comment = cm; if(AI_SIGNATURE.test(cm)) meta.aiHit = (cm.match(AI_SIGNATURE) || [''])[0]; }
+        }
+        off += 2 + len;
+      }
+    } else if(bytes[0] === 0x89 && ascii(bytes, 1, 3) === 'PNG'){
+      meta.format = 'PNG';
+      let off = 8;
+      const dec = new TextDecoder('utf-8', {fatal:false});
+      while(off + 8 <= bytes.length){
+        const len = dv.getUint32(off);
+        const type = ascii(bytes, off + 4, 4);
+        if(type === 'IEND' || len > bytes.length) break;
+        if(type === 'tEXt' || type === 'iTXt' || type === 'zTXt'){
+          const chunk = dec.decode(bytes.subarray(off + 8, off + 8 + Math.min(len, 4000)));
+          const key = chunk.split('\0')[0];
+          const val = chunk.slice(key.length).replace(/\0/g, ' ').trim();
+          meta.textKeys.push(key);
+          meta.tags[key] = val.slice(0, 300);
+          if(AI_SIGNATURE.test(key + ' ' + val)) meta.aiHit = ((key + ' ' + val).match(AI_SIGNATURE) || [''])[0];
+          if(/^(parameters|prompt|workflow|sd-metadata|Dream)$/i.test(key)) meta.aiHit = meta.aiHit || key;
+        }
+        if(type === 'caBX' || type === 'caBk') meta.c2pa = true;
+        off += 12 + len;
+      }
+    } else if(ascii(bytes, 0, 4) === 'RIFF' && ascii(bytes, 8, 4) === 'WEBP'){
+      meta.format = 'WebP';
+      const head = ascii(bytes, 0, Math.min(bytes.length, 4000));
+      if(AI_SIGNATURE.test(head)) meta.aiHit = (head.match(AI_SIGNATURE) || [''])[0];
+    } else if(ascii(bytes, 4, 4) === 'ftyp'){
+      meta.format = ascii(bytes, 8, 4).trim().toUpperCase();
+    }
+  }catch(e){ /* 손상된 파일이어도 픽셀 감식은 계속 진행한다 */ }
+
+  return meta;
+}
+
+/* ===== 감식 2. 픽셀 ===== */
+function makeCanvas(img, maxDim){
+  let w = img.naturalWidth || img.width, h = img.naturalHeight || img.height;
+  const s = Math.min(1, maxDim / Math.max(w, h));
+  w = Math.max(1, Math.round(w*s)); h = Math.max(1, Math.round(h*s));
+  const c = document.createElement('canvas');
+  c.width = w; c.height = h;
+  c.getContext('2d', {willReadFrequently:true}).drawImage(img, 0, 0, w, h);
+  return c;
+}
+
+function loadImage(src){
+  return new Promise((res, rej)=>{
+    const i = new Image();
+    i.onload = ()=>res(i); i.onerror = rej; i.src = src;
+  });
+}
+
+/* ELA(Error Level Analysis): 다시 압축했을 때 유독 많이 변하는 영역을 찾는다.
+   합성으로 덧붙인 부분은 원본과 압축 이력이 달라 밝게 드러나는 경우가 있다. */
+async function errorLevelAnalysis(base){
+  const w = base.width, h = base.height;
+  const ctxA = base.getContext('2d', {willReadFrequently:true});
+  const a = ctxA.getImageData(0, 0, w, h).data;
+  const re = await loadImage(base.toDataURL('image/jpeg', 0.85));
+  const c2 = document.createElement('canvas');
+  c2.width = w; c2.height = h;
+  const ctxB = c2.getContext('2d', {willReadFrequently:true});
+  ctxB.drawImage(re, 0, 0, w, h);
+  const b = ctxB.getImageData(0, 0, w, h).data;
+  const out = ctxB.createImageData(w, h);
+  let sum = 0, peak = 0;
+  for(let i = 0; i < a.length; i += 4){
+    const d = (Math.abs(a[i]-b[i]) + Math.abs(a[i+1]-b[i+1]) + Math.abs(a[i+2]-b[i+2])) / 3;
+    sum += d; if(d > peak) peak = d;
+    const v = Math.min(255, d * 14);
+    out.data[i] = v; out.data[i+1] = Math.min(255, v*0.75); out.data[i+2] = Math.min(255, v*0.3); out.data[i+3] = 255;
+  }
+  ctxB.putImageData(out, 0, 0);
+  return { mean: sum / (a.length/4), peak, url: c2.toDataURL('image/png') };
+}
+
+function toGray(canvas){
+  const w = canvas.width, h = canvas.height;
+  const d = canvas.getContext('2d', {willReadFrequently:true}).getImageData(0, 0, w, h).data;
+  const g = new Float32Array(w*h);
+  for(let i = 0, p = 0; i < d.length; i += 4, p++) g[p] = 0.299*d[i] + 0.587*d[i+1] + 0.114*d[i+2];
+  return {g, w, h};
+}
+
+/* 좌우 대칭도. 절대 차이만 보면 밋밋한 사진이 무조건 "대칭"으로 나오므로,
+   그 사진 자체의 명암 변화량(mad)으로 나눠 상대적으로 판단한다. */
+function symmetryScore({g, w, h}){
+  const y0 = Math.floor(h*0.12), y1 = Math.floor(h*0.88), half = w >> 1;
+  let sum = 0, n = 0;
+  for(let y = y0; y < y1; y++){
+    for(let x = 0; x < half; x++){ sum += Math.abs(g[y*w + x] - g[y*w + (w-1-x)]); n++; }
+  }
+  let tot = 0;
+  for(let i = 0; i < g.length; i++) tot += g[i];
+  const mean = tot / g.length;
+  let mad = 0;
+  for(let i = 0; i < g.length; i++) mad += Math.abs(g[i] - mean);
+  mad = mad / g.length;
+  const abs = n ? (sum/n) : 0;
+  return { pct: abs/255*100, rel: mad > 1 ? abs/mad : 1 };
+}
+
+function lapVar({g, w, h}, x0, y0, x1, y1){
+  let s = 0, s2 = 0, n = 0;
+  const ys = Math.max(1, y0), ye = Math.min(h-1, y1), xs = Math.max(1, x0), xe = Math.min(w-1, x1);
+  for(let y = ys; y < ye; y++){
+    for(let x = xs; x < xe; x++){
+      const v = 4*g[y*w+x] - g[(y-1)*w+x] - g[(y+1)*w+x] - g[y*w+x-1] - g[y*w+x+1];
+      s += v; s2 += v*v; n++;
+    }
+  }
+  if(!n) return 0;
+  const m = s/n;
+  return Math.max(0, s2/n - m*m);
+}
+
+function sharpnessSpread(gray){
+  const {w, h} = gray, vals = [];
+  for(let by = 0; by < 3; by++){
+    for(let bx = 0; bx < 3; bx++){
+      vals.push(lapVar(gray, Math.floor(bx*w/3), Math.floor(by*h/3), Math.floor((bx+1)*w/3), Math.floor((by+1)*h/3)));
+    }
+  }
+  const mean = vals.reduce((a,b)=>a+b, 0) / vals.length;
+  if(mean <= 0.0001) return {cv:0, mean:0};
+  const sd = Math.sqrt(vals.reduce((a,b)=>a + (b-mean)*(b-mean), 0) / vals.length);
+  return {cv: sd/mean, mean};
+}
+
+/* ===== 감식 실행 ===== */
+async function analyzePhoto(){
+  if(!originalBytes || !workImage) return;
+  analyzeBtn.disabled = true;
+  aiResult.classList.add('show');
+  aiResult.innerHTML = '<div class="loading-dots">감식 중</div>';
+  await new Promise(r => setTimeout(r, 420));   // 감식 중 애니메이션이 보이도록
+
+  try{
+    const meta = parseMetadata(originalBytes);
+    const W = workImage.naturalWidth, H = workImage.naturalHeight;
+    const base = makeCanvas(workImage, 640);
+    const gray = toGray(base);
+    const ela = await errorLevelAnalysis(base);
+    const sym = symmetryScore(gray);
+    const spread = sharpnessSpread(gray);
+    const kb = Math.round(originalFile.size / 1024);
+    const bpp = (originalFile.size * 8) / (W * H);   // 픽셀당 비트 수
+
+    const rows = [];      // 감식 리포트 항목
+    const notes = [];     // 요원 소견
+    let score = 0;        // 합성 의심 점수
+
+    /* --- 촬영 정보(EXIF) --- */
+    const camera = [meta.tags.Make, meta.tags.Model].filter(Boolean).join(' ');
+    const sw = meta.tags.Software || '';
+    if(meta.aiHit){
+      score += 6;
+      rows.push({k:'생성 도구 흔적', v:'발견: ' + meta.aiHit, d:'파일 안에 AI 생성 도구가 남긴 문자열이 그대로 들어 있습니다. 가장 강한 단서입니다.', cls:'strong'});
+      notes.push(`파일 내부 정보에 <b>"${meta.aiHit}"</b> 라는 AI 이미지 생성 도구의 흔적이 남아 있습니다.`);
+    } else if(camera && CAMERA_HINT.test(camera)){
+      score -= 3;
+      rows.push({k:'촬영 기기', v:camera, d:'실제 카메라·스마트폰이 기록한 정보입니다. 다만 이 정보 자체도 위조할 수 있습니다.', cls:'good'});
+      notes.push(`<b>${camera}</b> 로 촬영했다는 기록이 남아 있습니다. 실제 촬영본일 가능성을 높이는 단서입니다.`);
+    } else if(meta.hasExif){
+      rows.push({k:'촬영 기기', v:camera || '기록 없음', d:'EXIF는 있지만 기기 이름이 비어 있습니다. 편집 프로그램을 거친 경우가 많습니다.', cls:camera ? '' : 'flag'});
+      if(!camera) score += 1;
+    } else {
+      score += 2;
+      rows.push({k:'촬영 정보(EXIF)', v:'없음', d:'AI 생성 이미지는 대부분 촬영 정보가 없습니다. 다만 캡처·SNS 업로드·메신저 전송만으로도 지워지므로 이것만으로 단정할 수 없습니다.', cls:'flag'});
+      notes.push('사진 안에 촬영 날짜·기기 같은 <b>촬영 정보(EXIF)가 전혀 없습니다.</b> AI로 만든 이미지에서 흔한 특징이지만, 화면 캡처나 메신저로 받은 사진도 마찬가지라서 이것만으로는 판단할 수 없습니다.');
+    }
+    if(sw){
+      const edited = /photoshop|gimp|lightroom|snapseed|canva|picsart|facetune|remini/i.test(sw);
+      if(edited) score += 1;
+      rows.push({k:edited ? '편집 소프트웨어' : '기록된 소프트웨어', v:sw, d:edited ? '이미지 편집 프로그램을 거친 기록입니다. 보정만 했을 수도 있습니다.' : '파일을 만든 프로그램·기기 버전 기록입니다.', cls:edited ? 'flag' : ''});
+      if(edited) notes.push(`<b>${sw}</b> 로 편집한 기록이 남아 있습니다. 단순 보정일 수도 있지만, 어떤 부분이 수정됐는지 함께 살펴봐야 합니다.`);
+    }
+    if(meta.c2pa){
+      rows.push({k:'콘텐츠 자격증명(C2PA)', v:'포함됨', d:'제작·편집 이력을 증명하는 서명 정보입니다. contentcredentials.org 에서 내용을 확인할 수 있습니다.', cls:'flag'});
+      notes.push('이 사진에는 <b>콘텐츠 자격증명(C2PA)</b> 이 붙어 있습니다. 누가 어떻게 만들었는지 기록이 남아 있다는 뜻이니 원문을 확인해보세요.');
+    }
+    if(meta.gps){
+      rows.push({k:'위치 정보(GPS)', v:'포함됨', d:'촬영 장소 좌표가 파일에 들어 있습니다. 이대로 올리면 집·학교 위치가 노출됩니다.', cls:'flag'});
+      notes.push('⚠️ 파일에 <b>GPS 위치 좌표</b>가 들어 있습니다. 이 사진을 그대로 올리면 찍은 장소가 그대로 공개됩니다. (CASE 02와 이어지는 문제)');
+    }
+    rows.push({k:'파일 형식 / 크기', v:`${meta.format} · ${kb.toLocaleString()} KB`, d:`${W}×${H} 픽셀, 픽셀당 ${bpp.toFixed(2)}비트`, cls:''});
+
+    /* --- 해상도 --- */
+    const aiDim = (W % 64 === 0 && H % 64 === 0) || (W === H && W >= 512);
+    if(aiDim){
+      score += 1;
+      rows.push({k:'해상도 패턴', v:`${W}×${H} · 규격형`, d:'가로세로가 64의 배수이거나 정사각형입니다. AI 생성 모델이 즐겨 쓰는 크기입니다.', cls:'flag'});
+      notes.push(`가로·세로가 <b>${W}×${H}</b> 로 딱 떨어집니다. AI 이미지 생성 모델이 자주 쓰는 규격이라 참고할 만한 단서입니다.`);
+    } else {
+      rows.push({k:'해상도 패턴', v:`${W}×${H}`, d:'카메라 촬영본에서 흔한 자유로운 비율입니다.', cls:'good'});
+    }
+
+    /* --- ELA --- */
+    let elaCls = 'good', elaTxt = '고른 편';
+    if(ela.mean > 6.5){ score += 2; elaCls = 'flag'; elaTxt = '편차 큼'; }
+    else if(ela.mean > 3.5){ score += 1; elaCls = 'flag'; elaTxt = '다소 높음'; }
+    rows.push({k:'압축 흔적(ELA)', v:`${elaTxt} · ${ela.mean.toFixed(2)}`, d:'다시 압축했을 때 변화량입니다. 오른쪽 ELA 이미지에서 유독 밝게 빛나는 부분이 있다면 나중에 덧붙여진 영역일 수 있습니다.', cls:elaCls});
+    if(ela.mean > 3.5) notes.push('다시 압축해봤을 때 <b>영역마다 변화량이 고르지 않습니다.</b> 아래 ELA 이미지에서 얼굴 테두리나 특정 부분만 밝게 빛난다면 그 부분이 따로 합성되었을 가능성을 의심해볼 수 있습니다.');
+
+    /* --- 좌우 대칭 --- */
+    if(sym.rel < 0.42){
+      score += 1;
+      rows.push({k:'좌우 대칭도', v:`매우 높음 · ${sym.pct.toFixed(1)}%`, d:'사진 자체의 명암 변화에 비해 좌우가 지나치게 똑같습니다. 사람 얼굴은 원래 좌우가 조금씩 다릅니다.', cls:'flag'});
+      notes.push('사진의 <b>좌우가 지나치게 대칭</b>입니다. 실제 사람 얼굴은 눈 크기·귀 위치가 미세하게 다른데, 생성 이미지는 부자연스럽게 반듯한 경우가 있습니다. (정면을 정확히 바라본 증명사진에서도 이렇게 나올 수 있습니다)');
+    } else {
+      rows.push({k:'좌우 대칭도', v:`자연스러움 · ${sym.pct.toFixed(1)}%`, d:'좌우 차이가 실제 사진에서 흔한 범위입니다.', cls:'good'});
+    }
+
+    /* --- 영역별 선명도 --- */
+    if(spread.cv > 1.15){
+      score += 2;
+      rows.push({k:'영역별 선명도 편차', v:`큼 · ${spread.cv.toFixed(2)}`, d:'어떤 구역은 또렷하고 어떤 구역은 뭉개져 있습니다. 서로 다른 사진을 이어 붙였을 때 나타나는 특징입니다.', cls:'flag'});
+      notes.push('사진을 9칸으로 나눠 선명도를 재보니 <b>구역별 차이가 큽니다.</b> 배경 흐림 효과일 수도 있지만, 얼굴과 배경이 원래 다른 사진에서 왔을 때도 이런 값이 나옵니다. (CLUE 02·05와 함께 확인해보세요)');
+    } else {
+      rows.push({k:'영역별 선명도 편차', v:`고른 편 · ${spread.cv.toFixed(2)}`, d:'화면 전체의 화질이 균일합니다.', cls:'good'});
+    }
+
+    /* --- 종합 판정 --- */
+    let verdict = '특이사항 없음', confidence = '참고용';
+    if(score >= 5){ verdict = '여러 단서 발견'; confidence = '중간'; }
+    else if(score >= 2){ verdict = '일부 단서 발견'; confidence = '낮음'; }
+    if(!notes.length) notes.push('기계가 잡아낼 수 있는 범위에서는 눈에 띄는 이상 신호가 없었습니다. 하지만 잘 만든 합성 이미지는 이런 검사를 모두 통과하기도 하니, 위 다섯 가지 단서를 눈으로도 직접 확인해보세요.');
+
+    renderReport({
+      verdict, confidence,
+      observations: notes,
+      caveat: '이 결과는 파일 정보와 픽셀 통계로 계산한 <b>참고 자료</b>이며, 딥페이크 판별기가 아닙니다. 진짜 사진이 "단서 발견"으로, 잘 만든 가짜가 "특이사항 없음"으로 나올 수 있습니다.',
+      rows, ela, preview: previewImg.src
+    });
+  }catch(err){
+    aiResult.innerHTML = `<div class="disclaimer-box" style="margin-top:0;">
+      감식 중 오류가 발생했습니다.<br>
+      <span class="mono" style="font-size:11.5px; opacity:0.8;">${String(err && err.message || err).replace(/</g,'&lt;')}</span>
+    </div>`;
+  }finally{
+    analyzeBtn.disabled = false;
+  }
+}
+
+function renderReport(r){
+  const colorMap = {
+    '특이사항 없음': 'var(--teal)',
+    '일부 단서 발견': 'var(--amber)',
+    '여러 단서 발견': 'var(--red)',
+  };
+  const color = colorMap[r.verdict] || 'var(--amber)';
+  const obs = r.observations.map(o=>`<li>${o}</li>`).join('');
+  const cards = r.rows.map(x=>`
+    <div class="report-item ${x.cls}">
+      <div class="rk">${x.k}</div>
+      <div class="rv">${x.v}</div>
+      <div class="rd">${x.d}</div>
+    </div>`).join('');
+  aiResult.innerHTML = `
+    <div class="verdict-row">
+      <span class="verdict-badge" style="color:${color}; border-color:${color};">${r.verdict}</span>
+      <span class="conf">참고 신뢰도: ${r.confidence} · 이 페이지 안에서 직접 계산</span>
+    </div>
+    <ul>${obs}</ul>
+    <div class="ela-row">
+      <figure><img src="${r.preview}" alt="원본"><figcaption>원본</figcaption></figure>
+      <figure><img src="${r.ela.url}" alt="ELA 결과"><figcaption>ELA · 밝게 빛나는 부분일수록<br>압축 이력이 다른 영역</figcaption></figure>
+    </div>
+    <div class="report-grid">${cards}</div>
+    <div class="caveat">ℹ️ ${r.caveat}</div>
+  `;
+}
+
+/* ---------- CASE 02: privacy analyzer ---------- */
+const categories = [
+  {key:'time', label:'생활 패턴', color:'#F2B705', re:/(\d{1,2}\s?시(?:\s?\d{1,2}\s?분)?)|(\d{1,2}:\d{2})/g},
+  {key:'school', label:'소속 기관', color:'#3FC7B0', re:/([가-힣0-9]{1,10}(중학교|고등학교|초등학교))|(\d\s?학년\s?\d\s?반)|우리\s?학교/g},
+  {key:'place', label:'위치 정보', color:'#E2574C', re:/(우리\s?집|우리\s?동네|아파트|정류장|편의점\s?앞|골목|역\s?앞|\d+동\s?\d+호)/g},
+  {key:'contact', label:'연락처', color:'#B98CE0', re:/01[0-9]-?\d{3,4}-?\d{4}/g},
+  {key:'face', label:'얼굴/사진', color:'#F2895E', re:/(셀카|얼굴\s?사진|인증샷|프사)/g},
+];
+const legendEl = document.getElementById('legend');
+categories.forEach(c=>{
+  const chip = document.createElement('span');
+  chip.className='chip mono'; chip.id='chip-'+c.key;
+  chip.style.background = c.color+'22'; chip.style.color = c.color; chip.style.border='1px solid '+c.color+'55';
+  chip.textContent = c.label;
+  legendEl.appendChild(chip);
+});
+function escapeHTML(s){ return s.replace(/[&<>]/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+/* 글 하나를 훑어 위험 요소를 찾아내고, 표시용 HTML까지 만들어준다.
+   실시간 분석기와 고쳐 쓰기 미션이 같은 기준을 쓰도록 한 곳으로 모았다. */
+function scanRisk(raw){
+  let marks = [];               // {start,end,color}
+  let hitCats = new Set();
+  categories.forEach(c=>{
+    let m;
+    c.re.lastIndex = 0;
+    while((m = c.re.exec(raw)) !== null){
+      if(m[0].length===0){ c.re.lastIndex++; continue; }
+      marks.push({start:m.index, end:m.index+m[0].length, color:c.color});
+      hitCats.add(c.key);
+      if(m.index === c.re.lastIndex) c.re.lastIndex++;
+    }
+  });
+  marks.sort((a,b)=>a.start-b.start);
+  // 겹치는 구간은 뒤에 온 것을 건너뛴다
+  let filtered = [], lastEnd = -1;
+  marks.forEach(mk=>{
+    if(mk.start >= lastEnd){ filtered.push(mk); lastEnd = mk.end; }
+  });
+  let html = '', cursor = 0;
+  filtered.forEach(mk=>{
+    html += escapeHTML(raw.slice(cursor, mk.start));
+    html += `<mark style="background:${mk.color}33; color:${mk.color}; box-shadow:0 0 0 1px ${mk.color}55;">${escapeHTML(raw.slice(mk.start, mk.end))}</mark>`;
+    cursor = mk.end;
+  });
+  html += escapeHTML(raw.slice(cursor));
+  return { html, hits: hitCats };
+}
+
+function analyze(){
+  const raw = document.getElementById('postInput').value;
+  const out = document.getElementById('renderOut');
+  const fillEl = document.getElementById('meterFill');
+  const pctEl = document.getElementById('meterPct');
+  categories.forEach(c=>document.getElementById('chip-'+c.key).classList.remove('on'));
+  if(!raw.trim()){
+    out.style.color = '#555f68';
+    out.textContent = '← 왼쪽에 글을 입력하면 여기에 분석 결과가 표시됩니다.';
+    fillEl.style.width='0%'; pctEl.textContent='0%';
+    return;
+  }
+  out.style.color = 'var(--text)';
+  const {html, hits} = scanRisk(raw);
+  hits.forEach(k=>document.getElementById('chip-'+k).classList.add('on'));
+  out.innerHTML = html || escapeHTML(raw);
+  const pct = Math.min(100, hits.size * 22);
+  fillEl.style.width = pct+'%';
+  pctEl.textContent = pct+'%';
+}
+document.getElementById('postInput').addEventListener('input', analyze);
+function loadSample(){
+  document.getElementById('postInput').value = '오늘도 학원 끝나고 8시에 우리 아파트 앞 편의점에서 기다리는 중ㅋㅋ 한빛중학교 2학년 3반 애들 다 여기로 와! 셀카 찍어서 단톡에 올릴게 010-1234-5678로 연락줘';
+  analyze();
+}
+function clearPost(){ document.getElementById('postInput').value=''; analyze(); }
+
+/* ---------- MISSION: 안전하게 고쳐 쓰기 (요원증 등급 2점) ---------- */
+const MISSION_TEXT = '오늘도 8시에 한빛중학교 2학년 3반 수업 끝나고 우리 아파트 앞 편의점에 있을게! 셀카 찍어서 바로 올릴 테니까 010-1234-5678로 연락 줘';
+const MISSION_MODEL = '오늘 수업 끝나고 오랜만에 친구 만나기로 했다! 진짜 기대된다 ㅎㅎ 사진은 나중에 골라서 올릴게';
+let missionScore = 0;
+let missionTried = false;
+
+document.getElementById('missionOrigin').innerHTML = scanRisk(MISSION_TEXT).html;
+
+const missionInput = document.getElementById('missionInput');
+const missionFb = document.getElementById('missionFeedback');
+
+document.getElementById('missionSubmit').addEventListener('click', ()=>{
+  const text = missionInput.value.trim();
+  missionFb.classList.add('show');
+
+  if(text.length < 20){
+    missionFb.style.borderColor = 'rgba(242,183,5,0.4)';
+    missionFb.style.background = 'rgba(242,183,5,0.06)';
+    missionFb.innerHTML = `
+      <div class="mf-title" style="color:var(--amber);">! 아직 채점할 수 없습니다</div>
+      20자 이상으로 써주세요. 위험한 부분을 <b>지우기만 하는 것</b>은 정답이 아닙니다.
+      전하고 싶은 말은 그대로 남기면서, 나를 특정할 수 있는 정보만 빼는 것이 이 미션의 목표입니다.`;
+    return;
+  }
+
+  const {hits} = scanRisk(text);
+  const left = [...hits];
+  const score = (left.length === 0) ? 2 : (left.length === 1 ? 1 : 0);
+  missionTried = true;
+  missionScore = Math.max(missionScore, score);   // 다시 써서 올린 점수는 유지된다
+  updateStats();
+
+  const chips = left.map(k=>{
+    const c = categories.find(x=>x.key===k);
+    return `<span style="background:${c.color}22; color:${c.color}; border:1px solid ${c.color}55;">${c.label}</span>`;
+  }).join('');
+
+  if(score === 2){
+    missionFb.style.borderColor = 'rgba(63,199,176,0.45)';
+    missionFb.style.background = 'rgba(63,199,176,0.07)';
+    missionFb.innerHTML = `
+      <div class="mf-title" style="color:var(--teal);">✓ 미션 성공 · 2 / 2점</div>
+      위험 요소가 하나도 남지 않았습니다. 시간·장소·소속·연락처·얼굴 정보를 모두 걷어내면서도 하고 싶은 말은 살렸습니다.
+      <div class="model-answer">예시 답안 · ${MISSION_MODEL}</div>`;
+  } else {
+    const color = score === 1 ? 'var(--amber)' : 'var(--red)';
+    missionFb.style.borderColor = score === 1 ? 'rgba(242,183,5,0.4)' : 'rgba(226,87,76,0.4)';
+    missionFb.style.background = score === 1 ? 'rgba(242,183,5,0.06)' : 'rgba(226,87,76,0.06)';
+    missionFb.innerHTML = `
+      <div class="mf-title" style="color:${color};">${score === 1 ? '△ 거의 다 왔습니다 · 1 / 2점' : '✕ 아직 위험합니다 · 0 / 2점'}</div>
+      고쳐 쓴 글에서 아직 <b>${left.length}가지</b> 위험 요소가 발견됩니다.
+      <div class="left-chips">${chips}</div>
+      <ul>
+        <li>구체적인 시각("8시")은 "수업 끝나고"처럼 뭉뚱그리기</li>
+        <li>학교·학년·반, 아파트·편의점 같은 <b>나를 찾아올 수 있는 정보</b>는 빼기</li>
+        <li>전화번호는 어떤 이유로도 공개 글에 쓰지 않기</li>
+      </ul>
+      <div class="model-answer">다시 써서 제출하면 더 높은 점수로 갱신됩니다. 예시 답안 · ${MISSION_MODEL}</div>`;
+  }
+});
+
+document.getElementById('missionReset').addEventListener('click', ()=>{
+  missionInput.value = '';
+  missionFb.classList.remove('show');
+  missionInput.focus();
+});
+
+/* ---------- CASE 03: scenarios ---------- */
+const scenarios = [
+  {
+    sit:'친구가 장난으로 반 친구의 얼굴 사진을 다른 사람 몸에 합성해서 단체 채팅방에 올렸다. 다들 웃으며 넘어가는 분위기다. 나는 어떻게 해야 할까?',
+    choices:[
+      {text:'재밌으니까 나도 다른 사진으로 합성해서 올린다', correct:false, fb:'동의 없이 얼굴을 합성해 퍼뜨리는 행위는 정보통신망법·개인정보보호법 위반이 될 수 있고, 내용에 따라 더 무거운 처벌로 이어질 수 있습니다. "장난"이라는 이유로 책임이 없어지지 않습니다.'},
+      {text:'재미없다고 생각하지만 아무 말 없이 지나간다', correct:false, fb:'침묵도 때로는 문제를 키우는 방관이 될 수 있습니다. 직접 나서기 어렵다면 최소한 피해를 본 친구에게 개인적으로 괜찮은지 물어보는 것부터 시작할 수 있습니다.'},
+      {text:'친구에게 그만하라고 말하고, 필요하면 선생님이나 보호자에게 알린다', correct:true, fb:'가장 안전하고 올바른 대응입니다. 당사자의 동의 없는 합성물 제작·유포는 심각한 인권 침해가 될 수 있으며, 어른에게 알리는 것은 고자질이 아니라 피해를 막는 행동입니다.'},
+    ]
+  },
+  {
+    sit:'온라인 게임에서 알게 된 사람이 "얼굴 사진으로 인증하면 아이템을 준다"며 셀카를 요구한다. 어떻게 해야 할까?',
+    choices:[
+      {text:'아이템이 갖고 싶어서 셀카를 보낸다', correct:false, fb:'온라인에서 얼굴 사진을 요구하는 것은 개인정보를 악용하려는 시도인 경우가 많습니다. 한번 보낸 사진은 되돌릴 수 없고, 딥페이크 등에 악용될 위험도 있습니다.'},
+      {text:'거절하고, 계속 요구하면 보호자나 신고 기능을 이용한다', correct:true, fb:'정확한 대응입니다. 낯선 사람이 얼굴 사진이나 개인정보를 요구할 때는 이유가 그럴듯해 보여도 거절하는 것이 원칙이며, 반복되면 신고/차단하고 어른에게 알려야 합니다.'},
+      {text:'친구 사진을 대신 보낸다', correct:false, fb:'내 정보를 지키려다 다른 사람의 정보를 무단으로 사용하는 것도 문제가 됩니다. 타인의 사진을 동의 없이 전송하는 것 역시 개인정보 침해입니다.'},
+    ]
+  },
+  {
+    sit:'무심코 SNS에 "오늘도 8시에 학원 끝나고 우리 아파트 앞 편의점에서 친구 기다림ㅋㅋ" 라고 올렸다. 며칠 뒤 낯선 사람이 그 장소에서 말을 걸어왔다. 왜 이런 일이 벌어졌을까?',
+    choices:[
+      {text:'단순히 운이 나빴을 뿐이다', correct:false, fb:'우연이 아닙니다. 게시물에 담긴 시간·장소·반복되는 습관 정보가 그대로 "언제 어디서 만날 수 있는지"를 알려주는 지도가 됩니다.'},
+      {text:'글에 있던 시간·장소·반복 패턴 정보가 그대로 노출되었기 때문이다', correct:true, fb:'정확합니다. "8시", "우리 아파트 앞 편의점"처럼 구체적인 시간과 장소, 그리고 "오늘도"라는 반복 표현은 낯선 사람이 나의 동선을 예측하게 만드는 단서가 됩니다.'},
+      {text:'SNS 앱 자체에 보안 문제가 있어서다', correct:false, fb:'앱의 보안 문제라기보다, 게시물 내용 자체에 위치·시간 정보가 그대로 담겨 있었던 것이 원인입니다. Case 02에서 확인했던 것처럼 문장 속 정보를 스스로 점검하는 습관이 필요합니다.'},
+    ]
+  },
+  {
+    sit:'유명 연예인이 "이 코인에 투자하면 무조건 돈을 번다"고 말하는 영상이 SNS에 돌아다닌다. 목소리도 얼굴도 진짜 같고, 댓글에는 "나도 벌었다"는 글이 가득하다. 어떻게 해야 할까?',
+    choices:[
+      {text:'얼굴과 목소리가 진짜니까 믿고 부모님께 알려드린다', correct:false, fb:'얼굴과 목소리는 이제 가장 쉽게 위조되는 정보입니다. 유명인을 내세운 딥페이크 투자 사기는 실제로 자주 발생하는 수법이며, "진짜처럼 보인다"는 것은 근거가 되지 못합니다.'},
+      {text:'그 연예인의 공식 계정이나 언론 보도에서 같은 내용이 있는지 먼저 확인한다', correct:true, fb:'정확한 대응입니다. 영상 자체를 뜯어보기 전에 <b>출처를 거슬러 올라가 확인</b>하는 것이 가장 빠르고 확실한 검증법입니다. 공식 계정에 없는 발언이라면 합성일 가능성이 매우 높습니다. 댓글의 후기도 함께 조작될 수 있습니다.'},
+      {text:'일단 친구들 단톡방에 공유해서 진짜인지 물어본다', correct:false, fb:'확인되지 않은 영상을 퍼뜨리면 나도 모르게 사기의 전달자가 됩니다. 진위를 묻고 싶다면 영상을 옮기지 말고 "이런 영상이 도는데 확인해봐야 할 것 같다"고 말로 전하는 편이 안전합니다.'},
+    ]
+  },
+  {
+    sit:'내 얼굴이 합성된 사진이 다른 반 단톡방에 돌아다닌다는 것을 알게 됐다. 너무 창피하고 당황스럽다. 가장 먼저 무엇을 해야 할까?',
+    choices:[
+      {text:'창피하니까 아무에게도 말하지 않고 혼자 조용히 지워달라고 부탁한다', correct:false, fb:'가장 위험한 선택입니다. 혼자 해결하려는 사이 유포는 계속됩니다. <b>이것은 당한 사람의 잘못이 아닙니다.</b> 창피해야 할 사람은 만든 사람이고, 도움을 요청하는 것은 부끄러운 일이 아닙니다.'},
+      {text:'화면을 캡처해 증거를 남기고, 보호자·선생님에게 알린 뒤 필요한 기관에 신고한다', correct:true, fb:'정확합니다. 순서가 중요합니다. ① 대화 내용·사진·계정 이름을 <b>캡처해 증거로 보존</b>하고 ② 믿을 수 있는 어른에게 알리고 ③ 학교전담경찰관, 경찰 117, 디지털성범죄피해자지원센터(02-735-8994) 등에 도움을 요청합니다. 증거를 지우면 나중에 처벌과 삭제 요청이 어려워집니다.'},
+      {text:'똑같이 그 아이 사진을 합성해서 되갚아준다', correct:false, fb:'보복은 나를 가해자로 만들 뿐입니다. 피해자였던 사람이 순식간에 법적 책임을 지는 위치로 바뀝니다. 억울함은 정당한 절차로 푸는 것이 나를 지키는 길입니다.'},
+    ]
+  },
+  {
+    sit:'가족 여행 중이다. 신나서 호텔 수영장 사진을 찍은 그대로 SNS에 실시간으로 올리려고 한다. 어떤 점을 생각해야 할까?',
+    choices:[
+      {text:'사진 파일에 촬영 위치가 기록될 수 있고, 지금 집이 비어 있다는 사실도 함께 알려진다', correct:true, fb:'정확합니다. 스마트폰 사진에는 <b>GPS 좌표가 파일 안에 함께 저장</b>되는 경우가 많아, 사진 한 장이 위치를 그대로 알려줍니다. 게다가 실시간 여행 사진은 "지금 이 집에 사람이 없다"는 정보가 됩니다. 여행 사진은 다녀온 뒤에 올리고, 휴대폰 설정에서 위치 기록을 꺼두는 것이 안전합니다.'},
+      {text:'사진에는 글자가 없으니 개인정보가 들어갈 일이 없다', correct:false, fb:'눈에 보이는 것만 정보가 아닙니다. 사진 파일 안에는 촬영 날짜·기기·위치 좌표 같은 기록이 숨어 있습니다. CASE 01-B에서 사진을 넣어보면 이 기록을 직접 확인할 수 있습니다.'},
+      {text:'친구만 볼 수 있게 설정하면 아무 문제가 없다', correct:false, fb:'공개 범위를 좁히는 것은 좋은 습관이지만 완전한 해결책은 아닙니다. 친구가 캡처해 옮기면 그 순간 범위 설정은 의미가 없어집니다. "누가 볼까"보다 "무엇을 담을까"를 먼저 정해야 합니다.'},
+    ]
+  },
+  {
+    sit:'무료로 AI 프로필 사진을 만들어준다는 앱이 유행이다. 대신 내 얼굴 사진 20장을 올려야 한다. 어떻게 할까?',
+    choices:[
+      {text:'무료니까 일단 올리고, 마음에 안 들면 나중에 탈퇴한다', correct:false, fb:'한번 넘어간 얼굴 데이터는 탈퇴해도 회수하기 어렵습니다. 상당수 서비스가 약관에 "업로드한 이미지를 AI 학습에 사용할 수 있다"고 적어둡니다. 무료 서비스에서는 내 데이터가 대가인 경우가 많습니다.'},
+      {text:'약관에서 사진을 어디에 쓰는지 확인하고, 보호자와 상의한 뒤 결정한다', correct:true, fb:'올바른 태도입니다. 확인할 것은 세 가지입니다. ① 업로드한 사진을 <b>AI 학습에 쓰는지</b> ② 언제 삭제되는지 ③ 만 14세 미만은 보호자 동의가 필요한지. 얼굴은 비밀번호처럼 바꿀 수 없는 정보라서, 한번 유출되면 되돌릴 수 없습니다.'},
+      {text:'내 사진 대신 좋아하는 연예인 사진을 올린다', correct:false, fb:'타인의 사진을 동의 없이 올려 AI에 학습시키는 것 역시 초상권 침해가 될 수 있습니다. 내 정보를 지키려고 남의 정보를 쓰는 것은 해결책이 아닙니다.'},
+    ]
+  },
+  {
+    sit:'단톡방에 "우리 학교 근처에서 사고가 났다"며 충격적인 사진이 올라왔다. 누군가 "빨리 퍼뜨려서 알려야 한다"고 재촉한다. 어떻게 해야 할까?',
+    choices:[
+      {text:'사람들이 위험할 수 있으니 최대한 빨리 여러 곳에 퍼뜨린다', correct:false, fb:'선의로 시작한 공유가 가장 빠르게 퍼지는 가짜 정보가 됩니다. 실제로 재난 상황마다 옛날 사진이나 다른 나라 사진이 "지금 여기"로 둔갑해 확산됩니다. 급할수록 확인이 먼저입니다.'},
+      {text:'출처가 어디인지, 언론이나 공식 기관이 같은 내용을 알리고 있는지 확인한 뒤 판단한다', correct:true, fb:'정확합니다. <b>급하다는 말 자체가 흔한 조작 신호</b>입니다. 재촉은 판단할 시간을 빼앗기 위한 장치일 때가 많습니다. 확인되지 않은 사진은 옮기지 않는 것이 기본이며, 위급한 상황이라면 퍼뜨리는 것보다 119·112에 알리는 편이 훨씬 도움이 됩니다.'},
+      {text:'사진이 선명하고 자세하니 진짜라고 믿고 그대로 둔다', correct:false, fb:'화질이 좋다는 것은 진짜라는 증거가 되지 못합니다. 오래된 사진, 다른 지역 사진, AI로 만든 사진도 얼마든지 선명할 수 있습니다.'},
+    ]
+  },
+];
+let case3Correct = 0;
+let case3Answered = 0;
+const scWrap = document.getElementById('scenario-wrap');
+scenarios.forEach((sc, idx)=>{
+  const card = document.createElement('div');
+  card.className='scenario-card';
+  const choicesHTML = sc.choices.map((c,ci)=>`<button class="choice-btn" data-idx="${ci}">${c.text}</button>`).join('');
+  card.innerHTML = `
+    <div class="label mono" style="color:var(--muted); font-size:11px; letter-spacing:0.06em; margin-bottom:10px;">SITUATION ${idx+1}</div>
+    <div class="sit">${sc.sit}</div>
+    <div class="choice-list">${choicesHTML}</div>
+    <div class="feedback-box"><div class="fb-title mono"></div><div class="fb-text"></div></div>
+  `;
+  const btns = card.querySelectorAll('.choice-btn');
+  const fbBox = card.querySelector('.feedback-box');
+  const fbTitle = card.querySelector('.fb-title');
+  const fbText = card.querySelector('.fb-text');
+  btns.forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(card.dataset.answered) return;
+      card.dataset.answered = '1';
+      const choice = sc.choices[+btn.dataset.idx];
+      btns.forEach(b=>{
+        b.disabled = true;
+        const bc = sc.choices[+b.dataset.idx];
+        if(bc.correct) b.classList.add('correct');
+        else if(b===btn) b.classList.add('wrong');
+      });
+      fbTitle.textContent = choice.correct ? '✓ 올바른 판단입니다' : '✕ 다시 생각해봅시다';
+      fbTitle.style.color = choice.correct ? 'var(--teal)' : 'var(--red)';
+      fbText.innerHTML = choice.fb;
+      fbBox.classList.add('show');
+      case3Answered++;
+      if(choice.correct) case3Correct++;
+      updateStats();
+    });
+  });
+  scWrap.appendChild(card);
+});
+
+/* ---------- FINAL ID card ----------
+   등급은 "판단한 것"만 센다: 현장 판결 8점 + 고쳐 쓰기 미션 2점 = 10점.
+   단서 카드 클릭은 학습 진도일 뿐이므로 등급에 넣지 않는다. */
+const MAX_JUDGE = scenarios.length;   // 8
+const MAX_TOTAL = MAX_JUDGE + 2;      // 10
+
+function totalScore(){ return case3Correct + missionScore; }
+
+function gradeOf(total){
+  if(total >= MAX_TOTAL - 1) return '수석 요원 · 최고 등급 인증';
+  if(total >= Math.ceil(MAX_TOTAL * 0.6)) return '정식 요원 · 임무 수행 가능';
+  if(total >= 3) return '훈련 요원 · 보강 훈련 필요';
+  return '훈련 요원 · 판결 진행 중';
+}
+
+function idNumber(total){
+  const d = new Date();
+  const ymd = String(d.getFullYear()).slice(2)
+            + String(d.getMonth()+1).padStart(2,'0')
+            + String(d.getDate()).padStart(2,'0');
+  return `ID · ${ymd}-${String(total).padStart(2,'0')}`;
+}
+
+function updateStats(){
+  document.getElementById('statCase1').textContent = case1Done+'/5';
+  document.getElementById('statCase3').textContent = case3Correct+'/'+MAX_JUDGE;
+  document.getElementById('statMission').textContent = missionScore+'/2';
+  renderID();
+}
+
+function renderID(){
+  const total = totalScore();
+  document.getElementById('idGrade').textContent = `${gradeOf(total)}  ·  ${total}/${MAX_TOTAL}점`;
+  document.getElementById('idnum').textContent = idNumber(total);
+}
+
+/* ---------- 요원증을 이미지로 저장 ---------- */
+function wrapText(ctx, text, x, y, maxW, lineH){
+  const words = text.split(' ');
+  let line = '';
+  words.forEach(w=>{
+    const test = line ? line + ' ' + w : w;
+    if(ctx.measureText(test).width > maxW && line){
+      ctx.fillText(line, x, y); y += lineH; line = w;
+    } else { line = test; }
+  });
+  if(line) ctx.fillText(line, x, y);
+  return y;
+}
+
+function drawIdCard(){
+  const name = document.getElementById('agentName').value.trim();
+  const total = totalScore();
+  const W = 1000, H = 620, P = 64;
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const x = c.getContext('2d');
+  const F = (weight, size)=>`${weight} ${size}px "Pretendard","Malgun Gothic","맑은 고딕",sans-serif`;
+
+  const bg = x.createLinearGradient(0, 0, W, H);
+  bg.addColorStop(0, '#1D242B'); bg.addColorStop(1, '#12161A');
+  x.fillStyle = bg; x.fillRect(0, 0, W, H);
+
+  const glow = x.createRadialGradient(W-90, -30, 10, W-90, -30, 340);
+  glow.addColorStop(0, 'rgba(242,183,5,0.20)'); glow.addColorStop(1, 'rgba(242,183,5,0)');
+  x.fillStyle = glow; x.beginPath(); x.arc(W-90, -30, 340, 0, Math.PI*2); x.fill();
+
+  x.strokeStyle = '#2E373E'; x.lineWidth = 3; x.strokeRect(1.5, 1.5, W-3, H-3);
+
+  x.font = F(600, 19); x.fillStyle = '#8A96A1';
+  x.fillText('DIGITAL FORENSICS UNIT', P, 76);
+  x.textAlign = 'right'; x.fillStyle = '#F2B705';
+  x.fillText(idNumber(total), W-P, 76);
+  x.textAlign = 'left';
+
+  x.font = F(700, 58); x.fillStyle = '#ECEEEF';
+  x.fillText(name || '이름 없음', P, 190);
+  x.strokeStyle = '#2E373E'; x.lineWidth = 2;
+  x.beginPath(); x.moveTo(P, 214); x.lineTo(W-P, 214); x.stroke();
+
+  x.font = F(600, 26); x.fillStyle = '#3FC7B0';
+  x.fillText(`${gradeOf(total)}  ·  ${total}/${MAX_TOTAL}점`, P, 264);
+
+  const stats = [
+    ['현장 판결', `${case3Correct}/${MAX_JUDGE}`, '#ECEEEF'],
+    ['고쳐 쓰기', `${missionScore}/2`, '#ECEEEF'],
+    ['단서 학습', `${case1Done}/5`, '#8A96A1'],
+  ];
+  stats.forEach((s, i)=>{
+    const sx = P + i*220;
+    x.font = F(500, 17); x.fillStyle = '#8A96A1'; x.fillText(s[0], sx, 340);
+    x.font = F(700, 40); x.fillStyle = s[2];     x.fillText(s[1], sx, 388);
+  });
+
+  x.strokeStyle = '#2E373E'; x.lineWidth = 1;
+  x.beginPath(); x.moveTo(P, 440); x.lineTo(W-P, 440); x.stroke();
+
+  x.font = F(400, 19); x.fillStyle = '#8A96A1';
+  const endY = wrapText(x, '"나는 인공지능이 만든 정보를 그대로 믿지 않고, 나와 다른 사람의 개인정보를 함부로 다루지 않겠습니다."', P, 484, W-P*2, 32);
+  x.font = F(500, 16); x.fillStyle = '#555f68';
+  x.fillText('디지털 시민 서약', P, endY + 40);
+
+  const d = new Date();
+  x.textAlign = 'right';
+  x.fillText(`${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}. 발급`, W-P, endY + 40);
+  x.textAlign = 'left';
+
+  return c;
+}
+
+document.getElementById('saveIdBtn').addEventListener('click', ()=>{
+  const msg = document.getElementById('saveMsg');
+  const nameEl = document.getElementById('agentName');
+  if(!nameEl.value.trim()){
+    msg.textContent = '먼저 요원증에 이름을 입력해주세요.';
+    nameEl.focus();
+    return;
+  }
+  const canvas = drawIdCard();
+  const filename = `요원증_${nameEl.value.trim()}.png`;
+  const save = (href, revoke)=>{
+    const a = document.createElement('a');
+    a.download = filename; a.href = href;
+    document.body.appendChild(a); a.click(); a.remove();
+    if(revoke) setTimeout(()=>URL.revokeObjectURL(href), 4000);
+    msg.textContent = '요원증 이미지를 저장했습니다. (다운로드 폴더를 확인하세요)';
+  };
+  // 큰 이미지는 blob 방식이 안전하다. 지원되지 않으면 data URL로 되돌린다.
+  if(canvas.toBlob){
+    canvas.toBlob((blob)=>{
+      if(blob) save(URL.createObjectURL(blob), true);
+      else save(canvas.toDataURL('image/png'), false);
+    }, 'image/png');
+  } else {
+    save(canvas.toDataURL('image/png'), false);
+  }
+});
+
+document.getElementById('printIdBtn').addEventListener('click', ()=>{
+  const nameEl = document.getElementById('agentName');
+  if(!nameEl.value.trim()){
+    document.getElementById('saveMsg').textContent = '먼저 요원증에 이름을 입력해주세요.';
+    nameEl.focus();
+    return;
+  }
+  // 입력창의 값은 인쇄되지 않으므로 value를 속성으로 옮겨둔다
+  nameEl.setAttribute('value', nameEl.value);
+  window.print();
+});
+
+updateStats();
+</script>
+</body>
+</html>
