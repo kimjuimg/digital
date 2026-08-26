@@ -9,15 +9,16 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
 <style>
 :root{
-  --bg:#12161A;
-  --panel:#1B2126;
-  --panel-alt:#212930;
-  --line:#2E373E;
-  --text:#ECEEEF;
-  --muted:#8A96A1;
-  --amber:#F2B705;
-  --teal:#3FC7B0;
-  --red:#E2574C;
+  --bg:#F5F7FA;
+  --panel:#FFFFFF;
+  --panel-alt:#EDF1F5;
+  --line:#D6DEE6;
+  --text:#1B2229;
+  --muted:#5D6C7B;
+  --amber:#B67A00;
+  --teal:#0F8C79;
+  --red:#C8382C;
+  --card-shadow:0 1px 2px rgba(27,34,41,0.04), 0 6px 18px rgba(27,34,41,0.05);
 }
 *{box-sizing:border-box;}
 html{scroll-behavior:smooth;}
@@ -31,41 +32,63 @@ body{
 }
 .disp{font-family:'Space Grotesk', 'Pretendard', sans-serif;}
 .mono{font-family:'JetBrains Mono', monospace;}
-::selection{background:var(--amber); color:#12161A;}
+::selection{background:rgba(182,122,0,0.22); color:#1B2229;}
 
 /* progress bar */
 .progress-rail{
   position:sticky; top:0; z-index:50;
-  background:rgba(18,22,26,0.92);
+  background:rgba(255,255,255,0.94);
   backdrop-filter:blur(8px);
   border-bottom:1px solid var(--line);
-  padding:10px 20px;
-  display:flex; align-items:center; gap:14px;
+  padding:9px 16px;
+  display:flex; align-items:center; gap:10px;
   font-family:'JetBrains Mono', monospace;
   font-size:11px;
   letter-spacing:0.04em;
   overflow-x:auto;
 }
-.progress-rail .tag{color:var(--muted); flex-shrink:0;}
-.stepdots{display:flex; gap:8px; flex-shrink:0;}
+.progress-rail .tag{color:var(--muted); flex-shrink:0; white-space:nowrap;}
+.stepdots{display:flex; gap:6px; flex-shrink:0;}
 .stepdot{
-  width:8px; height:8px; border-radius:50%;
-  background:var(--line);
-  transition:background .3s, box-shadow .3s;
+  font-family:'JetBrains Mono', monospace; font-size:11px;
+  background:#fff; color:var(--muted);
+  border:1px solid var(--line); border-radius:999px;
+  padding:5px 11px; cursor:pointer; white-space:nowrap;
+  transition:background .2s, color .2s, border-color .2s;
 }
-.stepdot.active{background:var(--amber); box-shadow:0 0 8px rgba(242,183,5,0.6);}
-.stepdot.done{background:var(--teal);}
+.stepdot:hover{border-color:var(--amber); color:var(--amber);}
+.stepdot.done{border-color:var(--teal); color:var(--teal);}
+.stepdot.active{background:var(--amber); border-color:var(--amber); color:#fff; font-weight:600;}
+
+/* 세션 이동 바 */
+.stepnav{
+  position:sticky; bottom:0; z-index:40;
+  background:rgba(255,255,255,0.94);
+  backdrop-filter:blur(8px);
+  border-top:1px solid var(--line);
+  padding:12px 20px;
+  display:flex; align-items:center; justify-content:center; gap:12px;
+}
+.stepnav .count{
+  font-family:'JetBrains Mono', monospace; font-size:12px;
+  color:var(--muted); min-width:64px; text-align:center;
+}
+.sc-pager{display:flex; align-items:center; justify-content:center; gap:12px; margin-top:20px;}
+.sc-pager .sc-count{font-size:12px; color:var(--muted); min-width:56px; text-align:center;}
 
 section{
   max-width:920px;
   margin:0 auto;
-  padding:90px 24px;
+  padding:40px 24px 28px;
+  display:none;
 }
-@media(max-width:640px){ section{padding:56px 18px;} }
+section.active{display:block; animation:stepin .28s ease;}
+@keyframes stepin{from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:none;}}
+@media(max-width:640px){ section{padding:26px 18px 20px;} }
 
 /* HERO */
 .hero{
-  padding-top:70px;
+  padding-top:34px;
   text-align:center;
   position:relative;
 }
@@ -74,14 +97,14 @@ section{
   font-family:'JetBrains Mono', monospace;
   font-size:12px; letter-spacing:0.12em;
   color:var(--amber); text-transform:uppercase;
-  border:1px solid rgba(242,183,5,0.35);
+  border:1px solid rgba(182,122,0,0.35);
   padding:6px 14px; border-radius:999px;
   margin-bottom:28px;
 }
 .case-eyebrow::before{content:"●"; font-size:8px; animation:pulse 1.6s infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
 .hero h1{
-  font-size:clamp(34px, 6vw, 62px);
+  font-size:clamp(30px, 5vw, 50px);
   font-weight:700;
   margin:0 0 18px;
   letter-spacing:-0.01em;
@@ -90,14 +113,14 @@ section{
 .hero h1 .accent{color:var(--amber);}
 .hero p.lead{
   color:var(--muted);
-  font-size:17px;
+  font-size:16.5px;
   max-width:520px;
-  margin:0 auto 44px;
+  margin:0 auto 26px;
 }
 .scanwrap{
   position:relative;
-  width:220px; height:220px;
-  margin:0 auto 14px;
+  width:184px; height:184px;
+  margin:0 auto 12px;
   cursor:pointer;
   transition:transform .2s;
 }
@@ -105,14 +128,14 @@ section{
 .scanwrap svg{width:100%; height:100%;}
 .scan-hint{
   text-align:center; font-size:11.5px; color:var(--muted);
-  margin-bottom:32px; letter-spacing:0.03em;
+  margin-bottom:24px; letter-spacing:0.03em;
 }
 .scanline{
   position:absolute; left:8%; right:8%;
   height:2px;
   background:linear-gradient(90deg, transparent, var(--amber), transparent);
   animation:scan 2.8s ease-in-out infinite;
-  box-shadow:0 0 12px rgba(242,183,5,0.7);
+  box-shadow:0 0 12px rgba(182,122,0,0.7);
 }
 @keyframes scan{
   0%{top:12%;} 50%{top:88%;} 100%{top:12%;}
@@ -125,7 +148,7 @@ section{
   cursor:pointer;
   transition:transform .15s, box-shadow .15s;
 }
-.btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(242,183,5,0.25);}
+.btn:hover{transform:translateY(-2px); box-shadow:0 8px 20px rgba(182,122,0,0.25);}
 .btn:active{transform:translateY(0);}
 .btn.ghost{
   background:transparent; color:var(--text);
@@ -136,7 +159,7 @@ section{
 .btn.small{padding:9px 18px; font-size:13px;}
 
 /* section header */
-.sec-head{margin-bottom:40px;}
+.sec-head{margin-bottom:26px;}
 .sec-num{
   font-family:'JetBrains Mono', monospace;
   color:var(--muted); font-size:13px; letter-spacing:0.1em;
@@ -156,16 +179,17 @@ section{
   border-radius:14px;
   padding:20px;
   cursor:pointer;
-  transition:border-color .2s, transform .2s;
-  min-height:260px;
+  transition:border-color .2s, transform .2s, box-shadow .2s;
+  min-height:224px;
   display:flex; flex-direction:column;
 }
-.evi-card:hover{border-color:rgba(242,183,5,0.4); transform:translateY(-3px);}
+.evi-card:hover{border-color:rgba(182,122,0,0.4); transform:translateY(-3px);}
 .evi-card.flipped{border-color:var(--teal);}
 .evi-card .svgbox{
-  height:120px; display:flex; align-items:center; justify-content:center;
-  margin-bottom:14px;
+  height:92px; display:flex; align-items:center; justify-content:center;
+  margin-bottom:14px; overflow:hidden;
 }
+.evi-card .svgbox svg{height:100%; width:auto; max-width:100%;}
 .evi-card .label{
   font-family:'JetBrains Mono', monospace;
   font-size:11px; color:var(--muted); letter-spacing:0.06em;
@@ -186,14 +210,14 @@ section{
 .counter-pill{
   display:inline-flex; align-items:center; gap:8px;
   font-family:'JetBrains Mono', monospace; font-size:12.5px;
-  color:var(--teal); background:rgba(63,199,176,0.08);
-  border:1px solid rgba(63,199,176,0.3);
+  color:var(--teal); background:rgba(15,140,121,0.08);
+  border:1px solid rgba(15,140,121,0.3);
   padding:7px 14px; border-radius:999px; margin-top:28px;
 }
 
 /* CASE 01-B upload */
 .upload-block{
-  margin-top:56px; padding-top:40px; border-top:1px solid var(--line);
+  margin-top:0; padding-top:0;
 }
 .upload-block h3{font-size:19px; margin:0 0 8px; font-weight:700;}
 .upload-desc{color:var(--muted); font-size:14px; margin:0 0 22px;}
@@ -206,7 +230,7 @@ section{
   transition:border-color .2s, background .2s;
   color:var(--muted); font-size:13px;
 }
-.upload-drop:hover{border-color:var(--amber); color:var(--amber); background:rgba(242,183,5,0.04);}
+.upload-drop:hover{border-color:var(--amber); color:var(--amber); background:rgba(182,122,0,0.04);}
 .upload-drop input{display:none;}
 .preview-box{
   display:none; flex:1; min-width:160px; max-width:220px;
@@ -232,7 +256,7 @@ section{
 }
 .disclaimer-box{
   margin-top:18px; font-size:12.5px; color:var(--muted);
-  background:rgba(226,87,76,0.06); border:1px solid rgba(226,87,76,0.25);
+  background:rgba(200,56,44,0.06); border:1px solid rgba(200,56,44,0.25);
   border-radius:10px; padding:12px 14px;
 }
 .loading-dots{font-family:'JetBrains Mono', monospace; font-size:13px; color:var(--amber);}
@@ -253,11 +277,11 @@ section{
 }
 .report-item .rv{font-size:14.5px; font-weight:600; margin-top:5px;}
 .report-item .rd{font-size:12px; color:var(--muted); margin-top:5px; line-height:1.55;}
-.report-item.flag{border-color:rgba(242,183,5,0.45);}
+.report-item.flag{border-color:rgba(182,122,0,0.45);}
 .report-item.flag .rv{color:var(--amber);}
-.report-item.strong{border-color:rgba(226,87,76,0.5);}
+.report-item.strong{border-color:rgba(200,56,44,0.5);}
 .report-item.strong .rv{color:var(--red);}
-.report-item.good{border-color:rgba(63,199,176,0.35);}
+.report-item.good{border-color:rgba(15,140,121,0.35);}
 .report-item.good .rv{color:var(--teal);}
 .ela-row{display:flex; gap:16px; flex-wrap:wrap; align-items:flex-start; margin-top:20px;}
 .ela-row figure{margin:0; width:220px; max-width:100%;}
@@ -310,11 +334,11 @@ section{
 .actions-row{display:flex; gap:10px; margin-top:14px; flex-wrap:wrap;}
 
 /* CASE 02-B: 고쳐 쓰기 미션 */
-.mission-block{margin-top:48px; padding-top:36px; border-top:1px solid var(--line);}
+.mission-block{margin-top:0; padding-top:0;}
 .mission-block h3{font-size:19px; margin:0 0 8px; font-weight:700;}
 .mission-desc{color:var(--muted); font-size:14px; margin:0 0 18px;}
 .mission-origin{
-  background:rgba(226,87,76,0.07); border:1px solid rgba(226,87,76,0.28);
+  background:rgba(200,56,44,0.07); border:1px solid rgba(200,56,44,0.28);
   border-radius:12px; padding:16px 18px; font-size:14.5px; line-height:1.9; margin-bottom:16px;
 }
 .mission-origin .mo-label{
@@ -362,11 +386,11 @@ section{
 }
 .choice-btn:hover{border-color:var(--amber);}
 .choice-btn:disabled{cursor:default;}
-.choice-btn.correct{border-color:var(--teal); background:rgba(63,199,176,0.08);}
-.choice-btn.wrong{border-color:var(--red); background:rgba(226,87,76,0.08);}
+.choice-btn.correct{border-color:var(--teal); background:rgba(15,140,121,0.08);}
+.choice-btn.wrong{border-color:var(--red); background:rgba(200,56,44,0.08);}
 .feedback-box{
   margin-top:16px; padding:16px; border-radius:10px;
-  background:rgba(242,183,5,0.06); border:1px solid rgba(242,183,5,0.25);
+  background:rgba(182,122,0,0.06); border:1px solid rgba(182,122,0,0.25);
   font-size:14px; display:none;
 }
 .feedback-box.show{display:block;}
@@ -376,7 +400,7 @@ section{
 .finale{text-align:center;}
 .id-card{
   max-width:420px; margin:36px auto 0;
-  background:linear-gradient(155deg, #1D242B, #171B1F);
+  background:linear-gradient(155deg, #FFFFFF, #F1F5F9);
   border:1px solid var(--line); border-radius:18px;
   padding:28px; position:relative; overflow:hidden;
   text-align:left;
@@ -384,7 +408,7 @@ section{
 .id-card::before{
   content:""; position:absolute; top:-40px; right:-40px;
   width:160px; height:160px; border-radius:50%;
-  background:radial-gradient(circle, rgba(242,183,5,0.14), transparent 70%);
+  background:radial-gradient(circle, rgba(182,122,0,0.14), transparent 70%);
 }
 .id-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:22px;}
 .id-top .org{font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--muted); letter-spacing:0.08em;}
@@ -395,7 +419,7 @@ section{
   font-family:'Pretendard', sans-serif;
 }
 .id-name-input:focus{outline:none; border-color:var(--amber);}
-.id-name-input::placeholder{color:#555f68;}
+.id-name-input::placeholder{color:#94A2AF;}
 .id-grade{
   margin-top:16px; font-family:'JetBrains Mono', monospace;
   font-size:13px; color:var(--teal);
@@ -415,14 +439,24 @@ section{
 .id-stats div.muted-stat b{color:var(--muted);}
 .save-msg{font-size:12.5px; color:var(--amber); margin-top:10px; min-height:18px;}
 footer{
-  text-align:center; padding:40px 20px 60px; color:#555f68;
+  text-align:center; padding:40px 20px 60px; color:#94A2AF;
   font-size:12px; font-family:'JetBrains Mono', monospace;
 }
 
+/* 밝은 화면용 마무리 */
+.evi-card, .result-panel, .scenario-card, .id-card,
+.analyzer textarea, .mission-block textarea, .report-item{
+  box-shadow:var(--card-shadow);
+}
+.evi-card:hover{box-shadow:0 4px 10px rgba(27,34,41,0.07), 0 12px 28px rgba(27,34,41,0.08);}
+.upload-drop{background:#fff;}
+.ela-row img{background:#EDF1F5;}
+
 /* 인쇄: 요원증만 밝은 색으로 출력 */
 @media print{
-  .progress-rail, footer, .id-actions, .save-msg, .grade-note,
-  #sec-hero, #sec-1, #sec-2, #sec-3, #sec-4 .sec-head{display:none !important;}
+  .progress-rail, .stepnav, .sc-pager, footer, .id-actions, .save-msg, .grade-note,
+  #sec-hero, #sec-1, #sec-1b, #sec-2, #sec-2b, #sec-3, #sec-4 .sec-head{display:none !important;}
+  #sec-4{display:block !important;}
   body{background:#fff !important; color:#111 !important;}
   section{padding:0 !important;}
   .id-card{
@@ -444,13 +478,7 @@ footer{
 
 <div class="progress-rail">
   <span class="tag">CASE FILE //</span>
-  <div class="stepdots">
-    <div class="stepdot active" id="dot-0"></div>
-    <div class="stepdot" id="dot-1"></div>
-    <div class="stepdot" id="dot-2"></div>
-    <div class="stepdot" id="dot-3"></div>
-    <div class="stepdot" id="dot-4"></div>
-  </div>
+  <div class="stepdots" id="stepdots"></div>
   <span class="tag" id="rail-status">감식 대기 중</span>
 </div>
 
@@ -465,16 +493,16 @@ footer{
       <defs>
         <clipPath id="faceclip"><circle cx="110" cy="100" r="70"/></clipPath>
       </defs>
-      <circle cx="110" cy="100" r="72" fill="none" stroke="#2E373E" stroke-width="1.5" stroke-dasharray="4 5"/>
-      <circle cx="110" cy="100" r="70" fill="#1B2126"/>
+      <circle cx="110" cy="100" r="72" fill="none" stroke="#C9D3DC" stroke-width="1.5" stroke-dasharray="4 5"/>
+      <circle cx="110" cy="100" r="70" fill="#EDF1F5"/>
       <g id="heroFaceAbstract" clip-path="url(#faceclip)">
-        <ellipse cx="110" cy="112" rx="46" ry="58" fill="#232B31"/>
-        <circle cx="92" cy="98" r="6" fill="#3FC7B0" opacity="0.8"/>
-        <circle cx="128" cy="98" r="6" fill="#3FC7B0" opacity="0.8"/>
-        <path d="M92 130 Q110 142 128 130" stroke="#8A96A1" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <ellipse cx="110" cy="112" rx="46" ry="58" fill="#DDE4EB"/>
+        <circle cx="92" cy="98" r="6" fill="#0F8C79" opacity="0.8"/>
+        <circle cx="128" cy="98" r="6" fill="#0F8C79" opacity="0.8"/>
+        <path d="M92 130 Q110 142 128 130" stroke="#5D6C7B" stroke-width="3" fill="none" stroke-linecap="round"/>
       </g>
       <image id="heroPhotoImg" x="40" y="30" width="140" height="140" preserveAspectRatio="xMidYMid slice" clip-path="url(#faceclip)" style="display:none;"></image>
-      <circle cx="110" cy="100" r="70" fill="none" stroke="#F2B705" stroke-width="1" opacity="0.3"/>
+      <circle cx="110" cy="100" r="70" fill="none" stroke="#B67A00" stroke-width="1" opacity="0.3"/>
     </svg>
     <div class="scanline"></div>
   </div>
@@ -492,9 +520,15 @@ footer{
   <div class="card-grid" id="evi-grid"></div>
   <div class="counter-pill mono" id="case1-counter">단서 학습: 0 / 5 · 등급 미반영</div>
 
+</section>
+
+<!-- CASE 01-B -->
+<section id="sec-1b">
   <div class="upload-block">
-    <span class="sec-num mono" style="display:block; margin-bottom:8px;">CASE 01-B</span>
-    <h3>실전 감식: 사진으로 직접 확인하기</h3>
+    <div class="sec-head">
+      <span class="sec-num mono">CASE 01-B</span>
+      <h2>실전 감식: 사진으로 직접 확인하기</h2>
+    </div>
     <p class="upload-desc">사진을 넣으면 내장 감식 엔진이 <b>파일 속 숨은 기록(메타데이터)</b>과 <b>픽셀</b>을 직접 분석해 소견을 제시합니다. 사진은 이 기기 밖으로 전송되지 않고, 인터넷이 끊겨 있어도 동작합니다.</p>
 
     <div class="upload-row">
@@ -538,14 +572,20 @@ footer{
         <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
         <span class="meter-label mono" id="meterPct">0%</span>
       </div>
-      <div class="render-out" id="renderOut" style="color:#555f68;">← 왼쪽에 글을 입력하면 여기에 분석 결과가 표시됩니다.</div>
+      <div class="render-out" id="renderOut" style="color:#94A2AF;">← 왼쪽에 글을 입력하면 여기에 분석 결과가 표시됩니다.</div>
       <div class="legend" id="legend"></div>
     </div>
   </div>
 
+</section>
+
+<!-- MISSION -->
+<section id="sec-2b">
   <div class="mission-block">
-    <span class="sec-num mono" style="display:block; margin-bottom:8px;">MISSION · 요원증 등급 반영</span>
-    <h3>안전하게 고쳐 쓰기</h3>
+    <div class="sec-head">
+      <span class="sec-num mono">MISSION · 요원증 등급 반영</span>
+      <h2>안전하게 고쳐 쓰기</h2>
+    </div>
     <p class="mission-desc">아래 글에는 위험한 정보가 다섯 종류나 들어 있습니다. <b>하고 싶은 말은 살리면서</b> 위험한 부분만 걷어내 다시 써보세요. 지우기만 하는 건 답이 아닙니다.</p>
     <div class="mission-origin">
       <span class="mo-label">원문 · 위험 요소 5종 검출</span>
@@ -604,26 +644,59 @@ footer{
   <div class="save-msg" id="saveMsg"></div>
 </section>
 
+<div class="stepnav">
+  <button class="btn small ghost" id="navPrev">← 이전</button>
+  <span class="count mono" id="navCount">1 / 7</span>
+  <button class="btn small" id="navNext">다음 →</button>
+</div>
+
 <footer>DIGITAL FORENSICS UNIT · EDUCATIONAL SIMULATION · 실존 인물과 무관한 교육용 콘텐츠입니다</footer>
 
 <script>
-/* ---------- progress dots ---------- */
-const sections = ['sec-hero','sec-1','sec-2','sec-3','sec-4'];
-const railLabels = ['감식 대기 중','CASE 01 진행 중','CASE 02 진행 중','CASE 03 진행 중','최종 보고서'];
-function goTo(i){ document.getElementById(sections[i]).scrollIntoView({behavior:'smooth'}); }
-const obs = new IntersectionObserver((entries)=>{
-  entries.forEach(e=>{
-    if(e.isIntersecting){
-      const idx = sections.indexOf(e.target.id);
-      document.querySelectorAll('.stepdot').forEach((d,i)=>{
-        d.classList.toggle('active', i===idx);
-        d.classList.toggle('done', i<idx);
-      });
-      document.getElementById('rail-status').textContent = railLabels[idx];
-    }
+/* ---------- 세션별 화면 전환: 한 번에 한 세션만 보여준다 ---------- */
+const steps = [
+  {id:'sec-hero', chip:'START', status:'감식 대기 중'},
+  {id:'sec-1',    chip:'01',    status:'CASE 01 · 딥페이크 단서 찾기'},
+  {id:'sec-1b',   chip:'01-B',  status:'CASE 01-B · 사진 실전 감식'},
+  {id:'sec-2',    chip:'02',    status:'CASE 02 · 디지털 발자국 분석'},
+  {id:'sec-2b',   chip:'02-B',  status:'MISSION · 안전하게 고쳐 쓰기'},
+  {id:'sec-3',    chip:'03',    status:'CASE 03 · 현장 판결'},
+  {id:'sec-4',    chip:'FINAL', status:'최종 보고서 · 요원증 발급'},
+];
+let stepIdx = 0;
+const dotsWrap = document.getElementById('stepdots');
+steps.forEach((s, i)=>{
+  const b = document.createElement('button');
+  b.className = 'stepdot';
+  b.id = 'dot-' + i;
+  b.textContent = s.chip;
+  b.title = s.status;
+  b.addEventListener('click', ()=>goTo(i));
+  dotsWrap.appendChild(b);
+});
+function goTo(i){
+  stepIdx = Math.max(0, Math.min(steps.length - 1, i));
+  steps.forEach((s, n)=>{
+    document.getElementById(s.id).classList.toggle('active', n === stepIdx);
+    const d = document.getElementById('dot-' + n);
+    d.classList.toggle('active', n === stepIdx);
+    d.classList.toggle('done', n < stepIdx);
   });
-},{threshold:0.4});
-sections.forEach(id=>obs.observe(document.getElementById(id)));
+  document.getElementById('rail-status').textContent = steps[stepIdx].status;
+  document.getElementById('navCount').textContent = (stepIdx + 1) + ' / ' + steps.length;
+  document.getElementById('navPrev').disabled = stepIdx === 0;
+  document.getElementById('navNext').disabled = stepIdx === steps.length - 1;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+document.getElementById('navPrev').addEventListener('click', ()=>goTo(stepIdx - 1));
+document.getElementById('navNext').addEventListener('click', ()=>goTo(stepIdx + 1));
+document.addEventListener('keydown', (e)=>{
+  const t = (e.target.tagName || '').toUpperCase();
+  if(t === 'TEXTAREA' || t === 'INPUT') return;
+  if(e.key === 'ArrowRight') goTo(stepIdx + 1);
+  if(e.key === 'ArrowLeft')  goTo(stepIdx - 1);
+});
+goTo(0);
 
 /* ---------- HERO: put a real photo inside the circle ---------- */
 const heroScan = document.getElementById('heroScan');
@@ -649,11 +722,11 @@ heroPhotoInput.addEventListener('change', (e)=>{
 /* ---------- CASE 01: evidence cards ---------- */
 const svgIcon = (type)=>{
   const base = `viewBox="0 0 120 100"`;
-  if(type==='ear') return `<svg ${base}><ellipse cx="60" cy="55" rx="34" ry="40" fill="#232B31"/><circle cx="30" cy="52" r="6" fill="#232B31" stroke="#F2B705" stroke-width="2"/><circle cx="30" cy="60" r="3" fill="#F2B705"/><circle cx="90" cy="52" r="6" fill="#232B31" stroke="#3FC7B0" stroke-width="1"/></svg>`;
-  if(type==='seam') return `<svg ${base}><ellipse cx="60" cy="50" rx="34" ry="40" fill="#232B31"/><rect x="26" y="72" width="68" height="8" fill="#1B2126"/><line x1="26" y1="76" x2="94" y2="76" stroke="#F2B705" stroke-width="2" stroke-dasharray="3 3"/></svg>`;
-  if(type==='teeth') return `<svg ${base}><ellipse cx="60" cy="50" rx="34" ry="40" fill="#232B31"/><rect x="40" y="70" width="40" height="12" rx="2" fill="#1B2126"/><line x1="46" y1="70" x2="43" y2="82" stroke="#F2B705" stroke-width="1.5"/><line x1="54" y1="70" x2="58" y2="82" stroke="#F2B705" stroke-width="1.5"/><line x1="66" y1="70" x2="61" y2="82" stroke="#F2B705" stroke-width="1.5"/><line x1="74" y1="70" x2="76" y2="82" stroke="#F2B705" stroke-width="1.5"/><circle cx="60" cy="76" r="18" fill="none" stroke="#F2B705" stroke-width="1" opacity="0.4"/></svg>`;
-  if(type==='shadow') return `<svg ${base}><ellipse cx="55" cy="50" rx="30" ry="36" fill="#232B31"/><path d="M20 90 L100 90" stroke="#1B2126" stroke-width="4"/><ellipse cx="42" cy="90" rx="22" ry="5" fill="#12161A"/><line x1="14" y1="18" x2="30" y2="34" stroke="#3FC7B0" stroke-width="2"/><line x1="95" y1="20" x2="80" y2="35" stroke="#F2B705" stroke-width="2"/><circle cx="8" cy="12" r="3" fill="#3FC7B0"/><circle cx="100" cy="14" r="3" fill="#F2B705"/></svg>`;
-  if(type==='bg') return `<svg ${base}><path d="M0 20 Q30 40 20 60 Q10 80 0 100" stroke="#3FC7B0" stroke-width="2" fill="none" opacity="0.5"/><path d="M120 15 Q95 35 100 60 Q105 85 120 95" stroke="#3FC7B0" stroke-width="2" fill="none" opacity="0.5"/><ellipse cx="60" cy="52" rx="30" ry="38" fill="#232B31"/><path d="M28 52 Q20 52 15 45" stroke="#F2B705" stroke-width="2" fill="none"/><path d="M92 52 Q102 40 96 30" stroke="#F2B705" stroke-width="2" fill="none"/></svg>`;
+  if(type==='ear') return `<svg ${base}><ellipse cx="60" cy="55" rx="34" ry="40" fill="#DDE4EB"/><circle cx="30" cy="52" r="6" fill="#DDE4EB" stroke="#B67A00" stroke-width="2"/><circle cx="30" cy="60" r="3" fill="#B67A00"/><circle cx="90" cy="52" r="6" fill="#DDE4EB" stroke="#0F8C79" stroke-width="1"/></svg>`;
+  if(type==='seam') return `<svg ${base}><ellipse cx="60" cy="50" rx="34" ry="40" fill="#DDE4EB"/><rect x="26" y="72" width="68" height="8" fill="#EDF1F5"/><line x1="26" y1="76" x2="94" y2="76" stroke="#B67A00" stroke-width="2" stroke-dasharray="3 3"/></svg>`;
+  if(type==='teeth') return `<svg ${base}><ellipse cx="60" cy="50" rx="34" ry="40" fill="#DDE4EB"/><rect x="40" y="70" width="40" height="12" rx="2" fill="#EDF1F5"/><line x1="46" y1="70" x2="43" y2="82" stroke="#B67A00" stroke-width="1.5"/><line x1="54" y1="70" x2="58" y2="82" stroke="#B67A00" stroke-width="1.5"/><line x1="66" y1="70" x2="61" y2="82" stroke="#B67A00" stroke-width="1.5"/><line x1="74" y1="70" x2="76" y2="82" stroke="#B67A00" stroke-width="1.5"/><circle cx="60" cy="76" r="18" fill="none" stroke="#B67A00" stroke-width="1" opacity="0.4"/></svg>`;
+  if(type==='shadow') return `<svg ${base}><ellipse cx="55" cy="50" rx="30" ry="36" fill="#DDE4EB"/><path d="M20 90 L100 90" stroke="#EDF1F5" stroke-width="4"/><ellipse cx="42" cy="90" rx="22" ry="5" fill="#CFD8E0"/><line x1="14" y1="18" x2="30" y2="34" stroke="#0F8C79" stroke-width="2"/><line x1="95" y1="20" x2="80" y2="35" stroke="#B67A00" stroke-width="2"/><circle cx="8" cy="12" r="3" fill="#0F8C79"/><circle cx="100" cy="14" r="3" fill="#B67A00"/></svg>`;
+  if(type==='bg') return `<svg ${base}><path d="M0 20 Q30 40 20 60 Q10 80 0 100" stroke="#0F8C79" stroke-width="2" fill="none" opacity="0.5"/><path d="M120 15 Q95 35 100 60 Q105 85 120 95" stroke="#0F8C79" stroke-width="2" fill="none" opacity="0.5"/><ellipse cx="60" cy="52" rx="30" ry="38" fill="#DDE4EB"/><path d="M28 52 Q20 52 15 45" stroke="#B67A00" stroke-width="2" fill="none"/><path d="M92 52 Q102 40 96 30" stroke="#B67A00" stroke-width="2" fill="none"/></svg>`;
 };
 const evidence = [
   {id:'ear', label:'CLUE 01', title:'액세서리 비대칭', hint:'클릭해서 감식하기', body:'딥페이크는 좌우 액세서리를 따로 학습하지 않아 귀걸이·안경 다리처럼 짝을 이루는 요소의 모양·개수가 미묘하게 달라지는 경우가 많습니다.'},
@@ -1101,11 +1174,11 @@ function renderReport(r){
 
 /* ---------- CASE 02: privacy analyzer ---------- */
 const categories = [
-  {key:'time', label:'생활 패턴', color:'#F2B705', re:/(\d{1,2}\s?시(?:\s?\d{1,2}\s?분)?)|(\d{1,2}:\d{2})/g},
-  {key:'school', label:'소속 기관', color:'#3FC7B0', re:/([가-힣0-9]{1,10}(중학교|고등학교|초등학교))|(\d\s?학년\s?\d\s?반)|우리\s?학교/g},
-  {key:'place', label:'위치 정보', color:'#E2574C', re:/(우리\s?집|우리\s?동네|아파트|정류장|편의점\s?앞|골목|역\s?앞|\d+동\s?\d+호)/g},
-  {key:'contact', label:'연락처', color:'#B98CE0', re:/01[0-9]-?\d{3,4}-?\d{4}/g},
-  {key:'face', label:'얼굴/사진', color:'#F2895E', re:/(셀카|얼굴\s?사진|인증샷|프사)/g},
+  {key:'time', label:'생활 패턴', color:'#B67A00', re:/(\d{1,2}\s?시(?:\s?\d{1,2}\s?분)?)|(\d{1,2}:\d{2})/g},
+  {key:'school', label:'소속 기관', color:'#0F8C79', re:/([가-힣0-9]{1,10}(중학교|고등학교|초등학교))|(\d\s?학년\s?\d\s?반)|우리\s?학교/g},
+  {key:'place', label:'위치 정보', color:'#C8382C', re:/(우리\s?집|우리\s?동네|아파트|정류장|편의점\s?앞|골목|역\s?앞|\d+동\s?\d+호)/g},
+  {key:'contact', label:'연락처', color:'#6D45A8', re:/01[0-9]-?\d{3,4}-?\d{4}/g},
+  {key:'face', label:'얼굴/사진', color:'#B4551F', re:/(셀카|얼굴\s?사진|인증샷|프사)/g},
 ];
 const legendEl = document.getElementById('legend');
 categories.forEach(c=>{
@@ -1154,7 +1227,7 @@ function analyze(){
   const pctEl = document.getElementById('meterPct');
   categories.forEach(c=>document.getElementById('chip-'+c.key).classList.remove('on'));
   if(!raw.trim()){
-    out.style.color = '#555f68';
+    out.style.color = '#94A2AF';
     out.textContent = '← 왼쪽에 글을 입력하면 여기에 분석 결과가 표시됩니다.';
     fillEl.style.width='0%'; pctEl.textContent='0%';
     return;
@@ -1190,8 +1263,8 @@ document.getElementById('missionSubmit').addEventListener('click', ()=>{
   missionFb.classList.add('show');
 
   if(text.length < 20){
-    missionFb.style.borderColor = 'rgba(242,183,5,0.4)';
-    missionFb.style.background = 'rgba(242,183,5,0.06)';
+    missionFb.style.borderColor = 'rgba(182,122,0,0.4)';
+    missionFb.style.background = 'rgba(182,122,0,0.06)';
     missionFb.innerHTML = `
       <div class="mf-title" style="color:var(--amber);">! 아직 채점할 수 없습니다</div>
       20자 이상으로 써주세요. 위험한 부분을 <b>지우기만 하는 것</b>은 정답이 아닙니다.
@@ -1212,16 +1285,16 @@ document.getElementById('missionSubmit').addEventListener('click', ()=>{
   }).join('');
 
   if(score === 2){
-    missionFb.style.borderColor = 'rgba(63,199,176,0.45)';
-    missionFb.style.background = 'rgba(63,199,176,0.07)';
+    missionFb.style.borderColor = 'rgba(15,140,121,0.45)';
+    missionFb.style.background = 'rgba(15,140,121,0.07)';
     missionFb.innerHTML = `
       <div class="mf-title" style="color:var(--teal);">✓ 미션 성공 · 2 / 2점</div>
       위험 요소가 하나도 남지 않았습니다. 시간·장소·소속·연락처·얼굴 정보를 모두 걷어내면서도 하고 싶은 말은 살렸습니다.
       <div class="model-answer">예시 답안 · ${MISSION_MODEL}</div>`;
   } else {
     const color = score === 1 ? 'var(--amber)' : 'var(--red)';
-    missionFb.style.borderColor = score === 1 ? 'rgba(242,183,5,0.4)' : 'rgba(226,87,76,0.4)';
-    missionFb.style.background = score === 1 ? 'rgba(242,183,5,0.06)' : 'rgba(226,87,76,0.06)';
+    missionFb.style.borderColor = score === 1 ? 'rgba(182,122,0,0.4)' : 'rgba(200,56,44,0.4)';
+    missionFb.style.background = score === 1 ? 'rgba(182,122,0,0.06)' : 'rgba(200,56,44,0.06)';
     missionFb.innerHTML = `
       <div class="mf-title" style="color:${color};">${score === 1 ? '△ 거의 다 왔습니다 · 1 / 2점' : '✕ 아직 위험합니다 · 0 / 2점'}</div>
       고쳐 쓴 글에서 아직 <b>${left.length}가지</b> 위험 요소가 발견됩니다.
@@ -1345,8 +1418,30 @@ scenarios.forEach((sc, idx)=>{
       updateStats();
     });
   });
+  card.style.display = 'none';
   scWrap.appendChild(card);
 });
+
+/* 상황 카드는 한 장씩 넘겨 본다 */
+const scCards = Array.from(scWrap.children);
+let scIdx = 0;
+const scPager = document.createElement('div');
+scPager.className = 'sc-pager';
+scPager.innerHTML =
+  '<button class="btn small ghost" id="scPrev">← 이전 상황</button>' +
+  '<span class="mono sc-count" id="scCount">1 / ' + scCards.length + '</span>' +
+  '<button class="btn small" id="scNext">다음 상황 →</button>';
+scWrap.parentNode.appendChild(scPager);
+function showScenario(i){
+  scIdx = Math.max(0, Math.min(scCards.length - 1, i));
+  scCards.forEach((c, n)=>{ c.style.display = (n === scIdx) ? 'block' : 'none'; });
+  document.getElementById('scCount').textContent = (scIdx + 1) + ' / ' + scCards.length;
+  document.getElementById('scPrev').disabled = scIdx === 0;
+  document.getElementById('scNext').disabled = scIdx === scCards.length - 1;
+}
+document.getElementById('scPrev').addEventListener('click', ()=>showScenario(scIdx - 1));
+document.getElementById('scNext').addEventListener('click', ()=>showScenario(scIdx + 1));
+showScenario(0);
 
 /* ---------- FINAL ID card ----------
    등급은 "판단한 것"만 센다: 현장 판결 8점 + 고쳐 쓰기 미션 2점 = 10점.
@@ -1408,46 +1503,46 @@ function drawIdCard(){
   const F = (weight, size)=>`${weight} ${size}px "Pretendard","Malgun Gothic","맑은 고딕",sans-serif`;
 
   const bg = x.createLinearGradient(0, 0, W, H);
-  bg.addColorStop(0, '#1D242B'); bg.addColorStop(1, '#12161A');
+  bg.addColorStop(0, '#FFFFFF'); bg.addColorStop(1, '#EEF2F6');
   x.fillStyle = bg; x.fillRect(0, 0, W, H);
 
   const glow = x.createRadialGradient(W-90, -30, 10, W-90, -30, 340);
-  glow.addColorStop(0, 'rgba(242,183,5,0.20)'); glow.addColorStop(1, 'rgba(242,183,5,0)');
+  glow.addColorStop(0, 'rgba(182,122,0,0.20)'); glow.addColorStop(1, 'rgba(182,122,0,0)');
   x.fillStyle = glow; x.beginPath(); x.arc(W-90, -30, 340, 0, Math.PI*2); x.fill();
 
-  x.strokeStyle = '#2E373E'; x.lineWidth = 3; x.strokeRect(1.5, 1.5, W-3, H-3);
+  x.strokeStyle = '#C9D3DC'; x.lineWidth = 3; x.strokeRect(1.5, 1.5, W-3, H-3);
 
-  x.font = F(600, 19); x.fillStyle = '#8A96A1';
+  x.font = F(600, 19); x.fillStyle = '#5D6C7B';
   x.fillText('DIGITAL FORENSICS UNIT', P, 76);
-  x.textAlign = 'right'; x.fillStyle = '#F2B705';
+  x.textAlign = 'right'; x.fillStyle = '#B67A00';
   x.fillText(idNumber(total), W-P, 76);
   x.textAlign = 'left';
 
-  x.font = F(700, 58); x.fillStyle = '#ECEEEF';
+  x.font = F(700, 58); x.fillStyle = '#1B2229';
   x.fillText(name || '이름 없음', P, 190);
-  x.strokeStyle = '#2E373E'; x.lineWidth = 2;
+  x.strokeStyle = '#C9D3DC'; x.lineWidth = 2;
   x.beginPath(); x.moveTo(P, 214); x.lineTo(W-P, 214); x.stroke();
 
-  x.font = F(600, 26); x.fillStyle = '#3FC7B0';
+  x.font = F(600, 26); x.fillStyle = '#0F8C79';
   x.fillText(`${gradeOf(total)}  ·  ${total}/${MAX_TOTAL}점`, P, 264);
 
   const stats = [
-    ['현장 판결', `${case3Correct}/${MAX_JUDGE}`, '#ECEEEF'],
-    ['고쳐 쓰기', `${missionScore}/2`, '#ECEEEF'],
-    ['단서 학습', `${case1Done}/5`, '#8A96A1'],
+    ['현장 판결', `${case3Correct}/${MAX_JUDGE}`, '#1B2229'],
+    ['고쳐 쓰기', `${missionScore}/2`, '#1B2229'],
+    ['단서 학습', `${case1Done}/5`, '#5D6C7B'],
   ];
   stats.forEach((s, i)=>{
     const sx = P + i*220;
-    x.font = F(500, 17); x.fillStyle = '#8A96A1'; x.fillText(s[0], sx, 340);
+    x.font = F(500, 17); x.fillStyle = '#5D6C7B'; x.fillText(s[0], sx, 340);
     x.font = F(700, 40); x.fillStyle = s[2];     x.fillText(s[1], sx, 388);
   });
 
-  x.strokeStyle = '#2E373E'; x.lineWidth = 1;
+  x.strokeStyle = '#C9D3DC'; x.lineWidth = 1;
   x.beginPath(); x.moveTo(P, 440); x.lineTo(W-P, 440); x.stroke();
 
-  x.font = F(400, 19); x.fillStyle = '#8A96A1';
+  x.font = F(400, 19); x.fillStyle = '#5D6C7B';
   const endY = wrapText(x, '"나는 인공지능이 만든 정보를 그대로 믿지 않고, 나와 다른 사람의 개인정보를 함부로 다루지 않겠습니다."', P, 484, W-P*2, 32);
-  x.font = F(500, 16); x.fillStyle = '#555f68';
+  x.font = F(500, 16); x.fillStyle = '#94A2AF';
   x.fillText('디지털 시민 서약', P, endY + 40);
 
   const d = new Date();
