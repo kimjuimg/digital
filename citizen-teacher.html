@@ -428,7 +428,8 @@ function renderBoard(){
   const say = el("div","say");
   say.appendChild(document.createTextNode("학생들에게 이 코드를 알려주세요. 학생 화면 주소는 "));
   const b = document.createElement("b");
-  b.textContent = location.origin + location.pathname.replace(/citizen-teacher\.html$/, "citizen.html");
+  /* 주소에 .html 이 붙든 안 붙든 학생 화면 주소를 올바르게 만든다 */
+  b.textContent = new URL("citizen.html", location.href).href;
   say.appendChild(b);
   say.appendChild(document.createTextNode(" 입니다."));
   code.appendChild(say);
