@@ -5,20 +5,23 @@
    아래 설정값은 공개되어도 안전한 "주소" 같은 값입니다. 비밀번호가 아닙니다.
    실제 보안은 firestore.rules 에 적힌 규칙이 담당합니다.
 
-   이 프로젝트는 python-first-steps(파이썬 첫걸음 채점기)와 같은 Firebase
-   프로젝트를 씁니다. 자료가 섞이지 않도록 이 수업의 컬렉션 이름은 모두
-   dc_ 로 시작합니다.
+   Firebase 프로젝트: kim-digital — 이 수업 전용입니다.
+   (파이썬 첫걸음 채점기는 별도의 프로젝트를 쓰므로 서로 영향이 없습니다.)
+   컬렉션 이름은 dc_ 로 시작합니다.
 ------------------------------------------------------------------ */
 import { initializeApp }  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
 import { getAuth }        from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { getFirestore }   from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
-/* 선생님 계정 — 파이썬 첫걸음과 같은 계정을 씁니다.
+/* 선생님 계정.
    로그인 화면에는 아이디 "선생님"만 적으면 됩니다. Firebase 로그인은 이메일
    형식을 요구하기 때문에, 화면에서 받은 아이디를 아래 주소로 바꿔 보냅니다.
-   이 주소로 메일이 오가지는 않습니다. */
+   이 주소로 메일이 오가지는 않습니다.
+
+   ⚠️ 이 값을 바꾸면 firestore.rules 의 isTeacher() 안에 적힌 주소도 함께
+      바꿔야 합니다. 두 곳이 어긋나면 선생님이 순위표를 읽지 못합니다. */
 export const TEACHER_ID    = "선생님";
-export const TEACHER_EMAIL = "teacher@python-first-steps.local";
+export const TEACHER_EMAIL = "teacher@digital.local";
 
 /* 로그인 칸에 적은 값을 Firebase에 보낼 이메일로 바꾼다.
    선생님 계정은 하나뿐이므로, @ 가 없는 값은 모두 위 주소로 본다. */
@@ -28,12 +31,12 @@ export function teacherEmailFor(input){
 }
 
 const firebaseConfig = {
-  apiKey:            "AIzaSyDBTcaEhoycbZ2C365d5SJakO5NbUB8qcU",
-  authDomain:        "project-1714458941779160220.firebaseapp.com",
-  projectId:         "project-1714458941779160220",
-  storageBucket:     "project-1714458941779160220.firebasestorage.app",
-  messagingSenderId: "294844741696",
-  appId:             "1:294844741696:web:dd91541566247f21f787a5"
+  apiKey:            "AIzaSyDN9bz5tZNzw_HzC9v6Dsj-yV7IGxjSFnY",
+  authDomain:        "kim-digital.firebaseapp.com",
+  projectId:         "kim-digital",
+  storageBucket:     "kim-digital.firebasestorage.app",
+  messagingSenderId: "325383370134",
+  appId:             "1:325383370134:web:411b39a0633b916f39d9b7"
 };
 
 export const app  = initializeApp(firebaseConfig);
