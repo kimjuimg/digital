@@ -1,0 +1,1234 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>디지털 시민 신호등 · 학생</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;800&family=Gaegu:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#EDF1EA; --card:#FFFFFF; --card-2:#F5F8F3;
+  --ink:#1B2620; --ink-2:#4E5F55; --ink-3:#7B8C82;
+  --line:#CBD5C7; --line-strong:#A8B7A4;
+  --brand:#2A3A32; --brand-soft:#DFE7DC;
+  --go:#2E9E4F;      --go-soft:#DEF2E3;
+  --caution:#C98A08; --caution-soft:#FAECC6;
+  --stop:#CE3A31;    --stop-soft:#FBE1DF;
+  --p1:#2159B8;      --p1-soft:#DDE7FA;
+  --p2:#A83E8E;      --p2-soft:#F8DEF1;
+  --shadow:rgba(27,38,32,.18); --shadow-soft:rgba(27,38,32,.08);
+  --lamp-off:#C2CCBE;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141A16; --card:#1E2721; --card-2:#25302A;
+    --ink:#E9EFE7; --ink-2:#AEBDB1; --ink-3:#849487;
+    --line:#35443C; --line-strong:#4C5E53;
+    --brand:#C9DCC6; --brand-soft:#28352C;
+    --go:#57C877;      --go-soft:#1E3A27;
+    --caution:#F0BE47; --caution-soft:#3A2F16;
+    --stop:#F2726A;    --stop-soft:#3E211F;
+    --p1:#7FA8F0;      --p1-soft:#1A2640;
+    --p2:#E58CD0;      --p2-soft:#331F2E;
+    --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
+    --lamp-off:#3A473F;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141A16; --card:#1E2721; --card-2:#25302A;
+  --ink:#E9EFE7; --ink-2:#AEBDB1; --ink-3:#849487;
+  --line:#35443C; --line-strong:#4C5E53;
+  --brand:#C9DCC6; --brand-soft:#28352C;
+  --go:#57C877;      --go-soft:#1E3A27;
+  --caution:#F0BE47; --caution-soft:#3A2F16;
+  --stop:#F2726A;    --stop-soft:#3E211F;
+  --p1:#7FA8F0;      --p1-soft:#1A2640;
+  --p2:#E58CD0;      --p2-soft:#331F2E;
+  --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
+  --lamp-off:#3A473F;
+}
+
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{
+  margin:0;
+  background:var(--paper);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.045'/%3E%3C/svg%3E");
+  color:var(--ink);
+  font-family:'Gothic A1','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+img{max-width:100%}
+[hidden]{display:none !important}
+
+.wrap{max-width:880px;margin:0 auto;padding:24px 20px 60px;display:flex;flex-direction:column;gap:20px}
+
+/* ── masthead ── */
+.masthead{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.signal{flex:none;width:44px;padding:8px 7px;border-radius:12px;background:var(--brand);display:flex;flex-direction:column;gap:6px;box-shadow:0 4px 0 var(--shadow-soft)}
+.lamp{width:30px;height:30px;border-radius:50%;background:var(--lamp-off);transition:background .22s ease,box-shadow .22s ease}
+.lamp.on.go{background:var(--go)}
+.lamp.on.caution{background:var(--caution)}
+.lamp.on.stop{background:var(--stop)}
+.masthead .ttl{flex:1;min-width:200px}
+.masthead h1{font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(27px,5vw,38px);line-height:1.15;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.masthead h1 a{color:inherit;text-decoration:none}
+.masthead .sub{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
+.exit{flex:none;cursor:pointer;font-family:inherit;font-size:13px;font-weight:700;color:var(--ink-2);background:transparent;border:2px solid var(--line-strong);border-radius:11px;padding:7px 14px}
+.exit:hover{background:var(--card)}
+.exit:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+
+/* ── scoreboard ── */
+.board{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.player{background:var(--card);border:2px solid var(--line);border-radius:16px;padding:11px 14px;display:flex;align-items:center;gap:11px;min-width:0;transition:border-color .18s ease, background .18s ease}
+.player .av{flex:none;width:36px;height:36px;border-radius:12px;display:grid;place-items:center;font-size:19px;color:#fff}
+.player.p1 .av{background:var(--p1)}
+.player.p2 .av{background:var(--p2)}
+.player .who{min-width:0;flex:1}
+.player .nm{font-family:'Jua',sans-serif;font-size:17px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.player .role{font-size:11.5px;font-weight:700;color:var(--ink-3);letter-spacing:.06em}
+.player .pts{font-family:'Jua',sans-serif;font-size:22px;font-variant-numeric:tabular-nums;line-height:1;flex:none}
+.player.p1 .pts{color:var(--p1)}
+.player.p2 .pts{color:var(--p2)}
+.player.turn.p1{border-color:var(--p1);background:var(--p1-soft)}
+.player.turn.p2{border-color:var(--p2);background:var(--p2-soft)}
+.player.turn .role{color:var(--ink-2)}
+
+/* ── mission rail (누르면 그 미션으로 간다) ── */
+.rail{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+@media (max-width:700px){.rail{grid-template-columns:repeat(2,1fr)}}
+.chip{
+  font-family:inherit;text-align:left;color:var(--ink);cursor:pointer;
+  background:var(--card);border:2px solid var(--line);border-radius:14px;
+  padding:9px 11px;display:flex;align-items:center;gap:8px;min-width:0;
+  transition:transform .12s ease, border-color .15s ease, background .15s ease;
+}
+.chip:hover:not(:disabled){transform:translateY(-2px)}
+.chip:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.chip:disabled{cursor:not-allowed;opacity:.5}
+.chip .num{flex:none;width:23px;height:23px;border-radius:8px;background:var(--card-2);color:var(--ink-3);font-family:'Jua',sans-serif;font-size:13px;display:grid;place-items:center}
+.chip .nm{font-size:12.5px;font-weight:700;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip .cnt{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.chip[data-state="active"]{border-color:var(--brand);background:var(--brand-soft)}
+.chip[data-state="active"] .num{background:var(--brand);color:var(--card)}
+.chip[data-state="active"] .nm{color:var(--ink)}
+.chip[data-state="done"]{border-color:var(--go)}
+.chip[data-state="done"] .num{background:var(--go);color:#fff;font-size:12px}
+.chip[data-state="done"] .num span{display:none}
+.chip[data-state="done"] .num::after{content:"✓"}
+
+/* ── stage ── */
+.stage{background:var(--card);border:2px solid var(--line);border-radius:20px;box-shadow:0 6px 0 var(--shadow-soft);overflow:hidden}
+.stage-head{padding:13px 20px;border-bottom:2px solid var(--line);background:var(--card-2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--ink-3)}
+.count{font-variant-numeric:tabular-nums;font-weight:800;font-size:14px;color:var(--ink-2)}
+.bar{height:8px;background:var(--card-2);border-bottom:2px solid var(--line)}
+.bar > i{display:block;height:100%;width:0;background:var(--brand);transition:width .32s ease}
+.stage-body{padding:26px 24px 24px}
+
+/* ── join ── */
+.lead{font-family:'Gaegu',cursive;font-size:22px;line-height:1.55;color:var(--ink-2);margin:0 0 20px;white-space:pre-line}
+.fields{display:flex;flex-direction:column;gap:16px;margin:0 0 20px}
+.field{border:2px solid var(--line);border-radius:16px;padding:13px 16px;background:var(--card-2);display:flex;flex-direction:column;gap:6px}
+.field.p1{border-color:var(--p1)}
+.field.p2{border-color:var(--p2)}
+.field label{font-size:12.5px;font-weight:800;letter-spacing:.06em;color:var(--ink-3)}
+.field.p1 label{color:var(--p1)}
+.field.p2 label{color:var(--p2)}
+.field input{font-family:'Gaegu',cursive;font-size:24px;color:var(--ink);background:transparent;border:none;border-bottom:2.5px solid var(--line-strong);padding:4px 2px;width:100%}
+.field input::placeholder{color:var(--ink-3);opacity:.7}
+.field input:focus{outline:none;border-bottom-color:var(--ink-2)}
+.field.code input{font-family:'Jua',sans-serif;font-size:32px;letter-spacing:.22em;text-transform:uppercase;text-align:center}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:560px){.pair{grid-template-columns:1fr}.board{grid-template-columns:1fr}}
+.formmsg{margin:0 0 16px;font-size:14px;font-weight:700;color:var(--stop)}
+
+.missions{list-style:none;margin:20px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+.missions li{display:flex;gap:12px;align-items:flex-start;padding:11px 14px;border-radius:13px;background:var(--card-2)}
+.missions .badge{flex:none;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-size:17px}
+.missions h4{font-family:'Jua',sans-serif;font-weight:400;margin:0;font-size:17px;line-height:1.3}
+.missions p{margin:1px 0 0;font-size:13.5px;color:var(--ink-2)}
+
+/* ── banners ── */
+.banner{border:2px solid var(--caution);background:var(--caution-soft);border-radius:14px;padding:12px 16px;margin:0 0 18px;font-size:14px;color:var(--ink);display:flex;gap:10px;align-items:flex-start}
+.banner .ic{font-size:18px;line-height:1.3;flex:none}
+.banner.lock{border-color:var(--brand);background:var(--brand-soft)}
+
+/* ── turn ── */
+.turnbar{display:flex;align-items:center;gap:12px;border-radius:14px;padding:12px 16px;margin:0 0 18px;border:2px solid var(--line);background:var(--card-2)}
+.turnbar.p1{border-color:var(--p1);background:var(--p1-soft)}
+.turnbar.p2{border-color:var(--p2);background:var(--p2-soft)}
+.turnbar .av{flex:none;width:34px;height:34px;border-radius:11px;display:grid;place-items:center;font-size:18px;color:#fff}
+.turnbar.p1 .av{background:var(--p1)}
+.turnbar.p2 .av{background:var(--p2)}
+.turnbar strong{font-family:'Jua',sans-serif;font-weight:400;font-size:19px;display:block;line-height:1.25}
+.turnbar span{font-size:13px;color:var(--ink-2)}
+
+/* ── question ── */
+.scene{border:2px dashed var(--line-strong);border-radius:16px;padding:20px;background:var(--card-2);margin:0 0 16px}
+.scene .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.1em;color:var(--ink-3);margin-bottom:7px}
+.scene .actor{display:inline-block;font-size:12px;font-weight:800;border-radius:999px;padding:2px 10px;margin-bottom:8px;border:1.5px solid}
+.scene .actor.jarana{color:var(--p2);border-color:var(--p2);background:var(--p2-soft)}
+.scene .actor.yeollimi{color:var(--p1);border-color:var(--p1);background:var(--p1-soft)}
+.scene p{margin:0;font-family:'Jua',sans-serif;font-size:clamp(20px,3.3vw,25px);line-height:1.5;text-wrap:balance}
+.talk{display:flex;gap:9px;align-items:center;font-size:14px;color:var(--ink-2);font-weight:700;margin:0 0 16px;padding:0 2px}
+.talk .ic{font-size:17px}
+
+.choices{display:grid;gap:12px}
+.choices.three{grid-template-columns:repeat(3,1fr)}
+.choices.two{grid-template-columns:repeat(2,1fr)}
+@media (max-width:560px){.choices.three,.choices.two{grid-template-columns:1fr}}
+button{font-family:inherit}
+.pick{cursor:pointer;border:2px solid var(--line-strong);background:var(--card);color:var(--ink);border-radius:16px;padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 4px 0 var(--shadow-soft);transition:transform .12s ease, box-shadow .12s ease, background .12s ease}
+.pick .face{font-size:30px;line-height:1}
+.pick .label{font-family:'Jua',sans-serif;font-size:18px;line-height:1.2;text-align:center}
+.pick .hint{font-size:12px;color:var(--ink-3);line-height:1.35;text-align:center}
+.pick:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 var(--shadow-soft)}
+.pick:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 var(--shadow-soft)}
+.pick:disabled{cursor:default;opacity:.42}
+.pick:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.pick.go{border-color:var(--go)}           .pick.go .label{color:var(--go)}
+.pick.caution{border-color:var(--caution)} .pick.caution .label{color:var(--caution)}
+.pick.stop{border-color:var(--stop)}       .pick.stop .label{color:var(--stop)}
+.pick.chosen{opacity:1}
+.pick.chosen.go{background:var(--go-soft)}
+.pick.chosen.caution{background:var(--caution-soft)}
+.pick.chosen.stop{background:var(--stop-soft)}
+.pick.chosen.neutral{background:var(--brand-soft);border-color:var(--brand)}
+.pick.reveal{opacity:1;border-width:3px}
+
+.note{margin-top:18px;border-radius:14px;padding:15px 18px;border:2px solid var(--line);background:var(--card-2);display:flex;gap:12px;align-items:flex-start}
+.note.right{background:var(--go-soft);border-color:var(--go)}
+.note.wrong{background:var(--stop-soft);border-color:var(--stop)}
+.note.think{background:var(--brand-soft);border-color:var(--brand)}
+.note .mark{font-size:24px;line-height:1.2;flex:none}
+.note h4{font-family:'Jua',sans-serif;font-weight:400;margin:0 0 3px;font-size:18px}
+.note p{margin:0;font-size:15px;line-height:1.6;color:var(--ink-2)}
+
+.actions{margin-top:20px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.actions .right{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
+.btn{cursor:pointer;font-family:'Jua',sans-serif;font-size:18px;border:none;border-radius:14px;padding:12px 26px;background:var(--brand);color:var(--card);box-shadow:0 4px 0 var(--shadow);transition:transform .12s ease, box-shadow .12s ease}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 var(--shadow)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 var(--shadow)}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink-2);box-shadow:none;border:2px solid var(--line-strong)}
+.btn.ghost:hover:not(:disabled){transform:none;box-shadow:none;background:var(--card-2)}
+.btn.big{font-size:22px;padding:15px 38px}
+
+/* ── 탐정 수첩 표 ── */
+.tablewrap{overflow-x:auto;border:2px solid var(--line);border-radius:14px;background:var(--card);margin-top:18px}
+table.dtable{border-collapse:collapse;width:100%;min-width:420px;font-size:14.5px}
+table.dtable th, table.dtable td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left}
+table.dtable thead th{background:var(--card-2);font-size:13px;font-weight:800;color:var(--ink-2);letter-spacing:.04em}
+table.dtable thead th.jarana{color:var(--p2);text-align:center}
+table.dtable thead th.yeollimi{color:var(--p1);text-align:center}
+table.dtable td.mark{text-align:center;font-family:'Jua',sans-serif;font-size:18px;width:78px}
+table.dtable td.yes{color:var(--stop)}
+table.dtable td.no{color:var(--ink-3)}
+table.dtable tbody tr:last-child th, table.dtable tbody tr:last-child td{border-bottom:none}
+table.dtable tbody th{font-weight:500;color:var(--ink)}
+
+/* ── promises / cert ── */
+.promise-grid{display:flex;flex-direction:column;gap:14px;margin:18px 0 0}
+.promise-row{display:flex;align-items:center;gap:12px;border:2px solid var(--line);border-radius:14px;padding:11px 14px;background:var(--card-2)}
+.promise-row.p1{border-color:var(--p1)}
+.promise-row.p2{border-color:var(--p2)}
+.promise-row .n{flex:none;padding:4px 10px;border-radius:9px;background:var(--brand);color:var(--card);font-family:'Jua',sans-serif;font-size:14px;white-space:nowrap}
+.promise-row.p1 .n{background:var(--p1);color:#fff}
+.promise-row.p2 .n{background:var(--p2);color:#fff}
+.promise-row input{flex:1;min-width:0;font-family:'Gaegu',cursive;font-size:21px;color:var(--ink);background:transparent;border:none;border-bottom:2.5px solid var(--line-strong);padding:5px 3px}
+.promise-row input::placeholder{color:var(--ink-3);opacity:.72}
+.promise-row input:focus{outline:none;border-bottom-color:var(--ink-2)}
+
+.cert{border:3px double var(--brand);border-radius:18px;padding:26px 22px;background:var(--card-2);text-align:center}
+.cert .seal{width:62px;height:62px;border-radius:50%;margin:0 auto 13px;background:var(--brand);color:var(--card);display:grid;place-items:center;font-size:29px}
+.cert h2{font-family:'Jua',sans-serif;font-weight:400;font-size:27px;margin:0 0 8px}
+.cert .team{font-family:'Gaegu',cursive;font-size:26px;margin:0 0 6px;line-height:1.4}
+.cert .team .a{color:var(--p1)}
+.cert .team .b{color:var(--p2)}
+.cert .gtag{font-size:13px;font-weight:800;letter-spacing:.08em;color:var(--ink-3);margin:0 0 8px}
+.cert .body{font-size:15px;color:var(--ink-2);margin:0 auto;max-width:48ch}
+.score-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0}
+@media (max-width:560px){.score-row{grid-template-columns:1fr}}
+.score-cell{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:12px 8px}
+.score-cell.p1{border-color:var(--p1)}
+.score-cell.p2{border-color:var(--p2)}
+.score-cell .v{font-family:'Jua',sans-serif;font-size:25px;line-height:1.15;font-variant-numeric:tabular-nums}
+.score-cell.p1 .v{color:var(--p1)}
+.score-cell.p2 .v{color:var(--p2)}
+.score-cell .k{font-size:12px;color:var(--ink-3);font-weight:700}
+.bymission{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 18px}
+.bymission span{font-size:12.5px;font-weight:700;color:var(--ink-2);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:4px 12px;font-variant-numeric:tabular-nums}
+.cert-promises{text-align:left;background:var(--card);border:2px solid var(--line);border-radius:14px;padding:15px 18px}
+.cert-promises h3{font-family:'Jua',sans-serif;font-weight:400;font-size:17px;margin:0 0 8px}
+.cert-promises ul{margin:0;padding-left:20px}
+.cert-promises li{font-family:'Gaegu',cursive;font-size:20px;line-height:1.7;color:var(--ink)}
+.cert-promises li .tagname{font-family:'Gothic A1',sans-serif;font-size:12px;font-weight:800;color:var(--ink-3);margin-right:6px}
+.livehint{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);text-align:center}
+
+footer{font-size:12.5px;color:var(--ink-3);line-height:1.7;text-align:center}
+footer a{color:var(--ink-2)}
+
+@media (prefers-reduced-motion: reduce){*{transition-duration:.01ms !important;animation-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="signal" aria-hidden="true">
+      <div class="lamp stop" id="lampStop"></div>
+      <div class="lamp caution" id="lampCaution"></div>
+      <div class="lamp go" id="lampGo"></div>
+    </div>
+    <div class="ttl">
+      <h1><a href="./">디지털 시민 신호등</a></h1>
+      <p class="sub" id="mastSub">초등 1~2학년 · 2명이 한 모둠이 되어 하는 디지털 시민성 1~4차시 짝 활동</p>
+    </div>
+    <button class="exit" id="exitBtn" type="button" hidden>모둠 나가기</button>
+  </header>
+
+  <section class="board" id="board" aria-label="모둠 점수" hidden></section>
+
+  <nav class="rail" id="rail" aria-label="미션 이동" hidden>
+    <button class="chip" type="button" data-m="m1"><span class="num"><span>1</span></span><span class="nm">인터넷 신호등</span><span class="cnt"></span></button>
+    <button class="chip" type="button" data-m="m2"><span class="num"><span>2</span></span><span class="nm">알릴까? 지킬까?</span><span class="cnt"></span></button>
+    <button class="chip" type="button" data-m="m3"><span class="num"><span>3</span></span><span class="nm">디지털 탐정</span><span class="cnt"></span></button>
+    <button class="chip" type="button" data-m="m4"><span class="num"><span>4</span></span><span class="nm">못된 말 멈춰!</span><span class="cnt"></span></button>
+  </nav>
+
+  <main class="stage">
+    <div class="stage-head">
+      <span class="eyebrow" id="stageEyebrow">모둠 참여하기</span>
+      <span class="count" id="stageCount"></span>
+    </div>
+    <div class="bar"><i id="stageBar"></i></div>
+    <div class="stage-body" id="stageBody"></div>
+  </main>
+
+  <footer>
+    Common Sense Education 디지털 시민성 수업 1~4차시(인터넷 신호등 · 쉿, 이건 개인정보야 · 디지털 흔적 · 온라인 속 못된 말과 행동 멈춰!)를 바탕으로 만든 2인 1모둠 활동입니다.<br>
+    <a href="./">처음 화면</a> · <a href="./citizen-teacher.html">선생님 화면</a>
+  </footer>
+
+</div>
+
+<!-- ══════════ 게임 본체 — 인터넷이 끊겨도 이 부분만으로 동작합니다 ══════════ -->
+<script>
+(function(){
+  "use strict";
+
+  /* ═══ 미션 1 · 인터넷 신호등 (1차시) ═══ */
+  var SIGNAL = [
+    { t:"학교에서 알려준 학습 게임 사이트예요. 내 나이에 딱 맞는 문제가 나와요.",
+      a:"go", why:"나에게 적합하고 재미있게 할 수 있는 웹사이트예요. 초록색이니까 마음 놓고 가세요!" },
+    { t:"앱을 켜니 “이름과 집 주소를 알려주세요”라는 칸이 나와요.",
+      a:"caution", why:"이름, 주소, 전화번호 같은 정보를 물어보면 노란색이에요. 반드시 어른께 먼저 여쭤보세요." },
+    { t:"만화를 보다가 갑자기 12세 이상만 볼 수 있는 무서운 영상이 나왔어요.",
+      a:"stop", why:"나보다 나이가 많은 사람을 위한 영상은 빨간색이에요. 바로 멈추고 어른께 말씀드리세요." },
+    { t:"자유롭게 그림을 그릴 수 있는 어린이용 그림 앱이에요.",
+      a:"go", why:"내가 재미있게 할 수 있고 적절한 단어가 쓰인 앱이에요. 초록색!" },
+    { t:"글자가 너무 어려워서 무슨 말인지 하나도 모르겠어요.",
+      a:"caution", why:"읽기 어려운 단어가 많으면 나에게 맞는지 확신할 수 없어요. 노란색, 조심하기!" },
+    { t:"모르는 사람이 채팅으로 “우리 둘이서만 이야기하자”라고 말을 걸어요.",
+      a:"stop", why:"모르는 사람과 채팅을 나눌 수 있는 곳은 빨간색이에요. 답하지 말고 바로 어른께 알리세요." },
+    { t:"게임을 하는데 “전화번호를 입력하세요”라는 창이 떴어요.",
+      a:"caution", why:"전화번호를 요청하는 것은 노란색이에요. 혼자 입력하지 말고 어른의 허락을 받으세요." },
+    { t:"주소를 잘못 눌러서 실수로 이상한 사이트에 들어갔어요.",
+      a:"stop", why:"실수로 들어가게 된 곳, 적합하지 않은 것이 분명한 곳은 빨간색이에요. 멈추세요!" },
+    { t:"도서관에서 추천해 준, 동화를 읽어주는 앱이에요.",
+      a:"go", why:"믿을 수 있는 곳에서 알려준, 나에게 적합한 앱이에요. 초록색이에요." },
+    { t:"“회원가입 양식을 채워주세요”라고 해요.",
+      a:"caution", why:"어떤 양식을 채우라고 하면 노란색이에요. 조심하기! 어른과 함께 살펴보세요." }
+  ];
+  var SIGNAL_CHOICES = [
+    { key:"go",      face:"🟢", label:"가세요!",     hint:"안전해요", cls:"go" },
+    { key:"caution", face:"🟡", label:"주의하세요!", hint:"조심하기", cls:"caution" },
+    { key:"stop",    face:"🔴", label:"멈추세요!",   hint:"위험해요", cls:"stop" }
+  ];
+
+  /* ═══ 미션 2 · 쉿, 이건 개인정보야 (2차시) ═══ */
+  var PRIVACY = [
+    { t:"내가 좋아하는 색깔",           a:"share", why:"좋아하는 색깔은 여러 사람에게 알려줘도 괜찮아요." },
+    { t:"우리 집 주소",                 a:"keep",  why:"주소는 나를 바로 알아볼 수 있는 개인정보예요. 부모님, 선생님처럼 믿을 수 있는 사람과만 나눠요." },
+    { t:"내 이름과 성을 모두 합친 전체 이름", a:"keep", why:"전체 이름은 개인을 알아볼 수 있는 정보예요. 온라인에서는 별명을 쓰는 게 좋아요." },
+    { t:"내가 좋아하는 동물",           a:"share", why:"좋아하는 동물은 친구들과 즐겁게 나눌 수 있어요." },
+    { t:"부모님 핸드폰 번호",           a:"keep",  why:"전화번호는 소중한 개인정보예요. 낯선 사람에게 알려주면 안 돼요." },
+    { t:"내가 좋아하는 음식",           a:"share", why:"좋아하는 음식은 알려줘도 괜찮아요." },
+    { t:"내가 다니는 학교 이름",        a:"keep",  why:"학교 이름을 알면 내가 어디 있는지 알 수 있어요. 지켜야 하는 정보예요." },
+    { t:"내 생일이 몇 년 몇 월 며칠인지", a:"keep", why:"생년월일은 나를 알아볼 수 있는 개인정보예요." },
+    { t:"내가 좋아하는 게임",           a:"share", why:"어떤 게임을 좋아하는지는 친구들과 이야기해도 괜찮아요." },
+    { t:"앱에 들어갈 때 쓰는 비밀번호",  a:"keep",  why:"비밀번호는 가족 말고는 누구에게도 알려주면 안 되는 정보예요." },
+    { t:"내 취미",                      a:"share", why:"취미는 나를 소개할 때 알려줘도 괜찮아요." },
+    { t:"우리 집 앞이 보이는, 내 얼굴이 나온 사진", a:"keep", why:"사진에는 내 얼굴과 사는 곳이 함께 담겨요. 올리기 전에 꼭 어른께 여쭤보세요." }
+  ];
+  var PRIVACY_CHOICES = [
+    { key:"share", face:"👍", label:"알려도 돼요", hint:"엄지 올리기", cls:"neutral" },
+    { key:"keep",  face:"👎", label:"지켜야 해요", hint:"엄지 내리기", cls:"neutral" }
+  ];
+
+  /* ═══ 미션 3 · 디지털 흔적 (3차시) ═══ */
+  var TRAIL = [
+    { who:"자라나", t:"“우리 집은 햇빛아파트 101동이야”라고 채팅방에 적었어요.",
+      a:"big", why:"집 주소가 그대로 흔적으로 남았어요. 이 흔적을 보면 자라나가 어디 사는지 알 수 있어요." },
+    { who:"열리미", t:"“나도 그 게임 좋아해!”라고 댓글을 달았어요.",
+      a:"small", why:"좋아하는 것을 말한 흔적이에요. 이것만으로는 열리미가 누구인지 알 수 없어요." },
+    { who:"자라나", t:"“내 생일은 3월 5일이야!”라고 올렸어요.",
+      a:"big", why:"생일은 개인을 구별할 수 있는 정보예요. 지우기 어려운 큰 발자국이 남았어요." },
+    { who:"열리미", t:"이름을 물어보자 별명 ‘초록토끼’로만 답했어요.",
+      a:"small", why:"별명만 남겼으니 작은 발자국이에요. 온라인에서는 별명을 쓰는 것이 좋아요." },
+    { who:"자라나", t:"게임 아이디와 비밀번호를 채팅방에 적었어요.",
+      a:"big", why:"아이디와 비밀번호는 절대 남기면 안 되는 흔적이에요. 다른 사람이 내 계정에 들어올 수 있어요." },
+    { who:"자라나", t:"“나는 강아지 그림 그리는 걸 좋아해”라고 적었어요.",
+      a:"small", why:"취미는 알려줘도 괜찮은 정보예요. 작은 발자국이에요." },
+    { who:"자라나", t:"친구가 몰래 알려준 비밀을 채팅방에 그대로 올렸어요.",
+      a:"big", why:"내 흔적만 남는 게 아니에요. 친구의 비밀까지 지울 수 없는 흔적이 되었어요." },
+    { who:"열리미", t:"“우리 집 반려동물은 고양이야”라고 말했어요.",
+      a:"small", why:"반려동물 이야기만으로는 열리미가 누구인지 알 수 없어요. 작은 발자국이에요." }
+  ];
+  var TRAIL_CHOICES = [
+    { key:"small", face:"👣", label:"작은 발자국", hint:"누구인지 알 수 없어요", cls:"neutral" },
+    { key:"big",   face:"🔍", label:"큰 발자국",   hint:"누구인지 알 수 있어요", cls:"neutral" }
+  ];
+  var TRAIL_TABLE = [
+    { q:"누구의 이름을 알 수 있나요?",             j:false, y:false },
+    { q:"누구의 집 주소를 알 수 있나요?",          j:true,  y:false },
+    { q:"누구의 생일을 알 수 있나요?",             j:true,  y:false },
+    { q:"누구의 아이디와 비밀번호를 알 수 있나요?", j:true,  y:false },
+    { q:"누가 인터넷에 비밀을 공개했나요?",         j:true,  y:false },
+    { q:"누구의 반려동물을 알 수 있나요?",          j:false, y:true }
+  ];
+
+  /* ═══ 미션 4 · 온라인 속 못된 말과 행동 멈춰! (4차시) ═══ */
+  var MEAN = [
+    { t:"게임 채팅방에서 친구가 “같이 하자!”라고 말을 걸어요.",
+      a:"go", why:"친절한 말이에요. 못된 말과 행동이 아니니 안전하게 함께 즐기면 돼요." },
+    { t:"화가 나서 친구에게 못된 말을 보내고 싶어졌어요.",
+      a:"stop", why:"내가 못된 말을 하려 할 때가 바로 멈출 때예요. 잠시 화면에서 나와 마음을 가라앉혀요." },
+    { t:"모르는 사람이 나에게 욕이 담긴 메시지를 계속 보내요.",
+      a:"caution", why:"혼자 참지 말고 믿을 수 있는 어른께 말씀드려요. 온라인에서의 못된 말도 실제 폭력이 될 수 있어요." },
+    { t:"친구가 내 그림에 “정말 멋지다!”라고 댓글을 달았어요.",
+      a:"go", why:"서로를 아껴주는 말이에요. 이런 온라인 세상을 함께 만들어가요." },
+    { t:"채팅방에서 여러 명이 못된 말을 주고받기 시작했어요.",
+      a:"stop", why:"못된 말이 오가는 곳에서는 잠시 사용을 멈추고 그 방에서 나오는 것이 나를 지키는 방법이에요." },
+    { t:"누가 우리 반 친구의 우스꽝스러운 사진을 올리고 놀리고 있어요.",
+      a:"caution", why:"다른 사람이 상처받고 있어요. 함께 웃지 말고 믿을 수 있는 어른께 알려주세요." },
+    { t:"게임에서 누가 내 캐릭터를 일부러 망가뜨리고 계속 놀려요.",
+      a:"caution", why:"다른 사람의 캐릭터를 망치는 것도 못된 행동이에요. 어른께 말씀드리고 생각할 시간을 가져요." },
+    { t:"친구들과 그림 그리기 앱에서 서로 칭찬하며 놀고 있어요.",
+      a:"go", why:"안전한 사이트를 안전하게 활용하고 있어요. 초록색이에요!" }
+  ];
+  var MEAN_CHOICES = [
+    { key:"stop",    face:"🔴", label:"멈추기",       hint:"바로 그만하고 나오기", cls:"stop" },
+    { key:"caution", face:"🟡", label:"어른께 말하기", hint:"믿을 수 있는 어른께", cls:"caution" },
+    { key:"go",      face:"🟢", label:"그대로 즐기기", hint:"못된 말과 행동이 아니에요", cls:"go" }
+  ];
+
+  var MISSIONS = {
+    m1:{ n:1, items:SIGNAL,  choices:SIGNAL_CHOICES,  grid:"three", title:"인터넷 신호등",
+         eyebrow:"미션 1 · 인터넷 신호등", tag:"어떤 신호등일까요?", lamps:true, next:"m2" },
+    m2:{ n:2, items:PRIVACY, choices:PRIVACY_CHOICES, grid:"two",   title:"쉿, 이건 개인정보야",
+         eyebrow:"미션 2 · 쉿, 이건 개인정보야", tag:"이 정보는 어떤가요?", lamps:false, next:"m3" },
+    m3:{ n:3, items:TRAIL,   choices:TRAIL_CHOICES,   grid:"two",   title:"디지털 탐정",
+         eyebrow:"미션 3 · 디지털 탐정", tag:"어떤 발자국이 남았을까요?", lamps:false, next:"m3done" },
+    m4:{ n:4, items:MEAN,    choices:MEAN_CHOICES,    grid:"three", title:"못된 말과 행동 멈춰!",
+         eyebrow:"미션 4 · 못된 말과 행동 멈춰!", tag:"신호등 전략, 무엇을 고를까요?", lamps:true, next:"promise" }
+  };
+  var ORDER = ["m1","m2","m3","m4"];
+  var TOTAL_STEPS = ORDER.reduce(function(s,k){ return s + MISSIONS[k].items.length; }, 0);
+  var MAX_SCORE = TOTAL_STEPS;
+
+  /* ═══ 상태 ═══ */
+  var state = {
+    screen:"join",
+    classCode:"", groupId:"", groupName:"",
+    names:["",""],
+    picks:{ m1:[], m2:[], m3:[], m4:[] },
+    idx:  { m1:0,  m2:0,  m3:0,  m4:0 },
+    promises:["","",""],
+    formError:"",
+    joining:false,
+    lock:null,        /* 선생님이 지정한 미션 id, 없으면 null */
+    netMsg:""         /* 저장 문제 안내 */
+  };
+  var ROLES = [
+    { cls:"p1", av:"🐣", role:"1번 학생" },
+    { cls:"p2", av:"🐥", role:"2번 학생" }
+  ];
+
+  var NET = null;   /* Firebase 모듈이 준비되면 채워진다 */
+
+  var body    = document.getElementById("stageBody");
+  var eyebrow = document.getElementById("stageEyebrow");
+  var counter = document.getElementById("stageCount");
+  var barFill = document.getElementById("stageBar");
+  var boardEl = document.getElementById("board");
+  var railEl  = document.getElementById("rail");
+  var exitBtn = document.getElementById("exitBtn");
+  var mastSub = document.getElementById("mastSub");
+  var lamps = {
+    go:document.getElementById("lampGo"),
+    caution:document.getElementById("lampCaution"),
+    stop:document.getElementById("lampStop")
+  };
+
+  /* ═══ 유틸 ═══ */
+  function el(tag, cls, text){
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function nameOf(i){ return state.names[i] || ROLES[i].role; }
+  function setLamp(which){ Object.keys(lamps).forEach(function(k){ lamps[k].classList.toggle("on", k === which); }); }
+  function setLampsAll(on){ Object.keys(lamps).forEach(function(k){ lamps[k].classList.toggle("on", !!on); }); }
+  function cleanCode(v){ return String(v == null ? "" : v).toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6); }
+
+  /* 문항 i 는 (i % 2) 번 학생의 차례. 미션을 오가도 담당이 바뀌지 않는다. */
+  function ownerOf(i){ return i % 2; }
+  function answeredIn(m){
+    return state.picks[m].filter(function(p){ return p != null; }).length;
+  }
+  function scoreIn(m){
+    var items = MISSIONS[m].items;
+    return state.picks[m].reduce(function(s, p, i){
+      return s + (p != null && items[i] && p === items[i].a ? 1 : 0);
+    }, 0);
+  }
+  function playerScore(k){
+    return ORDER.reduce(function(sum, m){
+      var items = MISSIONS[m].items;
+      return sum + state.picks[m].reduce(function(s, p, i){
+        return s + (ownerOf(i) === k && p != null && items[i] && p === items[i].a ? 1 : 0);
+      }, 0);
+    }, 0);
+  }
+  function totalScore(){ return playerScore(0) + playerScore(1); }
+  function totalSteps(){ return ORDER.reduce(function(s,m){ return s + answeredIn(m); }, 0); }
+  function allAnswered(){ return ORDER.every(function(m){ return answeredIn(m) === MISSIONS[m].items.length; }); }
+  function firstUnanswered(m){
+    var picks = state.picks[m], items = MISSIONS[m].items;
+    for (var i = 0; i < items.length; i++) if (picks[i] == null) return i;
+    return items.length - 1;
+  }
+
+  function stepLabel(){
+    if (MISSIONS[state.screen]) return "미션 " + MISSIONS[state.screen].n;
+    if (state.screen === "m3done") return "미션 3";
+    if (state.screen === "promise") return "약속 정하기";
+    if (state.screen === "result")  return "완료";
+    return "준비";
+  }
+
+  function store(key, value){
+    try {
+      if (value === undefined) return window.localStorage.getItem(key);
+      window.localStorage.setItem(key, value);
+    } catch (e) { /* 저장소를 못 써도 게임은 그대로 됩니다 */ }
+    return null;
+  }
+
+  /* ═══ 서버에 보내는 값 ═══ */
+  function snapshot(){
+    return {
+      code: state.classCode,
+      name: state.groupName,
+      p1: nameOf(0), p2: nameOf(1),
+      s1: playerScore(0), s2: playerScore(1),
+      total: totalScore(),
+      m1: scoreIn("m1"), m2: scoreIn("m2"), m3: scoreIn("m3"), m4: scoreIn("m4"),
+      steps: totalSteps(),
+      stepLabel: stepLabel(),
+      done: state.screen === "result",
+      promises: state.promises.slice()
+    };
+  }
+  function push(){ if (NET) NET.push(snapshot()); }
+
+  /* ═══ 공용 파츠 ═══ */
+  function renderBoard(activeIdx){
+    boardEl.innerHTML = "";
+    [0,1].forEach(function(i){
+      var r = ROLES[i];
+      var box = el("div","player " + r.cls + (activeIdx === i ? " turn" : ""));
+      box.appendChild(el("div","av", r.av));
+      var who = el("div","who");
+      who.appendChild(el("div","nm", nameOf(i)));
+      who.appendChild(el("div","role", activeIdx === i ? "지금 차례!" : r.role));
+      box.appendChild(who);
+      box.appendChild(el("div","pts", String(playerScore(i))));
+      boardEl.appendChild(box);
+    });
+  }
+
+  function renderRail(){
+    var chips = railEl.querySelectorAll(".chip");
+    Array.prototype.forEach.call(chips, function(chip){
+      var m = chip.getAttribute("data-m");
+      var done = answeredIn(m);
+      var all = MISSIONS[m].items.length;
+      chip.querySelector(".cnt").textContent = done + "/" + all;
+      if (state.screen === m) chip.setAttribute("data-state","active");
+      else if (done === all)  chip.setAttribute("data-state","done");
+      else chip.removeAttribute("data-state");
+      var blocked = state.lock && state.lock !== m;
+      chip.disabled = !!blocked;
+      chip.title = blocked ? "선생님이 " + MISSIONS[state.lock].title + " 미션을 함께 보고 있어요" : MISSIONS[m].title;
+    });
+  }
+
+  function setProgress(done, total){
+    barFill.style.width = total ? (done / total * 100) + "%" : "0%";
+    counter.textContent = total ? (done + " / " + total) : "";
+  }
+
+  function chrome(opts){
+    boardEl.hidden = !opts.board;
+    railEl.hidden  = !opts.rail;
+    exitBtn.hidden = !opts.exit;
+    mastSub.textContent = opts.sub;
+  }
+  function playSub(){ return state.groupName + " · " + nameOf(0) + " · " + nameOf(1); }
+
+  function turnBanner(i, sub){
+    var bar = el("div","turnbar " + ROLES[i].cls);
+    bar.appendChild(el("div","av", ROLES[i].av));
+    var txt = el("div","txt");
+    txt.appendChild(el("strong", null, nameOf(i) + " 차례예요"));
+    txt.appendChild(el("span", null, sub));
+    bar.appendChild(txt);
+    return bar;
+  }
+  function talkLine(text){
+    var t = el("div","talk");
+    t.appendChild(el("span","ic","💬"));
+    t.appendChild(el("span", null, text));
+    return t;
+  }
+  function netBanner(){
+    if (!state.netMsg) return null;
+    var b = el("div","banner");
+    b.appendChild(el("span","ic","📡"));
+    b.appendChild(el("span", null, state.netMsg));
+    return b;
+  }
+  function lockBanner(){
+    if (!state.lock) return null;
+    var b = el("div","banner lock");
+    b.appendChild(el("span","ic","🧑‍🏫"));
+    b.appendChild(el("span", null, "선생님과 함께 보는 중이에요. 지금은 " + MISSIONS[state.lock].title + " 미션만 열려 있어요."));
+    return b;
+  }
+
+  /* ═══ 화면: 모둠 참여하기 ═══ */
+  function renderJoin(){
+    chrome({ board:false, rail:false, exit:false,
+      sub:"초등 1~2학년 · 2명이 한 모둠이 되어 하는 디지털 시민성 1~4차시 짝 활동" });
+    setLampsAll(true);
+    eyebrow.textContent = "모둠 참여하기";
+    setProgress(0, 0);
+    body.innerHTML = "";
+
+    var nb = netBanner();
+    if (nb) body.appendChild(nb);
+
+    body.appendChild(el("p","lead","선생님이 알려준 수업 코드를 넣고,\n모둠 이름과 두 학생의 이름을 적어주세요."));
+
+    var fields = el("div","fields");
+
+    var fc = el("div","field code");
+    var lc = el("label", null, "수업 코드"); lc.setAttribute("for","gcode");
+    var ic = document.createElement("input");
+    ic.type = "text"; ic.id = "gcode"; ic.maxLength = 6; ic.autocomplete = "off";
+    ic.value = state.classCode; ic.placeholder = "ABCD";
+    ic.addEventListener("input", function(){ ic.value = cleanCode(ic.value); state.classCode = ic.value; });
+    fc.appendChild(lc); fc.appendChild(ic);
+    fields.appendChild(fc);
+
+    var fg = el("div","field");
+    var lg = el("label", null, "모둠 이름"); lg.setAttribute("for","gname");
+    var ig = document.createElement("input");
+    ig.type = "text"; ig.id = "gname"; ig.maxLength = 14;
+    ig.value = state.groupName; ig.placeholder = "예) 햇살 모둠";
+    ig.addEventListener("input", function(){ state.groupName = ig.value; });
+    fg.appendChild(lg); fg.appendChild(ig);
+    fields.appendChild(fg);
+
+    var pair = el("div","pair");
+    [0,1].forEach(function(i){
+      var r = ROLES[i];
+      var f = el("div","field " + r.cls);
+      var l = el("label", null, r.av + " " + r.role + " 이름"); l.setAttribute("for","pn" + i);
+      var inp = document.createElement("input");
+      inp.type = "text"; inp.id = "pn" + i; inp.maxLength = 10;
+      inp.value = state.names[i]; inp.placeholder = i === 0 ? "이름" : "짝 이름";
+      inp.addEventListener("input", function(){ state.names[i] = inp.value.trim(); });
+      f.appendChild(l); f.appendChild(inp);
+      pair.appendChild(f);
+    });
+    fields.appendChild(pair);
+    body.appendChild(fields);
+
+    if (state.formError) body.appendChild(el("p","formmsg", state.formError));
+
+    var actions = el("div","actions");
+    var right = el("div","right");
+    var join = el("button","btn big", state.joining ? "들어가는 중…" : "참여하기");
+    join.type = "button";
+    join.disabled = state.joining;
+    join.addEventListener("click", doJoin);
+    right.appendChild(join);
+    actions.appendChild(right);
+    body.appendChild(actions);
+
+    var list = el("ul","missions");
+    ORDER.forEach(function(m){
+      var cfg = MISSIONS[m];
+      var badge = { m1:"🚦", m2:"🤫", m3:"🔍", m4:"🛑" }[m];
+      var bg = { m1:"var(--go-soft)", m2:"var(--p1-soft)", m3:"var(--brand-soft)", m4:"var(--stop-soft)" }[m];
+      var li = el("li");
+      var b = el("span","badge", badge);
+      b.style.background = bg;
+      var box = el("div");
+      box.appendChild(el("h4", null, "미션 " + cfg.n + " · " + cfg.title));
+      box.appendChild(el("p", null, cfg.items.length + "문제 · 한 문제씩 번갈아 답해요"));
+      li.appendChild(b); li.appendChild(box);
+      list.appendChild(li);
+    });
+    body.appendChild(list);
+
+    ic.focus();
+  }
+
+  function doJoin(){
+    if (state.joining) return;
+    if (state.classCode.length < 3) { state.formError = "선생님이 알려준 수업 코드를 넣어주세요."; render(); return; }
+    if (!state.groupName.trim())    { state.formError = "모둠 이름을 정해주세요."; render(); return; }
+    state.groupName = state.groupName.trim();
+    state.formError = "";
+
+    if (!NET) {   /* 인터넷 없이도 게임은 할 수 있다 — 점수만 저장되지 않는다 */
+      startPlay();
+      return;
+    }
+    state.joining = true;
+    render();
+    NET.join(state.classCode, snapshot()).then(function(){
+      state.joining = false;
+      store("dcs-code", state.classCode);
+      startPlay();
+    }, function(err){
+      state.joining = false;
+      /* 수업 코드가 틀린 것은 학생이 고칠 수 있는 일이라 되묻는다.
+         서버 쪽 문제라면 수업을 멈추지 않고, 저장 없이 그대로 진행한다. */
+      if (err && err.offline) {
+        NET = null;
+        state.netMsg = "지금은 점수를 선생님 화면에 보낼 수 없어요. 게임은 그대로 할 수 있습니다.";
+        store("dcs-code", state.classCode);
+        startPlay();
+        return;
+      }
+      state.formError = (err && err.message) || "들어가지 못했어요. 수업 코드를 다시 확인해 주세요.";
+      render();
+    });
+  }
+
+  function startPlay(){
+    state.screen = state.lock || "m1";
+    render();
+  }
+
+  /* ═══ 화면: 문제 미션 ═══ */
+  function renderQuiz(m){
+    var cfg = MISSIONS[m];
+    var i = Math.max(0, Math.min(cfg.items.length - 1, state.idx[m]));
+    state.idx[m] = i;
+    var q = cfg.items[i];
+    var me = ownerOf(i);
+    var picked = state.picks[m][i];
+    var answered = picked != null;
+
+    chrome({ board:true, rail:true, exit:true, sub:playSub() });
+    renderRail();
+    renderBoard(answered ? null : me);
+    eyebrow.textContent = cfg.eyebrow;
+    setProgress(answeredIn(m), cfg.items.length);
+    if (cfg.lamps) setLamp(answered ? q.a : null); else setLampsAll(false);
+
+    body.innerHTML = "";
+    var lb = lockBanner(); if (lb) body.appendChild(lb);
+    var nb = netBanner();  if (nb) body.appendChild(nb);
+
+    if (!answered) {
+      body.appendChild(turnBanner(me, "맞히면 " + nameOf(me) + "에게 1점, 모둠 점수도 1점 올라가요."));
+    }
+
+    var scene = el("div","scene");
+    if (q.who) scene.appendChild(el("span","actor " + (q.who === "자라나" ? "jarana" : "yeollimi"), q.who + "의 흔적"));
+    else scene.appendChild(el("span","tag", cfg.tag));
+    scene.appendChild(el("p", null, q.t));
+    body.appendChild(scene);
+
+    if (!answered) body.appendChild(talkLine("먼저 짝과 이야기를 나눠보세요. 그다음 " + nameOf(me) + "가 답을 고릅니다."));
+
+    var choices = el("div","choices " + cfg.grid);
+    var buttons = [];
+    cfg.choices.forEach(function(c){
+      var btn = el("button","pick " + c.cls);
+      btn.type = "button";
+      btn.appendChild(el("span","face", c.face));
+      btn.appendChild(el("span","label", c.label));
+      btn.appendChild(el("span","hint", c.hint));
+      if (answered) {
+        btn.disabled = true;
+        if (c.key === q.a) btn.classList.add("reveal","chosen");
+        if (c.key === picked) btn.classList.add("chosen");
+      } else {
+        btn.addEventListener("click", function(){ answer(m, i, c.key); });
+      }
+      choices.appendChild(btn);
+      buttons.push(btn);
+    });
+    body.appendChild(choices);
+
+    if (answered) {
+      var correct = picked === q.a;
+      var note = el("div","note " + (correct ? "right" : "wrong"));
+      note.appendChild(el("span","mark", correct ? "🎉" : "💡"));
+      var txt = el("div");
+      var wrongLabel = cfg.choices.filter(function(x){ return x.key === q.a; })[0].label;
+      txt.appendChild(el("h4", null, correct ? (nameOf(me) + ", 맞았어요! +1점") : ("다시 볼까요? 정답은 " + wrongLabel)));
+      txt.appendChild(el("p", null, q.why));
+      note.appendChild(txt);
+      body.appendChild(note);
+    }
+
+    /* 이동 버튼 */
+    var actions = el("div","actions");
+    var prev = el("button","btn ghost","← 이전 문제");
+    prev.type = "button";
+    prev.disabled = i === 0;
+    prev.addEventListener("click", function(){ state.idx[m] = i - 1; render(); });
+    actions.appendChild(prev);
+
+    var right = el("div","right");
+    var last = i === cfg.items.length - 1;
+    if (!last) {
+      var next = el("button","btn", answered ? "다음 문제 →" : ("다음은 " + nameOf(ownerOf(i + 1)) + " 차례"));
+      next.type = "button";
+      next.disabled = !answered;
+      next.addEventListener("click", function(){ state.idx[m] = i + 1; render(); });
+      right.appendChild(next);
+    } else {
+      var doneAll = answeredIn(m) === cfg.items.length;
+      var go = el("button","btn", m === "m3" ? "탐정 수첩 정리하기" : (m === "m4" ? "우리 모둠의 약속 정하기" : "미션 " + MISSIONS[cfg.next].n + "로 가기"));
+      go.type = "button";
+      go.disabled = !doneAll || (state.lock && state.lock !== cfg.next && cfg.next !== "m3done");
+      if (!doneAll) go.textContent = "남은 문제를 모두 풀어주세요";
+      go.addEventListener("click", function(){ state.screen = cfg.next; render(); });
+      right.appendChild(go);
+    }
+    actions.appendChild(right);
+    body.appendChild(actions);
+
+    if (!answered && buttons[0]) buttons[0].focus();
+  }
+
+  function answer(m, i, key){
+    if (state.picks[m][i] != null) return;
+    state.picks[m][i] = key;
+    push();
+    render();
+  }
+
+  /* ═══ 화면: 탐정 수첩 ═══ */
+  function renderTrailReport(){
+    chrome({ board:true, rail:true, exit:true, sub:playSub() });
+    renderRail();
+    renderBoard(null);
+    setLampsAll(false);
+    eyebrow.textContent = "미션 3 · 탐정 수첩";
+    setProgress(TRAIL.length, TRAIL.length);
+    body.innerHTML = "";
+
+    var lb = lockBanner(); if (lb) body.appendChild(lb);
+
+    var scene = el("div","scene");
+    scene.appendChild(el("span","tag","탐정 수첩 정리"));
+    scene.appendChild(el("p", null, "흔적을 모두 따라갔어요. 두 친구에 대해 무엇을 알게 되었나요?"));
+    body.appendChild(scene);
+
+    var wrap = el("div","tablewrap");
+    var table = document.createElement("table");
+    table.className = "dtable";
+    var thead = document.createElement("thead");
+    var hr = document.createElement("tr");
+    hr.appendChild(el("th", null, "탐정의 질문"));
+    hr.appendChild(el("th","jarana","자라나"));
+    hr.appendChild(el("th","yeollimi","열리미"));
+    thead.appendChild(hr);
+    table.appendChild(thead);
+    var tbody = document.createElement("tbody");
+    TRAIL_TABLE.forEach(function(r){
+      var tr = document.createElement("tr");
+      var th = document.createElement("th");
+      th.scope = "row"; th.textContent = r.q;
+      tr.appendChild(th);
+      tr.appendChild(el("td","mark " + (r.j ? "yes" : "no"), r.j ? "○" : "×"));
+      tr.appendChild(el("td","mark " + (r.y ? "yes" : "no"), r.y ? "○" : "×"));
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    body.appendChild(wrap);
+
+    var note = el("div","note think");
+    note.appendChild(el("span","mark","🕵️"));
+    var txt = el("div");
+    txt.appendChild(el("h4", null, "누구에 대해 더 많이 알 수 있었나요?"));
+    txt.appendChild(el("p", null, "자라나예요. 집 주소, 생일, 아이디와 비밀번호 같은 개인정보를 흔적으로 남겼기 때문이에요. 열리미는 별명과 좋아하는 것만 남겨서 작은 발자국만 있었어요. 흔적은 지우기 어려우니, 남기기 전에 한 번 더 생각해요."));
+    note.appendChild(txt);
+    body.appendChild(note);
+
+    var actions = el("div","actions");
+    var back = el("button","btn ghost","← 미션 3 다시 보기");
+    back.type = "button";
+    back.addEventListener("click", function(){ state.screen = "m3"; render(); });
+    actions.appendChild(back);
+    var right = el("div","right");
+    var next = el("button","btn","미션 4로 가기");
+    next.type = "button";
+    next.disabled = !!(state.lock && state.lock !== "m4");
+    next.addEventListener("click", function(){ state.screen = "m4"; render(); });
+    right.appendChild(next);
+    actions.appendChild(right);
+    body.appendChild(actions);
+    next.focus();
+  }
+
+  /* ═══ 화면: 약속 정하기 ═══ */
+  function renderPromise(){
+    chrome({ board:true, rail:true, exit:true, sub:playSub() });
+    renderRail();
+    renderBoard(null);
+    setLampsAll(false);
+    eyebrow.textContent = "마무리 · 우리 모둠의 약속";
+    setProgress(1, 1);
+    body.innerHTML = "";
+
+    var scene = el("div","scene");
+    scene.appendChild(el("span","tag","스스로 약속하기"));
+    scene.appendChild(el("p", null, "온라인에서 나를 지키고 서로를 존중하기 위해 실천할 약속을 적어보세요."));
+    body.appendChild(scene);
+    body.appendChild(talkLine("두 사람이 각각 하나씩, 그리고 함께 지킬 약속 하나를 정해요."));
+
+    var rows = [
+      { cls:"p1", tag:nameOf(0) + "의 약속", ph:"예) 이름 대신 별명 쓰기" },
+      { cls:"p2", tag:nameOf(1) + "의 약속", ph:"예) 개인정보를 묻는 칸은 어른께 여쭤보기" },
+      { cls:"",   tag:"우리 모둠 함께 약속", ph:"예) 못된 말을 보면 멈추고 선생님께 말씀드리기" }
+    ];
+    var grid = el("div","promise-grid");
+    var inputs = [];
+    rows.forEach(function(r, i){
+      var row = el("div","promise-row " + r.cls);
+      row.appendChild(el("span","n", r.tag));
+      var inp = document.createElement("input");
+      inp.type = "text"; inp.maxLength = 40;
+      inp.value = state.promises[i] || "";
+      inp.placeholder = r.ph;
+      inp.setAttribute("aria-label", r.tag);
+      inp.addEventListener("input", function(){ state.promises[i] = inp.value; });
+      inp.addEventListener("change", push);
+      row.appendChild(inp);
+      grid.appendChild(row);
+      inputs.push(inp);
+    });
+    body.appendChild(grid);
+
+    var actions = el("div","actions");
+    var back = el("button","btn ghost","← 미션 4 다시 보기");
+    back.type = "button";
+    back.addEventListener("click", function(){ state.screen = "m4"; render(); });
+    actions.appendChild(back);
+    var right = el("div","right");
+    var done = el("button","btn","모둠 인증서 받기");
+    done.type = "button";
+    done.addEventListener("click", function(){ state.screen = "result"; push(); render(); });
+    right.appendChild(done);
+    actions.appendChild(right);
+    body.appendChild(actions);
+    inputs[0].focus();
+  }
+
+  /* ═══ 화면: 모둠 인증서 ═══ */
+  function renderResult(){
+    chrome({ board:true, rail:true, exit:true, sub:playSub() });
+    renderRail();
+    renderBoard(null);
+    setLampsAll(true);
+    eyebrow.textContent = "디지털 시민 모둠 인증서";
+    setProgress(1, 1);
+    body.innerHTML = "";
+
+    var s1 = playerScore(0), s2 = playerScore(1);
+
+    var cert = el("div","cert");
+    cert.appendChild(el("div","seal","🏅"));
+    cert.appendChild(el("h2", null, "디지털 시민 모둠 인증서"));
+    cert.appendChild(el("p","gtag", state.groupName));
+
+    var team = el("p","team");
+    team.appendChild(el("b","a", nameOf(0)));
+    team.appendChild(document.createTextNode(" · "));
+    team.appendChild(el("b","b", nameOf(1)));
+    cert.appendChild(team);
+
+    cert.appendChild(el("p","body","위 두 학생은 인터넷 신호등을 읽고, 소중한 개인정보를 지키며, 자신이 남기는 디지털 발자국을 살피고, 온라인에서 서로를 존중할 줄 아는 디지털 시민임을 인증합니다."));
+
+    var scores = el("div","score-row");
+    [
+      { cls:"p1", k:nameOf(0) + " 점수", v:s1 + "점" },
+      { cls:"p2", k:nameOf(1) + " 점수", v:s2 + "점" },
+      { cls:"",   k:"모둠 점수", v:(s1 + s2) + " / " + MAX_SCORE }
+    ].forEach(function(s){
+      var c = el("div","score-cell " + s.cls);
+      c.appendChild(el("div","v", s.v));
+      c.appendChild(el("div","k", s.k));
+      scores.appendChild(c);
+    });
+    cert.appendChild(scores);
+
+    var by = el("div","bymission");
+    [
+      "🚦 신호등 "   + scoreIn("m1") + "/" + SIGNAL.length,
+      "🤫 개인정보 " + scoreIn("m2") + "/" + PRIVACY.length,
+      "🔍 탐정 "     + scoreIn("m3") + "/" + TRAIL.length,
+      "🛑 못된 말 "  + scoreIn("m4") + "/" + MEAN.length
+    ].forEach(function(s){ by.appendChild(el("span", null, s)); });
+    cert.appendChild(by);
+
+    var labels = [nameOf(0), nameOf(1), "함께"];
+    var filled = [];
+    state.promises.forEach(function(p, i){ if (p && p.trim()) filled.push({ who:labels[i], text:p.trim() }); });
+    if (filled.length){
+      var box = el("div","cert-promises");
+      box.appendChild(el("h3", null, "우리가 스스로 정한 약속"));
+      var ul = document.createElement("ul");
+      filled.forEach(function(p){
+        var li = document.createElement("li");
+        li.appendChild(el("span","tagname", p.who));
+        li.appendChild(document.createTextNode(p.text));
+        ul.appendChild(li);
+      });
+      box.appendChild(ul);
+      cert.appendChild(box);
+    }
+    body.appendChild(cert);
+
+    var msg = el("p", null, allAnswered() && (s1 + s2) === MAX_SCORE
+      ? "모든 문제를 맞혔어요! 오늘 정한 약속을 내일부터 함께 지켜봐요."
+      : "잘했어요! 헷갈렸던 문제는 위의 미션 칸을 눌러 짝과 다시 이야기해 보세요.");
+    msg.style.textAlign = "center";
+    msg.style.marginTop = "18px";
+    msg.style.color = "var(--ink-2)";
+    msg.style.fontWeight = "700";
+    body.appendChild(msg);
+
+    if (NET) body.appendChild(el("p","livehint","이 결과는 선생님 순위표에 이미 올라갔어요."));
+
+    var actions = el("div","actions");
+    var right = el("div","right");
+    var again = el("button","btn ghost","미션 1부터 다시 보기");
+    again.type = "button";
+    again.addEventListener("click", function(){ state.screen = "m1"; state.idx.m1 = 0; render(); });
+    right.appendChild(again);
+    actions.appendChild(right);
+    body.appendChild(actions);
+  }
+
+  /* ═══ 미션 칸 클릭으로 이동 ═══ */
+  Array.prototype.forEach.call(railEl.querySelectorAll(".chip"), function(chip){
+    chip.addEventListener("click", function(){
+      var m = chip.getAttribute("data-m");
+      if (state.lock && state.lock !== m) return;
+      state.screen = m;
+      state.idx[m] = firstUnanswered(m);
+      render();
+    });
+  });
+
+  exitBtn.addEventListener("click", function(){
+    if (!window.confirm("모둠을 나가면 지금까지 푼 것이 이 화면에서 사라집니다. 나갈까요?")) return;
+    if (NET) NET.leave();
+    state.screen = "join";
+    state.groupId = ""; state.groupName = "";
+    state.names = ["",""];
+    state.picks = { m1:[], m2:[], m3:[], m4:[] };
+    state.idx = { m1:0, m2:0, m3:0, m4:0 };
+    state.promises = ["","",""];
+    state.formError = "";
+    render();
+  });
+
+  /* ═══ 라우터 ═══ */
+  function render(){
+    if (state.screen === "join")    return renderJoin();
+    if (MISSIONS[state.screen])     return renderQuiz(state.screen);
+    if (state.screen === "m3done")  return renderTrailReport();
+    if (state.screen === "promise") return renderPromise();
+    if (state.screen === "result")  return renderResult();
+  }
+
+  /* ═══ Firebase 모듈이 쓰는 창구 ═══ */
+  window.DCS = {
+    attachNet: function(net){
+      NET = net;
+      state.netMsg = "";
+      if (state.screen === "join") render();
+    },
+    setNetMessage: function(msg){
+      state.netMsg = msg || "";
+      render();
+    },
+    /* 선생님이 지정한 미션. null 이면 자유롭게 오갈 수 있다. */
+    setLock: function(mission){
+      var m = MISSIONS[mission] ? mission : null;
+      if (state.lock === m) return;
+      state.lock = m;
+      if (m && state.screen !== "join") {
+        state.screen = m;
+        state.idx[m] = firstUnanswered(m);
+      }
+      render();
+    },
+    rememberedCode: function(){ return cleanCode(store("dcs-code")); }
+  };
+
+  state.classCode = cleanCode(store("dcs-code"));
+  render();
+})();
+</script>
+
+<!-- ══════════ Firebase 연결 — 실패해도 위의 게임은 그대로 동작합니다 ══════════ -->
+<script type="module">
+import { auth, db, COL_CLASSES, COL_GROUPS, COL_CLASSROOM } from "./firebase-init.js";
+import { signInAnonymously, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, onSnapshot, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+const STALE_MS = 3 * 60 * 60 * 1000;   /* 선생님이 끄는 것을 잊어도 세 시간 뒤에는 풀린다 */
+
+let groupRef  = null;
+let stopLock  = null;
+let saveTimer = null;
+let pending   = null;
+
+function fresh(ts){
+  try{
+    const t = (ts && ts.toDate) ? ts.toDate().getTime() : 0;
+    return t === 0 || (Date.now() - t) < STALE_MS;   /* 서버 시각이 아직 없으면 방금 것으로 본다 */
+  }catch(e){ return true; }
+}
+
+/* 선생님이 지정한 미션을 따라간다 */
+function watchLock(code){
+  if (stopLock) { stopLock(); stopLock = null; }
+  stopLock = onSnapshot(doc(db, COL_CLASSROOM, code), (snap) => {
+    const v = snap.exists() ? snap.data() : null;
+    const on = !!(v && v.leading) && fresh(v && v.at);
+    window.DCS.setLock(on ? v.mission : null);
+  }, (e) => {
+    console.warn("[함께 보기] 선생님 화면을 따라가지 못합니다", e);
+  });
+}
+
+/* 저장은 몰아서 보낸다 — 한 문제 풀 때마다 곧바로 쓰지 않는다 */
+function flush(){
+  saveTimer = null;
+  if (!groupRef || !pending) return;
+  const data = pending; pending = null;
+  updateDoc(groupRef, Object.assign({}, data, {
+    uid: auth.currentUser ? auth.currentUser.uid : null,
+    updatedAt: serverTimestamp()
+  })).catch((e) => {
+    console.error("[점수 저장] 보내지 못했습니다", e);
+    window.DCS.setNetMessage("점수를 선생님 화면에 보내지 못했어요. 게임은 계속할 수 있어요.");
+  });
+}
+
+/* 서버 쪽 문제라서 학생이 고칠 수 없는 경우. 수업을 멈추지 않고 저장만 건너뛴다. */
+function offlineError(e){
+  console.error("[모둠 참여]", e);
+  const err = new Error("지금은 점수를 저장할 수 없어요.");
+  err.offline = true;
+  return err;
+}
+
+const NET = {
+  async join(code, data){
+    try{
+      if (!auth.currentUser) await signInAnonymously(auth);
+    }catch(e){ throw offlineError(e); }
+    const uid = auth.currentUser.uid;
+
+    let cls;
+    try{
+      cls = await getDoc(doc(db, COL_CLASSES, code));
+    }catch(e){
+      /* 규칙이 아직 안 올라갔거나 연결이 끊긴 경우 */
+      throw offlineError(e);
+    }
+    if (!cls.exists()) {
+      throw new Error("그런 수업 코드가 없어요. 선생님께 코드를 다시 여쭤보세요.");
+    }
+
+    groupRef = doc(collection(db, COL_GROUPS));
+    try{
+      await setDoc(groupRef, Object.assign({}, data, {
+        uid, code, createdAt: serverTimestamp(), updatedAt: serverTimestamp()
+      }));
+    }catch(e){
+      groupRef = null;
+      throw offlineError(e);
+    }
+    watchLock(code);
+    return groupRef.id;
+  },
+  push(data){
+    if (!groupRef) return;
+    pending = data;
+    if (saveTimer) return;
+    saveTimer = setTimeout(flush, 600);
+  },
+  leave(){
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; }
+    pending = null;
+    if (groupRef) { deleteDoc(groupRef).catch(() => {}); groupRef = null; }
+  }
+};
+
+/* 페이지를 닫기 전에 아직 못 보낸 점수를 마저 보낸다 */
+window.addEventListener("pagehide", () => { if (pending) flush(); });
+
+try{
+  await signInAnonymously(auth);
+  onAuthStateChanged(auth, () => {});
+  window.DCS.attachNet(NET);
+
+  /* 코드를 기억하고 있으면 참여하기 전에도 선생님 화면을 따라간다 */
+  const remembered = window.DCS.rememberedCode();
+  if (remembered) watchLock(remembered);
+}catch(e){
+  console.error("[Firebase] 연결하지 못했습니다", e);
+  window.DCS.setNetMessage("지금은 점수를 저장할 수 없어요. 게임은 그대로 할 수 있습니다.");
+}
+</script>
+
+</body>
+</html>

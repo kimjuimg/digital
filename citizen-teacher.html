@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>디지털 시민 신호등 · 선생님</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;800&family=Gaegu:wght@400;700&display=swap">
+
+<style>
+:root{
+  --paper:#EDF1EA; --card:#FFFFFF; --card-2:#F5F8F3;
+  --ink:#1B2620; --ink-2:#4E5F55; --ink-3:#7B8C82;
+  --line:#CBD5C7; --line-strong:#A8B7A4;
+  --brand:#2A3A32; --brand-soft:#DFE7DC;
+  --go:#2E9E4F;      --go-soft:#DEF2E3;
+  --caution:#C98A08; --caution-soft:#FAECC6;
+  --stop:#CE3A31;    --stop-soft:#FBE1DF;
+  --p1:#2159B8;      --p1-soft:#DDE7FA;
+  --p2:#A83E8E;      --p2-soft:#F8DEF1;
+  --gold:#B8860B;    --gold-soft:#FBF0CE;
+  --shadow:rgba(27,38,32,.18); --shadow-soft:rgba(27,38,32,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#141A16; --card:#1E2721; --card-2:#25302A;
+    --ink:#E9EFE7; --ink-2:#AEBDB1; --ink-3:#849487;
+    --line:#35443C; --line-strong:#4C5E53;
+    --brand:#C9DCC6; --brand-soft:#28352C;
+    --go:#57C877;      --go-soft:#1E3A27;
+    --caution:#F0BE47; --caution-soft:#3A2F16;
+    --stop:#F2726A;    --stop-soft:#3E211F;
+    --p1:#7FA8F0;      --p1-soft:#1A2640;
+    --p2:#E58CD0;      --p2-soft:#331F2E;
+    --gold:#F0C550;    --gold-soft:#3A3016;
+    --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#141A16; --card:#1E2721; --card-2:#25302A;
+  --ink:#E9EFE7; --ink-2:#AEBDB1; --ink-3:#849487;
+  --line:#35443C; --line-strong:#4C5E53;
+  --brand:#C9DCC6; --brand-soft:#28352C;
+  --go:#57C877;      --go-soft:#1E3A27;
+  --caution:#F0BE47; --caution-soft:#3A2F16;
+  --stop:#F2726A;    --stop-soft:#3E211F;
+  --p1:#7FA8F0;      --p1-soft:#1A2640;
+  --p2:#E58CD0;      --p2-soft:#331F2E;
+  --gold:#F0C550;    --gold-soft:#3A3016;
+  --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
+}
+
+*{box-sizing:border-box}
+html{color-scheme:light dark}
+body{
+  margin:0; background:var(--paper); color:var(--ink);
+  font-family:'Gothic A1','Malgun Gothic','Apple SD Gothic Neo',system-ui,sans-serif;
+  font-size:16px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+[hidden]{display:none !important}
+.wrap{max-width:960px;margin:0 auto;padding:24px 20px 60px;display:flex;flex-direction:column;gap:20px}
+
+.masthead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.masthead .ic{flex:none;width:46px;height:46px;border-radius:14px;background:var(--brand);color:var(--card);display:grid;place-items:center;font-size:24px}
+.masthead .ttl{flex:1;min-width:200px}
+.masthead h1{font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(25px,4.4vw,34px);line-height:1.15;margin:0}
+.masthead .sub{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
+.masthead a{color:var(--ink-2)}
+
+.panel{background:var(--card);border:2px solid var(--line);border-radius:20px;box-shadow:0 6px 0 var(--shadow-soft);overflow:hidden}
+.panel-head{padding:13px 20px;border-bottom:2px solid var(--line);background:var(--card-2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.panel-head .eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--ink-3)}
+.panel-body{padding:24px 22px}
+
+.lead{font-family:'Gaegu',cursive;font-size:22px;line-height:1.55;color:var(--ink-2);margin:0 0 20px;white-space:pre-line}
+
+/* 로그인 */
+.fields{display:flex;flex-direction:column;gap:14px;margin:0 0 18px;max-width:420px}
+.field{border:2px solid var(--line);border-radius:16px;padding:12px 16px;background:var(--card-2);display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12.5px;font-weight:800;letter-spacing:.06em;color:var(--ink-3)}
+.field input{font-family:'Gothic A1',sans-serif;font-size:19px;color:var(--ink);background:transparent;border:none;border-bottom:2.5px solid var(--line-strong);padding:5px 2px;width:100%}
+.field input:focus{outline:none;border-bottom-color:var(--ink-2)}
+.field.code input{font-family:'Jua',sans-serif;font-size:30px;letter-spacing:.22em;text-transform:uppercase;text-align:center}
+.formmsg{margin:0 0 14px;font-size:14px;font-weight:700;color:var(--stop)}
+.hintline{margin:-6px 0 18px;font-size:13.5px;color:var(--ink-3);max-width:60ch}
+
+button{font-family:inherit}
+.btn{cursor:pointer;font-family:'Jua',sans-serif;font-size:17px;border:none;border-radius:14px;padding:11px 24px;background:var(--brand);color:var(--card);box-shadow:0 4px 0 var(--shadow);transition:transform .12s ease, box-shadow .12s ease}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 var(--shadow)}
+.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 var(--shadow)}
+.btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--ink-2);box-shadow:none;border:2px solid var(--line-strong)}
+.btn.ghost:hover:not(:disabled){transform:none;box-shadow:none;background:var(--card-2)}
+.btn.small{font-size:14px;padding:8px 16px;box-shadow:0 3px 0 var(--shadow-soft)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+
+/* 수업 코드 */
+.codecard{border:2px solid var(--brand);border-radius:18px;background:var(--brand-soft);padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.codecard .lbl{font-size:12.5px;font-weight:800;letter-spacing:.1em;color:var(--ink-2)}
+.codecard .val{font-family:'Jua',sans-serif;font-size:clamp(36px,7vw,52px);line-height:1.05;letter-spacing:.16em}
+.codecard .say{font-size:14px;color:var(--ink-2);flex:1;min-width:200px}
+.codecard .say b{font-family:'Gothic A1',sans-serif}
+
+/* 함께 보기 */
+.control{border:2px solid var(--line);border-radius:18px;background:var(--card-2);padding:16px 18px}
+.control h3{font-family:'Jua',sans-serif;font-weight:400;margin:0 0 3px;font-size:19px}
+.control p{margin:0 0 14px;font-size:13.5px;color:var(--ink-2);max-width:62ch}
+.control.on{border-color:var(--brand);background:var(--brand-soft)}
+.missionbtns{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
+@media (max-width:720px){.missionbtns{grid-template-columns:repeat(2,1fr)}}
+.mbtn{
+  cursor:pointer;border:2px solid var(--line-strong);background:var(--card);color:var(--ink);
+  border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  box-shadow:0 3px 0 var(--shadow-soft);transition:transform .12s ease, background .12s ease, border-color .12s ease;
+}
+.mbtn:hover{transform:translateY(-2px)}
+.mbtn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.mbtn .ic{font-size:20px;line-height:1}
+.mbtn .lb{font-family:'Jua',sans-serif;font-size:14.5px;text-align:center;line-height:1.25}
+.mbtn[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--card)}
+.mbtn.free[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:#fff}
+
+/* 요약 */
+.tallies{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:720px){.tallies{grid-template-columns:repeat(2,1fr)}}
+.tally{border:2px solid var(--line);border-radius:14px;background:var(--card-2);padding:11px 14px}
+.tally .v{font-family:'Jua',sans-serif;font-size:23px;line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tally .k{font-size:12px;font-weight:700;color:var(--ink-3)}
+.tally.first{border-color:var(--gold);background:var(--gold-soft)}
+.tally.first .v{color:var(--gold)}
+
+/* 순위표 */
+.ranklist{display:flex;flex-direction:column;gap:10px}
+.rank{border:2px solid var(--line);border-radius:16px;background:var(--card-2);padding:13px 15px;display:grid;gap:4px 14px;grid-template-columns:44px 1fr auto;align-items:center}
+.rank.first{border-color:var(--gold);background:var(--gold-soft);border-width:3px}
+.rank .pos{font-family:'Jua',sans-serif;font-size:20px;line-height:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.rank.first .pos{color:var(--gold)}
+.rank .who{min-width:0}
+.rank .gname{font-family:'Jua',sans-serif;font-size:19px;line-height:1.25;overflow-wrap:anywhere}
+.rank .gmem{font-size:13px;color:var(--ink-2);overflow-wrap:anywhere}
+.rank .tot{text-align:right}
+.rank .tot b{font-family:'Jua',sans-serif;font-weight:400;font-size:26px;font-variant-numeric:tabular-nums;line-height:1}
+.rank .tot small{font-size:12px;color:var(--ink-3);display:block}
+.rank .foot{grid-column:1 / -1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
+.pgbar{flex:1;min-width:120px;height:9px;border-radius:6px;background:var(--card);border:1px solid var(--line);overflow:hidden}
+.pgbar > i{display:block;height:100%;background:var(--brand)}
+.rank.first .pgbar > i{background:var(--gold)}
+.pill{font-size:11.5px;font-weight:800;letter-spacing:.04em;border-radius:999px;padding:3px 10px;border:1.5px solid}
+.pill.live{color:var(--ink-2);border-color:var(--line-strong);background:var(--card)}
+.pill.done{color:var(--go);border-color:var(--go);background:var(--go-soft)}
+.rank .detail{grid-column:1 / -1;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.rank .vows{grid-column:1 / -1;margin:4px 0 0;padding:0 0 0 18px}
+.rank .vows li{font-family:'Gaegu',cursive;font-size:17px;line-height:1.6;color:var(--ink-2)}
+
+.empty{border:2px dashed var(--line-strong);border-radius:16px;padding:30px 20px;text-align:center;color:var(--ink-2)}
+.empty .ic{font-size:34px;line-height:1.4}
+.livehint{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);text-align:center}
+
+.banner{border:2px solid var(--stop);background:var(--stop-soft);border-radius:14px;padding:12px 16px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.banner .ic{font-size:18px;flex:none;line-height:1.3}
+
+footer{font-size:12.5px;color:var(--ink-3);text-align:center;line-height:1.7}
+footer a{color:var(--ink-2)}
+@media (prefers-reduced-motion: reduce){*{transition-duration:.01ms !important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="ic" aria-hidden="true">🧑‍🏫</div>
+    <div class="ttl">
+      <h1>디지털 시민 신호등 · 선생님</h1>
+      <p class="sub">수업 코드를 열고, 모둠 점수를 실시간으로 보고, 학생 화면을 함께 넘깁니다.</p>
+    </div>
+    <button class="btn ghost small" id="logoutBtn" type="button" hidden>로그아웃</button>
+  </header>
+
+  <div id="alertSlot"></div>
+
+  <main class="panel">
+    <div class="panel-head">
+      <span class="eyebrow" id="eyebrow">선생님 로그인</span>
+      <span class="eyebrow" id="headRight"></span>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </main>
+
+  <footer>
+    <a href="./">처음 화면</a> · <a href="./citizen.html">학생 화면 열기</a> · <a href="./forensics.html">디지털 감식반</a>
+  </footer>
+
+</div>
+
+<script type="module">
+import { auth, db, teacherEmailFor, TEACHER_ID, COL_CLASSES, COL_GROUPS, COL_CLASSROOM, cleanCode, randomCode }
+  from "./firebase-init.js";
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+import { doc, setDoc, deleteDoc, collection, query, where, onSnapshot, getDocs, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+const MISSIONS = [
+  { id:"m1", ic:"🚦", label:"미션 1\n인터넷 신호등", max:10 },
+  { id:"m2", ic:"🤫", label:"미션 2\n개인정보",     max:12 },
+  { id:"m3", ic:"🔍", label:"미션 3\n디지털 탐정",  max:8  },
+  { id:"m4", ic:"🛑", label:"미션 4\n못된 말 멈춰", max:8  }
+];
+const MAX_SCORE   = MISSIONS.reduce((s,m)=>s+m.max, 0);   // 38
+const TOTAL_STEPS = MAX_SCORE;
+
+const state = {
+  screen:"login",     // login | class | board
+  code:"",
+  rows:[],
+  lock:null,          // 함께 보기로 지정한 미션 id, 없으면 null
+  formError:"",
+  busy:false
+};
+let stopGroups = null;
+
+const bodyEl   = document.getElementById("panelBody");
+const eyebrow  = document.getElementById("eyebrow");
+const headRight= document.getElementById("headRight");
+const alertSlot= document.getElementById("alertSlot");
+const logoutBtn= document.getElementById("logoutBtn");
+
+function el(tag, cls, text){
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+function alertBox(msg){
+  alertSlot.innerHTML = "";
+  if (!msg) return;
+  const b = el("div","banner");
+  b.appendChild(el("span","ic","⚠️"));
+  b.appendChild(el("span", null, msg));
+  alertSlot.appendChild(b);
+}
+
+/* ═══════ 로그인 ═══════ */
+function renderLogin(){
+  logoutBtn.hidden = true;
+  eyebrow.textContent = "선생님 로그인";
+  headRight.textContent = "";
+  bodyEl.innerHTML = "";
+
+  bodyEl.appendChild(el("p","lead","선생님 아이디와 비밀번호로 들어오세요.\n파이썬 첫걸음 채점기와 같은 계정입니다."));
+
+  const fields = el("div","fields");
+
+  const f1 = el("div","field");
+  const l1 = el("label", null, "아이디"); l1.setAttribute("for","tid");
+  const i1 = document.createElement("input");
+  i1.type = "text"; i1.id = "tid"; i1.value = TEACHER_ID; i1.autocomplete = "username";
+  f1.appendChild(l1); f1.appendChild(i1);
+  fields.appendChild(f1);
+
+  const f2 = el("div","field");
+  const l2 = el("label", null, "비밀번호"); l2.setAttribute("for","tpw");
+  const i2 = document.createElement("input");
+  i2.type = "password"; i2.id = "tpw"; i2.autocomplete = "current-password";
+  f2.appendChild(l2); f2.appendChild(i2);
+  fields.appendChild(f2);
+  bodyEl.appendChild(fields);
+
+  if (state.formError) bodyEl.appendChild(el("p","formmsg", state.formError));
+
+  const actions = el("div","actions");
+  const go = el("button","btn", state.busy ? "확인 중…" : "들어가기");
+  go.type = "button"; go.disabled = state.busy;
+  const submit = async () => {
+    if (state.busy) return;
+    state.busy = true; state.formError = ""; render();
+    try{
+      await signInWithEmailAndPassword(auth, teacherEmailFor(i1.value), i2.value);
+      /* 화면 전환은 onAuthStateChanged 가 맡는다 */
+    }catch(e){
+      state.busy = false;
+      state.formError = "아이디나 비밀번호가 맞지 않습니다.";
+      render();
+    }
+  };
+  go.addEventListener("click", submit);
+  i2.addEventListener("keydown", (e)=>{ if(e.key === "Enter") submit(); });
+  actions.appendChild(go);
+  bodyEl.appendChild(actions);
+
+  (state.formError ? i2 : i2).focus();
+}
+
+/* ═══════ 수업 열기 ═══════ */
+function renderClassSetup(){
+  logoutBtn.hidden = false;
+  eyebrow.textContent = "수업 열기";
+  headRight.textContent = "";
+  bodyEl.innerHTML = "";
+
+  bodyEl.appendChild(el("p","lead","수업 코드를 하나 정해 주세요.\n학생들은 이 코드로 모둠 게임에 들어옵니다."));
+
+  const fields = el("div","fields");
+  const f = el("div","field code");
+  const lab = el("label", null, "수업 코드"); lab.setAttribute("for","ccode");
+  const inp = document.createElement("input");
+  inp.type = "text"; inp.id = "ccode"; inp.maxLength = 6; inp.autocomplete = "off";
+  inp.value = state.code;
+  inp.addEventListener("input", ()=>{ inp.value = cleanCode(inp.value); state.code = inp.value; });
+  f.appendChild(lab); f.appendChild(inp);
+  fields.appendChild(f);
+  bodyEl.appendChild(fields);
+
+  bodyEl.appendChild(el("p","hintline","영어 대문자와 숫자만 쓸 수 있어요. 지난 수업과 같은 코드를 다시 열면 그때 모둠들이 순위표에 그대로 남아 있습니다."));
+
+  if (state.formError) bodyEl.appendChild(el("p","formmsg", state.formError));
+
+  const actions = el("div","actions");
+  const shuffle = el("button","btn ghost","다른 코드 만들기");
+  shuffle.type = "button";
+  shuffle.addEventListener("click", ()=>{ state.code = randomCode(4); render(); });
+  const open = el("button","btn", state.busy ? "여는 중…" : "수업 열기");
+  open.type = "button"; open.disabled = state.busy;
+  open.addEventListener("click", openClass);
+  actions.appendChild(shuffle);
+  actions.appendChild(open);
+  bodyEl.appendChild(actions);
+  inp.focus();
+}
+
+async function openClass(){
+  if (state.busy) return;
+  if (state.code.length < 3) { state.formError = "수업 코드는 3자 이상으로 정해 주세요."; render(); return; }
+  state.busy = true; state.formError = ""; render();
+  try{
+    await setDoc(doc(db, COL_CLASSES, state.code), { code: state.code, openedAt: serverTimestamp() });
+    await sendLock(null);                       /* 새 수업은 자유롭게 시작한다 */
+    try{ window.localStorage.setItem("dcs-teacher-code", state.code); }catch(e){}
+    state.busy = false;
+    state.screen = "board";
+    watchGroups();
+    render();
+  }catch(e){
+    console.error(e);
+    state.busy = false;
+    state.formError = (e && e.code === "permission-denied")
+      ? "쓰기 권한이 없습니다. 이 저장소의 firestore.rules 를 Firebase 콘솔의 규칙 탭에 붙여넣고 게시했는지 확인해 주세요."
+      : "수업을 열지 못했습니다. 잠시 후 다시 시도해 주세요.";
+    render();
+  }
+}
+
+/* ═══════ 함께 보기 ═══════ */
+async function sendLock(mission){
+  state.lock = mission;
+  try{
+    await setDoc(doc(db, COL_CLASSROOM, state.code), {
+      leading: !!mission,
+      mission: mission || null,
+      at: serverTimestamp()
+    });
+    alertBox("");
+  }catch(e){
+    console.error(e);
+    alertBox("학생 화면을 넘기지 못했습니다. 잠시 후 다시 눌러 주세요.");
+  }
+  render();
+}
+
+/* ═══════ 모둠 점수 지켜보기 ═══════ */
+function watchGroups(){
+  if (stopGroups) { stopGroups(); stopGroups = null; }
+  if (!state.code) return;
+  const q = query(collection(db, COL_GROUPS), where("code", "==", state.code));
+  stopGroups = onSnapshot(q, (snap) => {
+    state.rows = snap.docs.map((d) => {
+      const v = d.data() || {};
+      return {
+        id: d.id,
+        name: (typeof v.name === "string" && v.name) ? v.name : "이름 없는 모둠",
+        p1: typeof v.p1 === "string" ? v.p1 : "",
+        p2: typeof v.p2 === "string" ? v.p2 : "",
+        s1: Number(v.s1) || 0, s2: Number(v.s2) || 0,
+        total: Number(v.total) || 0,
+        m1: Number(v.m1) || 0, m2: Number(v.m2) || 0,
+        m3: Number(v.m3) || 0, m4: Number(v.m4) || 0,
+        steps: Number(v.steps) || 0,
+        stepLabel: typeof v.stepLabel === "string" ? v.stepLabel : "준비",
+        done: !!v.done,
+        promises: Array.isArray(v.promises) ? v.promises : [],
+        at: (v.updatedAt && v.updatedAt.toMillis) ? v.updatedAt.toMillis() : 0
+      };
+    });
+    alertBox("");
+    if (state.screen === "board") render();
+  }, (e) => {
+    console.error(e);
+    alertBox(e && e.code === "permission-denied"
+      ? "모둠 점수를 읽을 권한이 없습니다. 이 저장소의 firestore.rules 를 Firebase 콘솔의 규칙 탭에 붙여넣고 게시해 주세요."
+      : "모둠 점수를 불러오지 못했습니다. 페이지를 새로 열어 보세요.");
+  });
+}
+
+function ranked(){
+  return state.rows.slice().sort((a, b) => {
+    if (b.total !== a.total) return b.total - a.total;
+    if (b.steps !== a.steps) return b.steps - a.steps;
+    return a.at - b.at;
+  });
+}
+
+/* ═══════ 순위표 ═══════ */
+function renderBoard(){
+  logoutBtn.hidden = false;
+  eyebrow.textContent = "모둠 순위표";
+  headRight.textContent = state.lock ? "함께 보기 켜짐" : "학생이 자유롭게 이동";
+  bodyEl.innerHTML = "";
+
+  /* 수업 코드 */
+  const code = el("div","codecard");
+  const left = el("div");
+  left.appendChild(el("div","lbl","수업 코드"));
+  left.appendChild(el("div","val", state.code));
+  code.appendChild(left);
+  const say = el("div","say");
+  say.appendChild(document.createTextNode("학생들에게 이 코드를 알려주세요. 학생 화면 주소는 "));
+  const b = document.createElement("b");
+  b.textContent = location.origin + location.pathname.replace(/citizen-teacher\.html$/, "citizen.html");
+  say.appendChild(b);
+  say.appendChild(document.createTextNode(" 입니다."));
+  code.appendChild(say);
+  const changeBtn = el("button","btn ghost small","수업 코드 바꾸기");
+  changeBtn.type = "button";
+  changeBtn.addEventListener("click", ()=>{ state.screen = "class"; state.formError = ""; render(); });
+  code.appendChild(changeBtn);
+  bodyEl.appendChild(code);
+
+  /* 함께 보기 */
+  const ctrl = el("div","control" + (state.lock ? " on" : ""));
+  ctrl.style.marginTop = "18px";
+  ctrl.appendChild(el("h3", null, "학생 화면 함께 보기"));
+  ctrl.appendChild(el("p", null, "미션을 하나 고르면 모든 모둠의 화면이 그 미션으로 넘어가고, 다른 미션으로는 넘어가지 못합니다. 설명하는 동안 앞서 나가는 것을 막기 위한 것입니다. ‘자유롭게’를 누르면 풀립니다. 끄는 것을 잊어도 세 시간이 지나면 저절로 풀립니다."));
+
+  const btns = el("div","missionbtns");
+  MISSIONS.forEach((m) => {
+    const b2 = el("button","mbtn");
+    b2.type = "button";
+    b2.setAttribute("aria-pressed", state.lock === m.id ? "true" : "false");
+    b2.appendChild(el("span","ic", m.ic));
+    const lb = el("span","lb");
+    m.label.split("\n").forEach((line, i) => {
+      if (i) lb.appendChild(document.createElement("br"));
+      lb.appendChild(document.createTextNode(line));
+    });
+    b2.appendChild(lb);
+    b2.addEventListener("click", ()=> sendLock(state.lock === m.id ? null : m.id));
+    btns.appendChild(b2);
+  });
+  const free = el("button","mbtn free");
+  free.type = "button";
+  free.setAttribute("aria-pressed", state.lock ? "false" : "true");
+  free.appendChild(el("span","ic","🟢"));
+  const flb = el("span","lb");
+  flb.appendChild(document.createTextNode("자유롭게"));
+  flb.appendChild(document.createElement("br"));
+  flb.appendChild(document.createTextNode("함께 보기 끄기"));
+  free.appendChild(flb);
+  free.addEventListener("click", ()=> sendLock(null));
+  btns.appendChild(free);
+  ctrl.appendChild(btns);
+  bodyEl.appendChild(ctrl);
+
+  /* 요약 */
+  const rows = ranked();
+  const doneCount = rows.filter(r => r.done).length;
+  const top = rows.length ? rows[0] : null;
+  const avg = rows.length ? Math.round(rows.reduce((s,r)=>s+r.total,0) / rows.length * 10) / 10 : 0;
+
+  const tallies = el("div","tallies");
+  tallies.style.marginTop = "18px";
+  [
+    { k:"참여 모둠",       v: rows.length + "모둠", first:false },
+    { k:"모두 마친 모둠",  v: doneCount + " / " + rows.length, first:false },
+    { k:"모둠 평균 점수",  v: avg + " / " + MAX_SCORE, first:false },
+    { k:"현재 1등",        v: (top && top.total > 0) ? top.name : "아직 없음", first:true }
+  ].forEach(s => {
+    const c = el("div","tally" + (s.first ? " first" : ""));
+    c.appendChild(el("div","v", s.v));
+    c.appendChild(el("div","k", s.k));
+    tallies.appendChild(c);
+  });
+  bodyEl.appendChild(tallies);
+
+  /* 순위 */
+  const listWrap = document.createElement("div");
+  listWrap.style.marginTop = "18px";
+  if (!rows.length){
+    const empty = el("div","empty");
+    empty.appendChild(el("div","ic","🪑"));
+    empty.appendChild(el("div", null, "아직 참여한 모둠이 없어요. 학생이 학생 화면에서 수업 코드 " + state.code + " 를 넣으면 여기에 바로 나타납니다."));
+    listWrap.appendChild(empty);
+  } else {
+    const list = el("div","ranklist");
+    rows.forEach((r, i) => {
+      const isFirst = i === 0 && r.total > 0;
+      const row = el("div","rank" + (isFirst ? " first" : ""));
+
+      const pos = el("div","pos");
+      if (isFirst) pos.appendChild(el("div", null, "👑"));
+      pos.appendChild(el("div", null, String(i + 1)));
+      row.appendChild(pos);
+
+      const who = el("div","who");
+      who.appendChild(el("div","gname", r.name));
+      who.appendChild(el("div","gmem", (r.p1 || "1번 학생") + " · " + (r.p2 || "2번 학생")));
+      row.appendChild(who);
+
+      const tot = el("div","tot");
+      tot.appendChild(el("b", null, String(r.total)));
+      tot.appendChild(el("small", null, "점 / " + MAX_SCORE));
+      row.appendChild(tot);
+
+      const foot = el("div","foot");
+      const pg = el("div","pgbar");
+      const fill = el("i");
+      fill.style.width = Math.round(Math.min(r.steps, TOTAL_STEPS) / TOTAL_STEPS * 100) + "%";
+      pg.appendChild(fill);
+      foot.appendChild(pg);
+      foot.appendChild(el("span","pill " + (r.done ? "done" : "live"), r.done ? "완료" : r.stepLabel));
+      row.appendChild(foot);
+
+      row.appendChild(el("div","detail",
+        "신호등 " + r.m1 + "/10 · 개인정보 " + r.m2 + "/12 · 탐정 " + r.m3 + "/8 · 못된 말 " + r.m4 + "/8" +
+        " · " + (r.p1 || "1번") + " " + r.s1 + "점 / " + (r.p2 || "2번") + " " + r.s2 + "점" +
+        " · 진행 " + Math.min(r.steps, TOTAL_STEPS) + "/" + TOTAL_STEPS));
+
+      const vows = r.promises.filter(p => typeof p === "string" && p.trim());
+      if (vows.length){
+        const ul = el("ul","vows");
+        vows.forEach(p => ul.appendChild(el("li", null, p.trim())));
+        row.appendChild(ul);
+      }
+      list.appendChild(row);
+    });
+    listWrap.appendChild(list);
+    listWrap.appendChild(el("p","livehint","점수는 실시간으로 갱신됩니다. 새로고침하지 않아도 됩니다."));
+  }
+  bodyEl.appendChild(listWrap);
+
+  /* 정리 */
+  if (rows.length){
+    const clear = el("div","actions");
+    clear.style.marginTop = "18px";
+    const cb = el("button","btn ghost small","이 수업의 모둠 기록 모두 지우기");
+    cb.type = "button";
+    cb.addEventListener("click", clearGroups);
+    clear.appendChild(cb);
+    bodyEl.appendChild(clear);
+  }
+}
+
+async function clearGroups(){
+  const n = state.rows.length;
+  if (!window.confirm("수업 코드 " + state.code + " 의 모둠 기록 " + n + "개를 모두 지웁니다. 되돌릴 수 없습니다. 지울까요?")) return;
+  try{
+    const snap = await getDocs(query(collection(db, COL_GROUPS), where("code", "==", state.code)));
+    await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+    alertBox("");
+  }catch(e){
+    console.error(e);
+    alertBox("기록을 지우지 못했습니다.");
+  }
+}
+
+/* ═══════ 라우터 ═══════ */
+function render(){
+  if (state.screen === "login") return renderLogin();
+  if (state.screen === "class") return renderClassSetup();
+  if (state.screen === "board") return renderBoard();
+}
+
+logoutBtn.addEventListener("click", async () => {
+  if (stopGroups) { stopGroups(); stopGroups = null; }
+  if (state.lock) { try{ await sendLock(null); }catch(e){} }
+  try{ await signOut(auth); }catch(e){}
+});
+
+onAuthStateChanged(auth, (user) => {
+  const isTeacher = !!(user && user.email);
+  if (!isTeacher){
+    if (stopGroups) { stopGroups(); stopGroups = null; }
+    state.screen = "login"; state.rows = []; state.lock = null; state.busy = false;
+    render();
+    return;
+  }
+  state.busy = false;
+  let saved = "";
+  try{ saved = cleanCode(window.localStorage.getItem("dcs-teacher-code")); }catch(e){}
+  state.code = saved || randomCode(4);
+  if (state.screen === "login") state.screen = "class";
+  render();
+});
+
+render();
+</script>
+
+</body>
+</html>
