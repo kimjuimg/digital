@@ -3,50 +3,50 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>디지털 시민 신호등 · 선생님</title>
+<title>디지털 시민 브리핑 · 선생님</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jua&family=Gothic+A1:wght@400;500;700;800&family=Gaegu:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Gothic+A1:wght@400;500;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
 :root{
-  --paper:#EDF1EA; --card:#FFFFFF; --card-2:#F5F8F3;
-  --ink:#1B2620; --ink-2:#4E5F55; --ink-3:#7B8C82;
-  --line:#CBD5C7; --line-strong:#A8B7A4;
-  --brand:#2A3A32; --brand-soft:#DFE7DC;
+  --paper:#ECEFF1; --card:#FFFFFF; --card-2:#F4F6F7;
+  --ink:#141A1C; --ink-2:#4A585D; --ink-3:#7A8A90;
+  --line:#C9D2D6; --line-strong:#A6B3B9;
+  --brand:#14343E; --brand-soft:#E0E8EA;
   --go:#2E9E4F;      --go-soft:#DEF2E3;
   --caution:#C98A08; --caution-soft:#FAECC6;
   --stop:#CE3A31;    --stop-soft:#FBE1DF;
-  --p1:#2159B8;      --p1-soft:#DDE7FA;
-  --p2:#A83E8E;      --p2-soft:#F8DEF1;
+  --p1:#1E4C86;      --p1-soft:#DDE6F3;
+  --p2:#7A3266;      --p2-soft:#F2DEEC;
   --gold:#B8860B;    --gold-soft:#FBF0CE;
   --shadow:rgba(27,38,32,.18); --shadow-soft:rgba(27,38,32,.08);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#141A16; --card:#1E2721; --card-2:#25302A;
-    --ink:#E9EFE7; --ink-2:#AEBDB1; --ink-3:#849487;
-    --line:#35443C; --line-strong:#4C5E53;
-    --brand:#C9DCC6; --brand-soft:#28352C;
+    --paper:#101618; --card:#182023; --card-2:#1F292C;
+    --ink:#E6ECEE; --ink-2:#A8B7BC; --ink-3:#7B8A90;
+    --line:#2C393D; --line-strong:#43545A;
+    --brand:#BBD4DA; --brand-soft:#1E2C31;
     --go:#57C877;      --go-soft:#1E3A27;
     --caution:#F0BE47; --caution-soft:#3A2F16;
     --stop:#F2726A;    --stop-soft:#3E211F;
-    --p1:#7FA8F0;      --p1-soft:#1A2640;
-    --p2:#E58CD0;      --p2-soft:#331F2E;
+    --p1:#7FA6E0;      --p1-soft:#182437;
+    --p2:#D68FC1;      --p2-soft:#2C1B27;
     --gold:#F0C550;    --gold-soft:#3A3016;
     --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
   }
 }
 :root[data-theme="dark"]{
-  --paper:#141A16; --card:#1E2721; --card-2:#25302A;
-  --ink:#E9EFE7; --ink-2:#AEBDB1; --ink-3:#849487;
-  --line:#35443C; --line-strong:#4C5E53;
-  --brand:#C9DCC6; --brand-soft:#28352C;
+  --paper:#101618; --card:#182023; --card-2:#1F292C;
+  --ink:#E6ECEE; --ink-2:#A8B7BC; --ink-3:#7B8A90;
+  --line:#2C393D; --line-strong:#43545A;
+  --brand:#BBD4DA; --brand-soft:#1E2C31;
   --go:#57C877;      --go-soft:#1E3A27;
   --caution:#F0BE47; --caution-soft:#3A2F16;
   --stop:#F2726A;    --stop-soft:#3E211F;
-  --p1:#7FA8F0;      --p1-soft:#1A2640;
-  --p2:#E58CD0;      --p2-soft:#331F2E;
+  --p1:#7FA6E0;      --p1-soft:#182437;
+  --p2:#D68FC1;      --p2-soft:#2C1B27;
   --gold:#F0C550;    --gold-soft:#3A3016;
   --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
 }
@@ -62,86 +62,86 @@ body{
 .wrap{max-width:960px;margin:0 auto;padding:24px 20px 60px;display:flex;flex-direction:column;gap:20px}
 
 .masthead{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.masthead .ic{flex:none;width:46px;height:46px;border-radius:14px;background:var(--brand);color:var(--card);display:grid;place-items:center;font-size:24px}
+.masthead .ic{flex:none;width:46px;height:46px;border-radius:5px;background:var(--brand);color:var(--card);display:grid;place-items:center;font-size:24px}
 .masthead .ttl{flex:1;min-width:200px}
-.masthead h1{font-family:'Jua',sans-serif;font-weight:400;font-size:clamp(25px,4.4vw,34px);line-height:1.15;margin:0}
+.masthead h1{font-family:'Gowun Batang',serif;font-weight:400;font-size:clamp(25px,4.4vw,34px);line-height:1.15;margin:0}
 .masthead .sub{margin:2px 0 0;font-size:14px;color:var(--ink-2)}
 .masthead a{color:var(--ink-2)}
 
-.panel{background:var(--card);border:2px solid var(--line);border-radius:20px;box-shadow:0 6px 0 var(--shadow-soft);overflow:hidden}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:6px;box-shadow:0 1px 0 var(--shadow-soft);overflow:hidden}
 .panel-head{padding:13px 20px;border-bottom:2px solid var(--line);background:var(--card-2);display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .panel-head .eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;color:var(--ink-3)}
 .panel-body{padding:24px 22px}
 
-.lead{font-family:'Gaegu',cursive;font-size:22px;line-height:1.55;color:var(--ink-2);margin:0 0 20px;white-space:pre-line}
+.lead{font-family:'Gothic A1',sans-serif;font-size:22px;line-height:1.55;color:var(--ink-2);margin:0 0 20px;white-space:pre-line}
 
 /* 로그인 */
 .fields{display:flex;flex-direction:column;gap:14px;margin:0 0 18px;max-width:420px}
-.field{border:2px solid var(--line);border-radius:16px;padding:12px 16px;background:var(--card-2);display:flex;flex-direction:column;gap:5px}
+.field{border:1px solid var(--line);border-radius:5px;padding:12px 16px;background:var(--card-2);display:flex;flex-direction:column;gap:5px}
 .field label{font-size:12.5px;font-weight:800;letter-spacing:.06em;color:var(--ink-3)}
 .field input{font-family:'Gothic A1',sans-serif;font-size:19px;color:var(--ink);background:transparent;border:none;border-bottom:2.5px solid var(--line-strong);padding:5px 2px;width:100%}
 .field input:focus{outline:none;border-bottom-color:var(--ink-2)}
-.field.code input{font-family:'Jua',sans-serif;font-size:30px;letter-spacing:.22em;text-transform:uppercase;text-align:center}
+.field.code input{font-family:'Gowun Batang',serif;font-size:30px;letter-spacing:.22em;text-transform:uppercase;text-align:center}
 .formmsg{margin:0 0 14px;font-size:14px;font-weight:700;color:var(--stop)}
 .hintline{margin:-6px 0 18px;font-size:13.5px;color:var(--ink-3);max-width:60ch}
 
 button{font-family:inherit}
-.btn{cursor:pointer;font-family:'Jua',sans-serif;font-size:17px;border:none;border-radius:14px;padding:11px 24px;background:var(--brand);color:var(--card);box-shadow:0 4px 0 var(--shadow);transition:transform .12s ease, box-shadow .12s ease}
-.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 6px 0 var(--shadow)}
-.btn:active:not(:disabled){transform:translateY(2px);box-shadow:0 2px 0 var(--shadow)}
+.btn{cursor:pointer;font-family:'Gowun Batang',serif;font-size:17px;border:none;border-radius:5px;padding:11px 24px;background:var(--brand);color:var(--card);box-shadow:none;transition:transform .12s ease, box-shadow .12s ease}
+.btn:hover:not(:disabled){transform:none;box-shadow:none}
+.btn:active:not(:disabled){transform:none;box-shadow:none}
 .btn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .btn:disabled{opacity:.4;cursor:not-allowed}
-.btn.ghost{background:transparent;color:var(--ink-2);box-shadow:none;border:2px solid var(--line-strong)}
+.btn.ghost{background:transparent;color:var(--ink-2);box-shadow:none;border:1px solid var(--line-strong)}
 .btn.ghost:hover:not(:disabled){transform:none;box-shadow:none;background:var(--card-2)}
-.btn.small{font-size:14px;padding:8px 16px;box-shadow:0 3px 0 var(--shadow-soft)}
+.btn.small{font-size:14px;padding:8px 16px;box-shadow:none}
 .actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 
 /* 수업 코드 */
-.codecard{border:2px solid var(--brand);border-radius:18px;background:var(--brand-soft);padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+.codecard{border:1px solid var(--brand);border-radius:6px;background:var(--brand-soft);padding:18px 20px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .codecard .lbl{font-size:12.5px;font-weight:800;letter-spacing:.1em;color:var(--ink-2)}
-.codecard .val{font-family:'Jua',sans-serif;font-size:clamp(36px,7vw,52px);line-height:1.05;letter-spacing:.16em}
+.codecard .val{font-family:'Gowun Batang',serif;font-size:clamp(36px,7vw,52px);line-height:1.05;letter-spacing:.16em}
 .codecard .say{font-size:14px;color:var(--ink-2);flex:1;min-width:200px}
 .codecard .say b{font-family:'Gothic A1',sans-serif}
 
 /* 함께 보기 */
-.control{border:2px solid var(--line);border-radius:18px;background:var(--card-2);padding:16px 18px}
-.control h3{font-family:'Jua',sans-serif;font-weight:400;margin:0 0 3px;font-size:19px}
+.control{border:1px solid var(--line);border-radius:6px;background:var(--card-2);padding:16px 18px}
+.control h3{font-family:'Gowun Batang',serif;font-weight:400;margin:0 0 3px;font-size:19px}
 .control p{margin:0 0 14px;font-size:13.5px;color:var(--ink-2);max-width:62ch}
 .control.on{border-color:var(--brand);background:var(--brand-soft)}
 .missionbtns{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}
 @media (max-width:720px){.missionbtns{grid-template-columns:repeat(2,1fr)}}
 .mbtn{
-  cursor:pointer;border:2px solid var(--line-strong);background:var(--card);color:var(--ink);
-  border-radius:14px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;
-  box-shadow:0 3px 0 var(--shadow-soft);transition:transform .12s ease, background .12s ease, border-color .12s ease;
+  cursor:pointer;border:1px solid var(--line-strong);background:var(--card);color:var(--ink);
+  border-radius:5px;padding:12px 8px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  box-shadow:none;transition:transform .12s ease, background .12s ease, border-color .12s ease;
 }
-.mbtn:hover{transform:translateY(-2px)}
+.mbtn:hover{transform:none}
 .mbtn:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
 .mbtn .ic{font-size:20px;line-height:1}
-.mbtn .lb{font-family:'Jua',sans-serif;font-size:14.5px;text-align:center;line-height:1.25}
+.mbtn .lb{font-family:'Gowun Batang',serif;font-size:14.5px;text-align:center;line-height:1.25}
 .mbtn[aria-pressed="true"]{background:var(--brand);border-color:var(--brand);color:var(--card)}
 .mbtn.free[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:#fff}
 
 /* 요약 */
 .tallies{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
 @media (max-width:720px){.tallies{grid-template-columns:repeat(2,1fr)}}
-.tally{border:2px solid var(--line);border-radius:14px;background:var(--card-2);padding:11px 14px}
-.tally .v{font-family:'Jua',sans-serif;font-size:23px;line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.tally{border:1px solid var(--line);border-radius:5px;background:var(--card-2);padding:11px 14px}
+.tally .v{font-family:'Gowun Batang',serif;font-size:23px;line-height:1.2;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
 .tally .k{font-size:12px;font-weight:700;color:var(--ink-3)}
 .tally.first{border-color:var(--gold);background:var(--gold-soft)}
 .tally.first .v{color:var(--gold)}
 
 /* 순위표 */
 .ranklist{display:flex;flex-direction:column;gap:10px}
-.rank{border:2px solid var(--line);border-radius:16px;background:var(--card-2);padding:13px 15px;display:grid;gap:4px 14px;grid-template-columns:44px 1fr auto;align-items:center}
-.rank.first{border-color:var(--gold);background:var(--gold-soft);border-width:3px}
-.rank .pos{font-family:'Jua',sans-serif;font-size:20px;line-height:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
+.rank{border:1px solid var(--line);border-radius:5px;background:var(--card-2);padding:13px 15px;display:grid;gap:4px 14px;grid-template-columns:44px 1fr auto;align-items:center}
+.rank.first{border-color:var(--gold);background:var(--gold-soft);border-width:2px}
+.rank .pos{font-family:'Gowun Batang',serif;font-size:20px;line-height:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-variant-numeric:tabular-nums;color:var(--ink-2)}
 .rank.first .pos{color:var(--gold)}
 .rank .who{min-width:0}
-.rank .gname{font-family:'Jua',sans-serif;font-size:19px;line-height:1.25;overflow-wrap:anywhere}
+.rank .gname{font-family:'Gowun Batang',serif;font-size:19px;line-height:1.25;overflow-wrap:anywhere}
 .rank .gmem{font-size:13px;color:var(--ink-2);overflow-wrap:anywhere}
 .rank .tot{text-align:right}
-.rank .tot b{font-family:'Jua',sans-serif;font-weight:400;font-size:26px;font-variant-numeric:tabular-nums;line-height:1}
+.rank .tot b{font-family:'Gowun Batang',serif;font-weight:400;font-size:26px;font-variant-numeric:tabular-nums;line-height:1}
 .rank .tot small{font-size:12px;color:var(--ink-3);display:block}
 .rank .foot{grid-column:1 / -1;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px}
 .pgbar{flex:1;min-width:120px;height:9px;border-radius:6px;background:var(--card);border:1px solid var(--line);overflow:hidden}
@@ -152,13 +152,13 @@ button{font-family:inherit}
 .pill.done{color:var(--go);border-color:var(--go);background:var(--go-soft)}
 .rank .detail{grid-column:1 / -1;font-size:12.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
 .rank .vows{grid-column:1 / -1;margin:4px 0 0;padding:0 0 0 18px}
-.rank .vows li{font-family:'Gaegu',cursive;font-size:17px;line-height:1.6;color:var(--ink-2)}
+.rank .vows li{font-family:'Gothic A1',sans-serif;font-size:17px;line-height:1.6;color:var(--ink-2)}
 
-.empty{border:2px dashed var(--line-strong);border-radius:16px;padding:30px 20px;text-align:center;color:var(--ink-2)}
+.empty{border:2px dashed var(--line-strong);border-radius:5px;padding:30px 20px;text-align:center;color:var(--ink-2)}
 .empty .ic{font-size:34px;line-height:1.4}
 .livehint{margin:14px 0 0;font-size:12.5px;color:var(--ink-3);text-align:center}
 
-.banner{border:2px solid var(--stop);background:var(--stop-soft);border-radius:14px;padding:12px 16px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
+.banner{border:1px solid var(--stop);background:var(--stop-soft);border-radius:5px;padding:12px 16px;font-size:14px;display:flex;gap:10px;align-items:flex-start}
 .banner .ic{font-size:18px;flex:none;line-height:1.3}
 
 footer{font-size:12.5px;color:var(--ink-3);text-align:center;line-height:1.7}
@@ -173,7 +173,7 @@ footer a{color:var(--ink-2)}
   <header class="masthead">
     <div class="ic" aria-hidden="true">🧑‍🏫</div>
     <div class="ttl">
-      <h1>디지털 시민 신호등 · 선생님</h1>
+      <h1>디지털 시민 브리핑 · 선생님</h1>
       <p class="sub">수업 코드를 열고, 모둠 점수를 실시간으로 보고, 학생 화면을 함께 넘깁니다.</p>
     </div>
     <button class="btn ghost small" id="logoutBtn" type="button" hidden>로그아웃</button>
@@ -204,12 +204,12 @@ import { doc, setDoc, deleteDoc, collection, query, where, onSnapshot, getDocs, 
   from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const MISSIONS = [
-  { id:"m1", ic:"🚦", label:"미션 1\n인터넷 신호등", max:10 },
-  { id:"m2", ic:"🤫", label:"미션 2\n개인정보",     max:12 },
-  { id:"m3", ic:"🔍", label:"미션 3\n디지털 탐정",  max:8  },
-  { id:"m4", ic:"🛑", label:"미션 4\n못된 말 멈춰", max:8  }
+  { id:"m1", ic:"🔐", label:"미션 1\n내가 공유하는 것", max:12 },
+  { id:"m2", ic:"👣", label:"미션 2\n디지털 평판",     max:12 },
+  { id:"m3", ic:"🛡", label:"미션 3\n혐오 표현 대응",   max:12 },
+  { id:"m4", ic:"🔎", label:"미션 4\n가짜와 사기",     max:12 }
 ];
-const MAX_SCORE   = MISSIONS.reduce((s,m)=>s+m.max, 0);   // 38
+const MAX_SCORE   = MISSIONS.reduce((s,m)=>s+m.max, 0);   // 48
 const TOTAL_STEPS = MAX_SCORE;
 
 const state = {
@@ -443,7 +443,7 @@ function renderBoard(){
   const ctrl = el("div","control" + (state.lock ? " on" : ""));
   ctrl.style.marginTop = "18px";
   ctrl.appendChild(el("h3", null, "학생 화면 함께 보기"));
-  ctrl.appendChild(el("p", null, "미션을 하나 고르면 모든 모둠의 화면이 그 미션으로 넘어가고, 다른 미션으로는 넘어가지 못합니다. 설명하는 동안 앞서 나가는 것을 막기 위한 것입니다. ‘자유롭게’를 누르면 풀립니다. 끄는 것을 잊어도 세 시간이 지나면 저절로 풀립니다."));
+  ctrl.appendChild(el("p", null, "미션을 하나 고르면 모든 모둠의 화면이 그 미션으로 넘어가고, 다른 미션으로는 넘어가지 못합니다. 설명하거나 함께 토의할 때 앞서 나가는 것을 막기 위한 것입니다. ‘자유롭게’를 누르면 풀립니다. 끄는 것을 잊어도 세 시간이 지나면 저절로 풀립니다."));
 
   const btns = el("div","missionbtns");
   MISSIONS.forEach((m) => {
@@ -534,7 +534,7 @@ function renderBoard(){
       row.appendChild(foot);
 
       row.appendChild(el("div","detail",
-        "신호등 " + r.m1 + "/10 · 개인정보 " + r.m2 + "/12 · 탐정 " + r.m3 + "/8 · 못된 말 " + r.m4 + "/8" +
+        "공유 " + r.m1 + "/12 · 평판 " + r.m2 + "/12 · 혐오표현 " + r.m3 + "/12 · 가짜정보 " + r.m4 + "/12" +
         " · " + (r.p1 || "1번") + " " + r.s1 + "점 / " + (r.p2 || "2번") + " " + r.s2 + "점" +
         " · 진행 " + Math.min(r.steps, TOTAL_STEPS) + "/" + TOTAL_STEPS));
 

@@ -52,7 +52,7 @@ service cloud.firestore {
         && request.resource.data.name.size() <= 20
         && request.resource.data.total is number
         && request.resource.data.total >= 0
-        && request.resource.data.total <= 38;
+        && request.resource.data.total <= 48;
 
       allow update: if isSignedIn()
         && resource.data.uid == request.auth.uid
@@ -60,7 +60,7 @@ service cloud.firestore {
         && request.resource.data.code == resource.data.code
         && request.resource.data.total is number
         && request.resource.data.total >= 0
-        && request.resource.data.total <= 38;
+        && request.resource.data.total <= 48;
     }
 
     // 함께 보기 — 선생님이 지정한 미션 하나. 수업 코드마다 문서 하나.
