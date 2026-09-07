@@ -671,6 +671,28 @@ footer a{color:var(--ink-2)}
   var MAX_SCORE = ORDER.reduce(function(s,m){ return s + maxOf(m); }, 0);
   var TOTAL_Q   = ORDER.reduce(function(s,m){ return s + MISSIONS[m].items.length; }, 0);
 
+  /* ═══ 선택지 섞기 ═══
+     문제를 적을 때 해설을 쓰기 편하도록 정답을 늘 첫 줄에 두었다. 그대로 두면
+     ㄱ만 눌러도 만점이 나온다. 화면을 열 때 한 번 섞어서 정답 자리를 흩는다.
+     모둠마다 순서가 달라지므로 옆 모둠 답을 베끼기도 어려워진다. */
+  function shuffleChoices(q){
+    if (!q || !q.o) return;
+    var order = q.o.map(function(_, i){ return i; });
+    for (var i = order.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = order[i]; order[i] = order[j]; order[j] = t;
+    }
+    var before = q.o;
+    q.o = order.map(function(i){ return before[i]; });
+    q.a = order.indexOf(q.a);
+  }
+  ORDER.forEach(function(m){
+    MISSIONS[m].items.forEach(function(q){
+      shuffleChoices(q);
+      shuffleChoices(q.f);
+    });
+  });
+
   /* ═══ 상태 ═══ */
   var state = {
     screen:"join",
