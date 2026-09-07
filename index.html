@@ -18,6 +18,7 @@
   --caution:#C98A08; --caution-soft:#FAECC6;
   --stop:#CE3A31;    --stop-soft:#FBE1DF;
   --indigo:#2159B8;  --indigo-soft:#DDE7FA;
+  --plum:#A83E8E;
   --shadow:rgba(27,38,32,.18); --shadow-soft:rgba(27,38,32,.08);
   --lamp-off:#C2CCBE;
 }
@@ -31,6 +32,7 @@
     --caution:#F0BE47; --caution-soft:#3A2F16;
     --stop:#F2726A;    --stop-soft:#3E211F;
     --indigo:#7FA8F0;  --indigo-soft:#1A2640;
+    --plum:#E58CD0;
     --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
     --lamp-off:#3A473F;
   }
@@ -44,6 +46,7 @@
   --caution:#F0BE47; --caution-soft:#3A2F16;
   --stop:#F2726A;    --stop-soft:#3E211F;
   --indigo:#7FA8F0;  --indigo-soft:#1A2640;
+  --plum:#E58CD0;
   --shadow:rgba(0,0,0,.55); --shadow-soft:rgba(0,0,0,.34);
   --lamp-off:#3A473F;
 }
@@ -89,6 +92,9 @@ body{
 .card.signal-card{border-color:var(--go)}
 .card.teacher-card{border-color:var(--brand)}
 .card.forensics-card{border-color:var(--indigo)}
+.card.virtual-card{border-color:var(--plum)}
+.card.doc-card{border-color:var(--line-strong)}
+.card.doc-card h2{font-size:20px}
 
 .section-label{font-size:12px;font-weight:800;letter-spacing:.16em;color:var(--ink-3);margin:0}
 
@@ -152,14 +158,37 @@ footer a{color:var(--ink-2)}
     </a>
   </div>
 
-  <p class="section-label">디지털 감식반</p>
+  <p class="section-label">디지털 감식반 · 로그인 없이 바로</p>
 
   <div class="cards">
     <a class="card forensics-card" href="./forensics.html" style="grid-column:1 / -1">
       <span class="ic" aria-hidden="true">🕵️</span>
-      <span class="who">통합 과정 · 로그인 없이 바로</span>
+      <span class="who">통합 과정 · 학생용</span>
       <h2>디지털 감식반 통합 과정</h2>
       <p>딥페이크와 개인정보(PART 1), 가상 공간의 다섯 성질(PART 2)을 여덟 개 사건으로 조사하고 요원증을 받습니다. 현장 판결 문항은 매번 무작위로 출제됩니다.</p>
+    </a>
+
+    <a class="card virtual-card" href="./virtual.html">
+      <span class="ic" aria-hidden="true">🪐</span>
+      <span class="who">단독 과정 · 학생용</span>
+      <h2>가상 공간 감식반</h2>
+      <p>가상 공간의 다섯 가지 성질을 따로 다루는 과정입니다. 통합 과정의 PART 2만 떼어 쓰고 싶을 때 씁니다.</p>
+    </a>
+
+    <a class="card doc-card" href="./virtual-lesson.html">
+      <span class="ic" aria-hidden="true">📋</span>
+      <span class="who">선생님용 문서</span>
+      <h2>가상 공간 감식반 지도안</h2>
+      <p>수업 흐름과 발문, 시간 배분이 담긴 지도안입니다.</p>
+    </a>
+  </div>
+
+  <div class="cards">
+    <a class="card doc-card" href="./virtual-worksheet.html" style="grid-column:1 / -1">
+      <span class="ic" aria-hidden="true">✏️</span>
+      <span class="who">학생용 문서 · 인쇄 가능</span>
+      <h2>가상 공간 감식반 활동지</h2>
+      <p>수업 중에 채워 나가는 활동지입니다. 화면으로 쓰거나 인쇄해서 나눠줄 수 있습니다.</p>
     </a>
   </div>
 

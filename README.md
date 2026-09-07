@@ -8,6 +8,9 @@
 | `/citizen.html` | 학생 | 수업 코드로 모둠 참여 → 4개 미션 → 결과 브리핑 |
 | `/citizen-teacher.html` | 선생님 | 수업 코드 열기, 모둠 순위 실시간 확인, 학생 화면 함께 보기 |
 | `/forensics.html` | 학생 | 디지털 감식반 통합 과정 (로그인 없이 혼자 진행) |
+| `/virtual.html` | 학생 | 가상 공간 감식반 (단독 과정) |
+| `/virtual-lesson.html` | 선생님 | 가상 공간 감식반 지도안 |
+| `/virtual-worksheet.html` | 학생 | 가상 공간 감식반 활동지 (인쇄 가능) |
 
 ## 디지털 시민 브리핑
 
@@ -47,6 +50,9 @@ Education 디지털 시민성 **중학생 차시** 네 개를 옮겼습니다.
 - `citizen.html` — 학생 화면 (모둠 참여 + 4개 미션 + 결과)
 - `citizen-teacher.html` — 선생님 화면 (수업 열기 + 순위표 + 함께 보기)
 - `forensics.html` — 디지털 감식반 통합 과정 (혼자 도는 한 장짜리 페이지)
+- `virtual.html` — 가상 공간 감식반 (통합 과정의 PART 2 를 따로 쓰는 판)
+- `virtual-lesson.html` — 가상 공간 감식반 지도안
+- `virtual-worksheet.html` — 가상 공간 감식반 활동지
 - `firebase-init.js` — 두 화면이 함께 쓰는 Firebase 연결 설정
 - `firestore.rules` — 보안 규칙
 - `firebase.json` / `.firebaserc` — 규칙 배포 설정
@@ -69,6 +75,13 @@ firebase deploy --only firestore:rules
 
 > 배포된 주소는 Firebase 콘솔의 **Authentication > 설정 > 승인된 도메인**에
 > 등록되어 있어야 로그인이 됩니다. 주소가 바뀌면 다시 등록하세요.
+>
+> 이 저장소는 두 곳에 배포됩니다.
+>
+> - https://digital-eight-kappa.vercel.app (Vercel)
+> - https://kimjuimg.github.io/digital (GitHub Pages)
+>
+> **두 주소 모두 승인된 도메인에 등록되어 있어야** 로그인이 됩니다.
 
 ## 저장되는 것
 
