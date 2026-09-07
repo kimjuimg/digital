@@ -1,4 +1,3 @@
-
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>디지털 감식반 · 통합 과정</title>
@@ -1444,7 +1443,7 @@ footer{
   <div class="sec-head">
     <span class="sec-num mono">CASE 03 / 08 · 현장 판결</span>
     <h2>현장 판결</h2>
-    <p>실제로 벌어질 수 있는 여덟 가지 상황. 요원으로서 가장 올바른 대응을 선택해보자. 이 판결이 요원증 등급의 핵심 기준이 된다.</p>
+    <p>실제로 벌어질 수 있는 다섯 가지 상황. 요원으로서 가장 올바른 대응을 선택해보자. 이 판결이 요원증 등급의 핵심 기준이 된다.</p>
   </div>
   <div id="scenario-wrap"></div>
 </section>
@@ -1582,9 +1581,9 @@ footer{
 
 <!-- ══════════ CASE 05 · 현장 판결 ══════════ -->
 <section id="s6">
-  <span class="case-tag">CASE 08 / 08 · 권리와 책임 · 등급 반영 8점</span>
+  <span class="case-tag">CASE 08 / 08 · 권리와 책임 · 등급 반영 6점</span>
   <h2>현장 판결</h2>
-  <p class="lead">가상 공간에서 실제로 벌어지는 여덟 가지 상황이다. 요원으로서 가장 올바른 대응을 고르자. 이 판결이 요원증 등급의 핵심 기준이 된다.</p>
+  <p class="lead">가상 공간에서 실제로 벌어지는 여섯 가지 상황이다. 요원으로서 가장 올바른 대응을 고르자. 이 판결이 요원증 등급의 핵심 기준이 된다.</p>
   <div class="qbar"><div class="qfill" id="qFill"></div></div>
   <div class="panel" id="judgeBox"></div>
 </section>
@@ -1605,9 +1604,9 @@ footer{
     <div class="id-grade" id="idGrade">등급 판정 대기 중</div>
     <p class="rankd" id="idGradeDesc" style="color:var(--muted);font-size:16px;line-height:1.5;margin:12px 0 0"></p>
     <div class="id-stats id-stats-merged">
-      <div>판결 · 딥페이크<b id="statCase3">0/8</b></div>
+      <div>판결 · 딥페이크<b id="statCase3">0/5</b></div>
       <div>고쳐 쓰기<b id="statMission">0/2</b></div>
-      <div>판결 · 가상공간<b id="statJudgeA">0/8</b></div>
+      <div>판결 · 가상공간<b id="statJudgeA">0/6</b></div>
       <div>방관자<b id="statBy">0/2</b></div>
       <div>다시 쓰기<b id="statRw">0/2</b></div>
       <div class="muted-stat">참고 · 단서/흔적<b id="statLearn">0/10</b></div>
@@ -1618,7 +1617,7 @@ footer{
     </div>
   </div>
   <div class="grade-note">
-    등급 산정 = 현장 판결 · 딥페이크(8점) + 고쳐 쓰기(2점) + 현장 판결 · 가상공간(8점) + 방관자(2점) + 다시 쓰기(2점) = 22점 만점<br>
+    등급 산정 = 현장 판결 · 딥페이크(5점) + 고쳐 쓰기(2점) + 현장 판결 · 가상공간(6점) + 방관자(2점) + 다시 쓰기(2점) = 17점 만점<br>현장 판결 문항은 각각 8개 중에서 무작위로 출제됩니다.<br>
     단서 학습과 흔적 확인은 참고 항목이며 등급에 반영되지 않습니다
   </div>
   <div class="id-actions finrow">
@@ -1995,11 +1994,23 @@ function renderBystander(){
     wrap.appendChild(b);
   });
 }
-function nextBy(){byStep++;renderBystander();}
+function nextBy(){byStep++;renderBystander();scrollToStageTop('bystanderBox');}
 function restartBy(){byStep=0;byScore=0;byDone=false;renderBystander();}
 renderBystander();
 
 /* ═══════ CASE 05 · 현장 판결 ═══════ */
+/* 현장 판결 문항은 8개를 모두 보관하고, 풀 때마다 그중 일부만 무작위로 출제한다 */
+const JUDGE_PICK = 6;   // PART 2 · 가상공간 현장 판결 출제 수
+const CASE3_PICK = 5;   // PART 1 · 딥페이크 현장 판결 출제 수
+function pickRandom(list, count){
+  const pool = list.slice();
+  for(let i = pool.length - 1; i > 0; i--){
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, Math.min(count, pool.length));
+}
+
 const cases=[
  {q:'온라인 게임에서 몇 주째 친하게 지낸 사람이 있다. 어느 날 "우리 둘만의 비밀"이라며 얼굴 사진을 보내 달라고 한다.',
   o:['친해졌으니 한 장 정도는 괜찮다','거절하고, 대화 내용을 저장한 뒤 보호자나 교사에게 알린다','사진 대신 다른 개인정보를 준다','대답 없이 차단만 하고 아무에게도 말하지 않는다'],
@@ -2026,25 +2037,26 @@ const cases=[
   o:['화면을 캡처해 날짜와 함께 보관하고, 원본 글은 지우지 않은 채 어른에게 알린다','일단 가해자 글을 신고해 삭제시킨다','당사자에게 참으라고 조언한다','내가 직접 가해자에게 따진다'],
   a:0, e:'가장 흔한 실수가 증거보다 삭제를 먼저 하는 것이다. 글이 지워지면 무슨 일이 있었는지 증명할 방법이 사라진다. 날짜와 화면 주소가 함께 보이도록 기록하고, 대응은 어른과 함께 한다.'}
 ];
+let judgeSet = pickRandom(cases, JUDGE_PICK);
 let cIdx=0, cScore=0, cDone=false;
 function renderJudge(){
   const box=document.getElementById('judgeBox');
   const fill=document.getElementById('qFill');
-  if(cIdx>=cases.length){
+  if(cIdx>=judgeSet.length){
     fill.style.width='100%';
-    box.innerHTML='<h3>판결 종료</h3><p class="lead" style="margin:10px 0 18px">현장 판결 점수 <b>'+cScore+' / 8</b></p>'+
-      '<div class="feedback"><b>여덟 개 상황을 관통하는 원칙 세 가지.</b><br>'+
+    box.innerHTML='<h3>판결 종료</h3><p class="lead" style="margin:10px 0 18px">현장 판결 점수 <b>'+cScore+' / '+judgeSet.length+'</b></p>'+
+      '<div class="feedback"><b>모든 상황을 관통하는 원칙 세 가지.</b><br>'+
       '① 혼자 처리하지 않는다 — 가상 공간의 문제는 숨길수록 커진다.<br>'+
       '② 지우기 전에 남긴다 — 증거가 없으면 없던 일이 된다.<br>'+
       '③ 여기서 멈춘다 — 내가 전달하지 않으면 확산은 한 칸 줄어든다.</div>'+
       '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">'+
-      '<button class="btn small" onclick="go(7)">요원증 발급 →</button>'+
+      '<button class="btn small" onclick="NAV.go(13)">요원증 발급 →</button>'+
       '<button class="btn small ghost" onclick="restartJudge()">다시 풀기</button></div>';
     cDone=true; return;
   }
-  const c=cases[cIdx];
-  fill.style.width=(cIdx/cases.length*100)+'%';
-  box.innerHTML='<div class="qhead"><span class="qnum mono">판결 '+(cIdx+1)+' / '+cases.length+'</span>'+
+  const c=judgeSet[cIdx];
+  fill.style.width=(cIdx/judgeSet.length*100)+'%';
+  box.innerHTML='<div class="qhead"><span class="qnum mono">판결 '+(cIdx+1)+' / '+judgeSet.length+'</span>'+
     '<span class="qnum mono">획득 '+cScore+'점</span></div>'+
     '<div class="scene"><b>'+c.q+'</b></div><div class="opts" id="cOpts"></div><div id="cFb"></div>';
   const wrap=document.getElementById('cOpts');
@@ -2061,13 +2073,22 @@ function renderJudge(){
       document.getElementById('cFb').innerHTML=
         '<div class="feedback">'+(i===c.a?'<b>정확한 판단입니다.</b> ':'<b>다시 보자.</b> ')+c.e+'</div>'+
         '<div style="margin-top:14px"><button class="btn small" onclick="nextJudge()">'+
-        (cIdx===cases.length-1?'결과 보기 →':'다음 판결 →')+'</button></div>';
+        (cIdx===judgeSet.length-1?'결과 보기 →':'다음 판결 →')+'</button></div>';
     });
     wrap.appendChild(b);
   });
 }
-function nextJudge(){cIdx++;renderJudge();}
-function restartJudge(){cIdx=0;cScore=0;cDone=false;renderJudge();}
+/* 다음 문항으로 넘어갈 때 새 내용의 머리가 화면 밖에 남지 않도록 위쪽을 맞춰 준다 */
+function scrollToStageTop(id){
+  const box=document.getElementById(id);
+  if(!box) return;
+  const rail=document.querySelector('.rail');
+  const off=(rail?rail.getBoundingClientRect().height:0)+12;
+  const y=window.scrollY+box.getBoundingClientRect().top-off;
+  window.scrollTo({top:Math.max(0,y),behavior:'smooth'});
+}
+function nextJudge(){cIdx++;renderJudge();scrollToStageTop('judgeBox');}
+function restartJudge(){judgeSet=pickRandom(cases, JUDGE_PICK);cIdx=0;cScore=0;cDone=false;updateStats();renderJudge();}
 renderJudge();
 
 /* ═══════ FINAL ═══════ */
@@ -2760,7 +2781,8 @@ const scenarios = [
 let case3Correct = 0;
 let case3Answered = 0;
 const scWrap = document.getElementById('scenario-wrap');
-scenarios.forEach((sc, idx)=>{
+const case3Set = pickRandom(scenarios, CASE3_PICK);
+case3Set.forEach((sc, idx)=>{
   const card = document.createElement('div');
   card.className='scenario-card';
   const choicesHTML = sc.choices.map((c,ci)=>`<button class="choice-btn" data-idx="${ci}">${c.text}</button>`).join('');
@@ -2815,8 +2837,17 @@ function showScenario(i){
   document.getElementById('scPrev').disabled = scIdx === 0;
   document.getElementById('scNext').disabled = scIdx === scCards.length - 1;
 }
-document.getElementById('scPrev').addEventListener('click', ()=>showScenario(scIdx - 1));
-document.getElementById('scNext').addEventListener('click', ()=>showScenario(scIdx + 1));
+/* 상황을 넘길 때 새 카드의 머리가 화면 밖에 남지 않도록 위쪽을 맞춰 준다 */
+function scrollToActiveCard(){
+  const card = scCards[scIdx];
+  if(!card) return;
+  const rail = document.querySelector('.progress-rail');
+  const off = (rail ? rail.getBoundingClientRect().height : 0) + 12;
+  const y = window.scrollY + card.getBoundingClientRect().top - off;
+  window.scrollTo({top: Math.max(0, y), behavior: 'smooth'});
+}
+document.getElementById('scPrev').addEventListener('click', ()=>{ showScenario(scIdx - 1); scrollToActiveCard(); });
+document.getElementById('scNext').addEventListener('click', ()=>{ showScenario(scIdx + 1); scrollToActiveCard(); });
 showScenario(0);
 
 /* ---------- 요원증을 이미지로 저장 ---------- */
@@ -2944,8 +2975,13 @@ document.getElementById('printIdBtn').addEventListener('click', ()=>{
 
 
 /* ═══════ 통합 요원증 — 두 파트의 판단을 한 장으로 ═══════ */
-const MAX_JUDGE = scenarios.length;            // 2부 현장 판결 8문항
-const MAX_TOTAL = 8 + 2 + 2 + MAX_JUDGE + 2;   // 22점
+const MAX_JUDGE = case3Set.length;                        // 1부 현장 판결 출제 수
+const MAX_TOTAL = JUDGE_PICK + 2 + 2 + MAX_JUDGE + 2;     // 가상공간 + 고쳐쓰기 + 방관자 + 딥페이크 + 다시쓰기
+
+/* 등급 경계는 만점에 비례해 정한다 (기존 22점 기준의 20 / 15 / 9와 같은 비율) */
+const GRADE_A = Math.ceil(MAX_TOTAL * 0.90);
+const GRADE_B = Math.ceil(MAX_TOTAL * 0.68);
+const GRADE_C = Math.ceil(MAX_TOTAL * 0.41);
 
 function totalScore(){ return cScore + byScore + rwScore + case3Correct + missionScore; }
 function allTasksDone(){
@@ -2953,16 +2989,16 @@ function allTasksDone(){
 }
 function gradeOf(total){
   if(!allTasksDone()) return '등급 판정 대기 중';
-  if(total >= 20) return '특별요원 · 최고 등급 인증';
-  if(total >= 15) return '정요원 · 임무 수행 가능';
-  if(total >= 9)  return '수습요원 · 보강 훈련 필요';
+  if(total >= GRADE_A) return '특별요원 · 최고 등급 인증';
+  if(total >= GRADE_B) return '정요원 · 임무 수행 가능';
+  if(total >= GRADE_C) return '수습요원 · 보강 훈련 필요';
   return '훈련생 · 다시 한 번';
 }
 function gradeDesc(total){
   if(!allTasksDone()) return '아직 완료하지 않은 과제가 있습니다. 두 파트의 현장 판결·고쳐 쓰기·방관자·다시 쓰기를 모두 마치면 등급이 나옵니다.';
-  if(total >= 20) return '합성된 정보와 개인정보 앞에서의 판단은 물론, 가상 공간에서 사람을 대하는 태도까지 안정적입니다. 다른 사람의 판단을 도울 수 있는 수준입니다.';
-  if(total >= 15) return '대부분의 상황에서 옳은 방향을 고릅니다. 증거 보관과 신고 절차를 한 번 더 확인해 두세요.';
-  if(total >= 9)  return '기본은 잡혔습니다. 틀린 문항의 해설을 다시 읽고, 특히 "혼자 처리하지 않기"를 기억하세요.';
+  if(total >= GRADE_A) return '합성된 정보와 개인정보 앞에서의 판단은 물론, 가상 공간에서 사람을 대하는 태도까지 안정적입니다. 다른 사람의 판단을 도울 수 있는 수준입니다.';
+  if(total >= GRADE_B) return '대부분의 상황에서 옳은 방향을 고릅니다. 증거 보관과 신고 절차를 한 번 더 확인해 두세요.';
+  if(total >= GRADE_C) return '기본은 잡혔습니다. 틀린 문항의 해설을 다시 읽고, 특히 "혼자 처리하지 않기"를 기억하세요.';
   return '아직 연습이 필요합니다. 각 사건의 해설을 다시 읽어 보세요. 몰라서 틀리는 것은 문제가 아닙니다.';
 }
 function idNumber(total){
@@ -2975,7 +3011,7 @@ function idNumber(total){
 function updateStats(){
   document.getElementById('statCase3').textContent  = case3Correct+'/'+MAX_JUDGE;
   document.getElementById('statMission').textContent= missionScore+'/2';
-  document.getElementById('statJudgeA').textContent = cScore+'/8';
+  document.getElementById('statJudgeA').textContent = cScore+'/'+JUDGE_PICK;
   document.getElementById('statBy').textContent     = byScore+'/2';
   document.getElementById('statRw').textContent     = rwScore+'/2';
   document.getElementById('statLearn').textContent  = (case1Done + clueOpen)+'/10';
