@@ -396,11 +396,11 @@ async function openClass(){
 function docsBox(){
   const box = el("div","docs");
   box.appendChild(el("h3", null, "수업 자료"));
-  box.appendChild(el("p", null, "가상 공간 감식반 수업에 쓰는 문서입니다. 활동지는 인쇄해서 나눠주거나 화면으로 함께 볼 수 있습니다."));
+  box.appendChild(el("p", null, "가상 공간 감식반 수업에 쓰는 문서입니다. 여기서 여는 활동지에는 교사용 답안이 함께 보입니다. 학생이 첫 화면에서 여는 활동지에는 답안이 나오지 않습니다."));
   const wrap = el("div","doclinks");
   [
     { href:"./virtual-lesson.html",    ic:"📋", t:"가상 공간 감식반 지도안", d:"수업 흐름과 발문, 시간 배분" },
-    { href:"./virtual-worksheet.html", ic:"✏️", t:"가상 공간 감식반 활동지", d:"수업 중에 채우는 활동지 · 인쇄 가능" }
+    { href:"./virtual-worksheet.html?teacher", ic:"✏️", t:"가상 공간 감식반 활동지 (답안 포함)", d:"교사용 구간이 함께 보입니다 · 학생용으로도 인쇄 가능" }
   ].forEach((d) => {
     const a = document.createElement("a");
     a.className = "doclink";

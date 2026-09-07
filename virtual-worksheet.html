@@ -180,6 +180,8 @@ td.fill-lg{height:52px}
 
 /* ── 교사용 ── */
 .teacher{border-top:2px solid var(--ink)}
+/* 기본은 학생용이다. 주소에 ?teacher 가 붙었을 때만 교사용 구간이 보인다. */
+body.hide-teacher .teacher{display:none}
 .tflag{
   background:var(--primary);color:var(--page);
   font-family:"Rubik",sans-serif;font-size:10px;font-weight:600;line-height:1.8;
@@ -241,7 +243,7 @@ td.fill-lg{height:52px}
 <div class="toolbar">
   <span class="t">가상 공간 감식반 · 학생 활동지 · A4 5장</span>
   <button class="tb" onclick="printStudent()">학생용 인쇄 (4장)</button>
-  <button class="tb ghost" onclick="printAll()">교사용 포함 인쇄 (5장)</button>
+  <button class="tb ghost" id="btnAll" onclick="printAll()">교사용 포함 인쇄 (5장)</button>
 </div>
 
 <!-- ══════════════ 1장 ══════════════ -->
@@ -546,13 +548,30 @@ document.querySelectorAll('.write').forEach(w=>{
     w.appendChild(d);
   }
 });
+/* 주소에 ?teacher 가 붙어 있으면 교사용, 아니면 학생용으로 연다.
+   선생님 화면에서만 ?teacher 가 붙은 주소로 연결해 두었다. */
+var isTeacher = /(^|[?&])teacher(=|&|$)/.test(location.search);
+if (!isTeacher) {
+  document.body.classList.add('hide-teacher');
+  var btnAll = document.getElementById('btnAll');
+  if (btnAll) btnAll.hidden = true;
+  var t = document.querySelector('.toolbar .t');
+  if (t) t.textContent = '가상 공간 감식반 · 학생 활동지 · A4 4장';
+}
+
+/* 인쇄가 끝나면 원래 판으로 되돌린다 */
+function restoreView(){
+  if (isTeacher) document.body.classList.remove('hide-teacher');
+  else document.body.classList.add('hide-teacher');
+}
 function printStudent(){
   document.body.classList.add('hide-teacher');
   window.print();
-  setTimeout(()=>document.body.classList.remove('hide-teacher'),400);
+  setTimeout(restoreView, 400);
 }
 function printAll(){
   document.body.classList.remove('hide-teacher');
   window.print();
+  setTimeout(restoreView, 400);
 }
 </script>
