@@ -9,8 +9,8 @@
 | `/citizen-teacher.html` | 선생님 | 수업 코드 열기, 모둠 순위 실시간 확인, 학생 화면 함께 보기 |
 | `/forensics.html` | 학생 | 디지털 감식반 통합 과정 (로그인 없이 혼자 진행) |
 | `/virtual.html` | 학생 | 가상 공간 감식반 (단독 과정) |
-| `/virtual-lesson.html` | 선생님 | 가상 공간 감식반 지도안 |
-| `/virtual-worksheet.html` | 학생 | 가상 공간 감식반 활동지 (인쇄 가능) |
+| `/virtual-lesson.html` | 선생님 | 가상 공간 감식반 지도안 (선생님 화면에서 연결) |
+| `/virtual-worksheet.html` | 선생님 | 가상 공간 감식반 활동지 (선생님 화면에서 연결) |
 
 ## 디지털 시민 브리핑
 
@@ -53,6 +53,10 @@ Education 디지털 시민성 **중학생 차시** 네 개를 옮겼습니다.
 - `virtual.html` — 가상 공간 감식반 (통합 과정의 PART 2 를 따로 쓰는 판)
 - `virtual-lesson.html` — 가상 공간 감식반 지도안
 - `virtual-worksheet.html` — 가상 공간 감식반 활동지
+
+지도안과 활동지는 첫 화면에 두지 않고 **선생님 화면에 로그인한 뒤**에만
+연결해 두었다. 다만 정적 사이트라 주소를 아는 사람은 그대로 열 수 있다.
+접근을 막는 장치가 아니라 학생 눈에 띄지 않게 두는 정리다.
 - `firebase-init.js` — 두 화면이 함께 쓰는 Firebase 연결 설정
 - `firestore.rules` — 보안 규칙
 - `firebase.json` / `.firebaserc` — 규칙 배포 설정
