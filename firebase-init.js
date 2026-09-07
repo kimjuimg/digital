@@ -39,9 +39,24 @@ const firebaseConfig = {
   appId:             "1:325383370134:web:411b39a0633b916f39d9b7"
 };
 
-export const app  = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db   = getFirestore(app);
+/* 화면마다 Firebase 앱을 따로 만든다.
+
+   Firebase 는 로그인 상태를 브라우저 저장소에 "apiKey:앱이름" 으로 넣어 둔다.
+   두 화면이 같은 앱을 쓰면 저장 자리가 같아서, 같은 브라우저에서 학생이
+   익명으로 들어오는 순간 선생님 로그인이 덮어써지고 선생님 화면이 로그인
+   화면으로 튕겨 나갔다. 앱 이름을 나누면 저장 자리가 갈라져 서로 건드리지
+   않는다.
+
+   Firestore 요청은 같은 앱의 로그인 정보를 쓰므로 db 도 함께 나눠야 한다.
+   섞으면 학생이 로그인하지 않은 것으로 취급되어 점수 저장이 막힌다. */
+const bundles = {};
+export function firebaseFor(role){
+  if (!bundles[role]) {
+    const a = initializeApp(firebaseConfig, role);
+    bundles[role] = { app: a, auth: getAuth(a), db: getFirestore(a) };
+  }
+  return bundles[role];
+}
 
 /* 이 수업이 쓰는 컬렉션 이름. 파이썬 첫걸음과 겹치지 않도록 dc_ 를 붙였다. */
 export const COL_CLASSES   = "dc_classes";     // 선생님이 연 수업 코드

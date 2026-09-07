@@ -196,12 +196,22 @@ footer a{color:var(--ink-2)}
 </div>
 
 <script type="module">
-import { auth, db, teacherEmailFor, TEACHER_ID, COL_CLASSES, COL_GROUPS, COL_CLASSROOM, cleanCode, randomCode }
+import { firebaseFor, teacherEmailFor, TEACHER_ID, COL_CLASSES, COL_GROUPS, COL_CLASSROOM, cleanCode, randomCode }
   from "./firebase-init.js";
-import { signInWithEmailAndPassword, signOut, onAuthStateChanged }
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged,
+         setPersistence, browserSessionPersistence }
   from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
 import { doc, setDoc, deleteDoc, collection, query, where, onSnapshot, getDocs, serverTimestamp }
   from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
+
+/* 선생님 전용 앱을 쓴다. 학생이 같은 브라우저에서 익명으로 들어와도
+   선생님 로그인이 풀리지 않는다. */
+const { auth, db } = firebaseFor("teacher");
+
+/* 로그인 상태를 탭 안에만 둔다. 교실 컴퓨터에서 탭을 닫으면 선생님 권한이
+   남지 않는다. 새로 고침해도 같은 탭이면 로그인은 유지된다. */
+try{ await setPersistence(auth, browserSessionPersistence); }
+catch(e){ console.warn("[로그인] 탭 단위 저장을 쓰지 못합니다", e); }
 
 const MISSIONS = [
   { id:"m1", ic:"🔐", label:"미션 1\n내가 공유하는 것", max:12 },
@@ -221,6 +231,7 @@ const state = {
   busy:false
 };
 let stopGroups = null;
+let liveWrap = null;   /* 순위표처럼 자주 바뀌는 부분만 담아 두는 자리 */
 
 const bodyEl   = document.getElementById("panelBody");
 const eyebrow  = document.getElementById("eyebrow");
@@ -367,7 +378,21 @@ async function sendLock(mission){
     console.error(e);
     alertBox("학생 화면을 넘기지 못했습니다. 잠시 후 다시 눌러 주세요.");
   }
-  render();
+  paintLock();
+}
+
+/* 함께 보기 버튼의 눌린 표시만 바꾼다 */
+function paintLock(){
+  if (state.screen !== "board") { render(); return; }
+  const ctrl = bodyEl.querySelector(".control");
+  if (ctrl) ctrl.classList.toggle("on", !!state.lock);
+  const btns = bodyEl.querySelectorAll(".mbtn");
+  btns.forEach((b, i) => {
+    const isFree = b.classList.contains("free");
+    const on = isFree ? !state.lock : (MISSIONS[i] && state.lock === MISSIONS[i].id);
+    b.setAttribute("aria-pressed", on ? "true" : "false");
+  });
+  headRight.textContent = state.lock ? "함께 보기 켜짐" : "학생이 자유롭게 이동";
 }
 
 /* ═══════ 모둠 점수 지켜보기 ═══════ */
@@ -395,7 +420,7 @@ function watchGroups(){
       };
     });
     alertBox("");
-    if (state.screen === "board") render();
+    if (state.screen === "board") renderLive();
   }, (e) => {
     console.error(e);
     alertBox(e && e.code === "permission-denied"
@@ -474,7 +499,20 @@ function renderBoard(){
   ctrl.appendChild(btns);
   bodyEl.appendChild(ctrl);
 
-  /* 요약 */
+  /* 여기서부터는 학생이 들어오거나 점수를 올릴 때마다 바뀌는 부분이다.
+     따로 담아 두고 그 안만 다시 그린다. 화면 전체를 새로 그리면 스크롤이
+     맨 위로 튀고 눌러 둔 버튼이 사라져 새로고침처럼 보인다. */
+  liveWrap = document.createElement("div");
+  bodyEl.appendChild(liveWrap);
+  renderLive();
+}
+
+/* 요약 + 순위표만 다시 그린다 */
+function renderLive(){
+  if (!liveWrap || state.screen !== "board") return;
+  headRight.textContent = state.lock ? "함께 보기 켜짐" : "학생이 자유롭게 이동";
+  liveWrap.innerHTML = "";
+
   const rows = ranked();
   const doneCount = rows.filter(r => r.done).length;
   const top = rows.length ? rows[0] : null;
@@ -493,7 +531,7 @@ function renderBoard(){
     c.appendChild(el("div","k", s.k));
     tallies.appendChild(c);
   });
-  bodyEl.appendChild(tallies);
+  liveWrap.appendChild(tallies);
 
   /* 순위 */
   const listWrap = document.createElement("div");
@@ -549,7 +587,7 @@ function renderBoard(){
     listWrap.appendChild(list);
     listWrap.appendChild(el("p","livehint","점수는 실시간으로 갱신됩니다. 새로고침하지 않아도 됩니다."));
   }
-  bodyEl.appendChild(listWrap);
+  liveWrap.appendChild(listWrap);
 
   /* 정리 */
   if (rows.length){
@@ -559,7 +597,7 @@ function renderBoard(){
     cb.type = "button";
     cb.addEventListener("click", clearGroups);
     clear.appendChild(cb);
-    bodyEl.appendChild(clear);
+    liveWrap.appendChild(clear);
   }
 }
 
@@ -578,6 +616,7 @@ async function clearGroups(){
 
 /* ═══════ 라우터 ═══════ */
 function render(){
+  if (state.screen !== "board") liveWrap = null;
   if (state.screen === "login") return renderLogin();
   if (state.screen === "class") return renderClassSetup();
   if (state.screen === "board") return renderBoard();
