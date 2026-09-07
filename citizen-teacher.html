@@ -103,6 +103,12 @@ button{font-family:inherit}
 .codecard .say{font-size:14px;color:var(--ink-2);flex:1;min-width:200px}
 .codecard .say b{font-family:'Gothic A1',sans-serif}
 
+.notyet{border:2px solid var(--caution);background:var(--caution-soft);border-radius:14px;
+  padding:11px 15px;margin:0 0 14px;font-size:14px;line-height:1.6;max-width:62ch}
+.notyet b{font-weight:800}
+.codecard .open{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;
+  color:#fff;background:var(--go);border-radius:999px;padding:2px 9px;vertical-align:2px}
+
 /* 함께 보기 */
 .control{border:2px solid var(--line);border-radius:18px;background:var(--card-2);padding:16px 18px}
 .control h3{font-family:'Jua',sans-serif;font-weight:400;margin:0 0 3px;font-size:19px}
@@ -219,8 +225,8 @@ const MISSIONS = [
   { id:"m3", ic:"🛡", label:"미션 3\n혐오 표현 대응",   max:12 },
   { id:"m4", ic:"🔎", label:"미션 4\n가짜와 사기",     max:12 }
 ];
-const MAX_SCORE   = MISSIONS.reduce((s,m)=>s+m.max, 0);   // 48
-const TOTAL_STEPS = MAX_SCORE;
+const MAX_SCORE   = MISSIONS.reduce((s,m)=>s+m.max, 0);   // 48점 — 문항 1점 + 추가 판단 1점
+const TOTAL_STEPS = MISSIONS.length * 8;                  // 32문항 — 학생 화면이 보내는 steps 의 기준
 
 const state = {
   screen:"login",     // login | class | board
@@ -324,6 +330,11 @@ function renderClassSetup(){
   f.appendChild(lab); f.appendChild(inp);
   fields.appendChild(f);
   bodyEl.appendChild(fields);
+
+  const warn = el("div","notyet");
+  warn.appendChild(el("b", null, "아직 열리지 않았습니다. "));
+  warn.appendChild(document.createTextNode("이 코드는 아래 " + String.fromCharCode(39) + "수업 열기" + String.fromCharCode(39) + " 를 눌러야 만들어집니다. 누르기 전에 학생에게 알려주면 " + String.fromCharCode(39) + "그런 수업 코드가 없습니다" + String.fromCharCode(39) + " 라고 나옵니다."));
+  bodyEl.appendChild(warn);
 
   bodyEl.appendChild(el("p","hintline","영어 대문자와 숫자만 쓸 수 있어요. 지난 수업과 같은 코드를 다시 열면 그때 모둠들이 순위표에 그대로 남아 있습니다."));
 
@@ -447,7 +458,10 @@ function renderBoard(){
   /* 수업 코드 */
   const code = el("div","codecard");
   const left = el("div");
-  left.appendChild(el("div","lbl","수업 코드"));
+  const lbl = el("div","lbl");
+  lbl.appendChild(document.createTextNode("수업 코드 "));
+  lbl.appendChild(el("span","open","열려 있음"));
+  left.appendChild(lbl);
   left.appendChild(el("div","val", state.code));
   code.appendChild(left);
   const say = el("div","say");
